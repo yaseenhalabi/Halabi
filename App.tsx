@@ -11,14 +11,15 @@ export default function App() {
   
   const firstLaunch = true;
 
-  if (firstLaunch) {
-    return <Onboarding />;
-  }
-
   return (
     <ProviderAndPersistor>
       <View style={styles.container}>
-        <CustomText size='large' style='bold'>Hello, world!</CustomText>
+        {
+          firstLaunch ? 
+          <Onboarding />
+          :
+          <CustomText size='large' style='bold'>Hello, world!</CustomText>
+        }
       </View>
     </ProviderAndPersistor>
   );
