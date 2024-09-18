@@ -1,16 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import CustomText from './components/CustomText';
 import FontLoader from './utils/FontLoader';
+import ProviderAndPersistor from './redux/ProviderAndPersistor';
+import { useEffect } from 'react';
+import Onboarding from './components/Onboarding';
 export default function App() {
   const loaded = FontLoader();
-  
   if (!loaded) return null;
+  
+  const firstLaunch = true;
+
+  if (firstLaunch) {
+    return <Onboarding />;
+  }
 
   return (
-    <View style={styles.container}>
-      <CustomText size='large' style='bold'>Hello, world!</CustomText>
-    </View>
+    <ProviderAndPersistor>
+      <View style={styles.container}>
+        <CustomText size='large' style='bold'>Hello, world!</CustomText>
+      </View>
+    </ProviderAndPersistor>
   );
 }
 
