@@ -4,8 +4,8 @@ type Size = 'xsmall' | 'small' | 'medium' | 'large';
 type Style = 'xbold' | 'bold' | 'light' | 'medium' | 'regular' | 'semiBold' | 'thin' | 'xlight';
 type CustomTextProps = {
     children: React.ReactNode;
-    size?: Size;
-    style?: Font;
+    size: Size;
+    style: Style;
 };
 
 const styles = StyleSheet.create({

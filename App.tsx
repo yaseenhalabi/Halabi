@@ -4,12 +4,12 @@ import CustomText from './components/CustomText';
 import FontLoader from './utils/FontLoader';
 export default function App() {
   const loaded = FontLoader();
-  if (!loaded) {
-    return null;
-  }
+  
+  if (!loaded) return null;
+
   return (
     <View style={styles.container}>
-      <CustomText size="large" style='bold'>Hello, world!</CustomText>
+      <CustomText size='large' style='bold'>Hello, world!</CustomText>
     </View>
   );
 }
