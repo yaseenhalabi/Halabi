@@ -10,7 +10,7 @@ type CustomTextProps = {
     color?: Color
 };
 
-export default function CustomText({ children, size, style, color} : CustomTextProps) {
+export default function CommonText({ children, size, style, color} : CustomTextProps) {
     const theme = getTheme();
     let fontSize: number = 14;
     switch (size) {
