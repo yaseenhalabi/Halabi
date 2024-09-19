@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers } from '@reduxjs/toolkit';
 import userSlice from './userSlice';
 import themeSlice from './themeSlice';
+import onboardingSlice from './onboardingSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
@@ -12,11 +13,13 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSlice,
   theme: themeSlice,
+  onboarding: onboardingSlice,
 });
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: persistedReducer,
+  // reducer: persistedReducer,
+  reducer: rootReducer,
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -27,6 +30,7 @@ const store = configureStore({
     }),
 });
 
-const persistor = persistStore(store);
+// const persistor = persistStore(store);
 
-export { store, persistor };
+// export { store, persistor };
+export { store };
