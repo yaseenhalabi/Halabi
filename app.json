@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/halabi-icon.png",
     "userInterfaceStyle": "light",
+    "scheme" : "halabi",
     "splash": {
       "image": "./assets/images/halabi-splash-screen.png",
       "resizeMode": "contain",
@@ -22,9 +23,20 @@
       [
         "expo-font",
         {
-          "fonts" : ["./assets/fonts/Poppins-Black.ttf", "./assets/fonts/Poppins-Bold.ttf", "./assets/fonts/Poppins-ExtraBold.ttf", "./assets/fonts/Poppins-ExtraLight.ttf", "./assets/fonts/Poppins-Light.ttf", "./assets/fonts/Poppins-Medium.ttf", "./assets/fonts/Poppins-Regular.ttf", "./assets/fonts/Poppins-SemiBold.ttf", "./assets/fonts/Poppins-Thin.ttf"]
+          "fonts": [
+            "./assets/fonts/Poppins-Black.ttf",
+            "./assets/fonts/Poppins-Bold.ttf",
+            "./assets/fonts/Poppins-ExtraBold.ttf",
+            "./assets/fonts/Poppins-ExtraLight.ttf",
+            "./assets/fonts/Poppins-Light.ttf",
+            "./assets/fonts/Poppins-Medium.ttf",
+            "./assets/fonts/Poppins-Regular.ttf",
+            "./assets/fonts/Poppins-SemiBold.ttf",
+            "./assets/fonts/Poppins-Thin.ttf"
+          ]
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }
