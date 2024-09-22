@@ -1,5 +1,5 @@
 // import { store, persistor } from './store';
-import { store } from './store';
+import { store } from '../redux/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useEffect } from 'react';

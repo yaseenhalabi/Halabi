@@ -2,14 +2,20 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const onboardingSlice = createSlice({
     name: 'onboarding',
-    initialState: true,
+    initialState: {
+        isOnboarding: true,
+        page: 1, 
+   },
     reducers: {
         finishOnboarding: (state, action) => {
-            return false;
+            return {...state, isOnboarding: false};
+        },
+        setPage: (state, action) => {
+            return {...state, page: action.payload};
         }
     }
 });
 
-export const {finishOnboarding} = onboardingSlice.actions;
+export const {finishOnboarding, setPage} = onboardingSlice.actions;
 
 export default onboardingSlice.reducer;

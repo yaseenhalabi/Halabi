@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import FontLoader from '../utils/FontLoader';
-import ProviderAndPersistor from '../redux/ProviderAndPersistor';
+import ProviderAndPersistor from '../components/ProviderAndPersistor';
 import { SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { Slot } from 'expo-router'
 export default function Root() {
