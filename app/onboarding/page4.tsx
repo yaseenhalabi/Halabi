@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import CommonText from '../../components/CommonText';
-import manageGroups from '../../assets/images/manage_groups.png';
+import manageGroups from '../../assets/images/manage-groups.png';
 import ContainedImage from '../../components/ContainedImage';
 export default function Page4() {
     return (

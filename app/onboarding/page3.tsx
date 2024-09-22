@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import CommonText from '../../components/CommonText';
-import tagContacts from '../../assets/images/tag_contacts.png';
+import tagContacts from '../../assets/images/tag-contacts.png';
 import ContainedImage from '../../components/ContainedImage';
 export default function Page2() {
     return (

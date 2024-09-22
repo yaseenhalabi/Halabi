@@ -3,7 +3,7 @@ import { Slot, Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { finishOnboarding, setPage } from '../../redux/onboardingSlice';
-import forwardArrow from '../../assets/images/forward_arrow_icon_white.png';
+import forwardArrow from '../../assets/images/forward-arrow-icon-white.png';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function OnboardingLayout() {
@@ -31,13 +31,28 @@ export default function OnboardingLayout() {
     return (
         <View style={styles.container}>
             <Slot />
-            <NextPageFooter
-                onNextPage={onNextPage}
-                onSkip={endOnboarding}
-            >
-            </NextPageFooter>
+            <View>
+                <ProgressDots pageNumber={pageNumber} />
+                <NextPageFooter onNextPage={onNextPage} onSkip={endOnboarding} />
+            </View>
         </View>
     );
+}
+
+
+// progress dots above footer
+type ProgressDotsProps = {
+    pageNumber: number;
+}
+function ProgressDots({pageNumber} : ProgressDotsProps) {
+    return (
+        <View style={styles.progressDots}>
+            <View style={pageNumber == 1 ? styles.filledDot : styles.emptyDot}/>
+            <View style={pageNumber == 2 ? styles.filledDot : styles.emptyDot}/>
+            <View style={pageNumber == 3 ? styles.filledDot : styles.emptyDot}/>
+            <View style={pageNumber == 4 ? styles.filledDot : styles.emptyDot}/>
+        </View>
+    )
 }
 
 // Footer at the bottom of the screen
@@ -77,6 +92,29 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 20
+    },
+
+    progressDots: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    emptyDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 10,
+        backgroundColor: 'gray',
+        margin: 5,
+    },
+
+    filledDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        margin: 5,
     },
 
     footer: {

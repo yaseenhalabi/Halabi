@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import CommonText from '../../components/CommonText';
-import valuableInformation from '../../assets/images/valuable_info.png';
+import valuableInformation from '../../assets/images/valuable-info.png';
 import ContainedImage from '../../components/ContainedImage';
 export default function Page2() {
     return (

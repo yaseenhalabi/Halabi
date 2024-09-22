@@ -9,10 +9,11 @@ const themeSlice = createSlice({
             {
                 name: 'dark',
                 background: '#000000',
+                button: '#202020',
                 text: {
                     full: '#ffffff',
                     semi: '#A6A6A6',
-                    muted: '5B5B5B',
+                    muted: '#5B5B5B',
                 },
             },
             {
