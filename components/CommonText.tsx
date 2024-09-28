@@ -1,16 +1,17 @@
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, StyleProp, TextStyle } from 'react-native';
 import getTheme from '../utils/GetTheme';
 type Size = 'xsmall' | 'small' | 'medium' | 'large';
-type Style = 'xbold' | 'bold' | 'light' | 'medium' | 'regular' | 'semiBold' | 'thin' | 'xlight';
+type Weight = 'xbold' | 'bold' | 'light' | 'medium' | 'regular' | 'semiBold' | 'thin' | 'xlight';
 type Color = 'full' | 'semi' | 'muted';
 type CustomTextProps = {
     children: React.ReactNode;
     size?: Size;
-    style?: Style;
+    weight?: Weight;
     color?: Color
+    style?: StyleProp<TextStyle>;
 };
 
-export default function CommonText({ children, size, style, color} : CustomTextProps) {
+export default function CommonText({ children, size, weight, color, style} : CustomTextProps) {
     const theme = getTheme();
     let fontSize: number = 14;
     switch (size) {
@@ -31,7 +32,7 @@ export default function CommonText({ children, size, style, color} : CustomTextP
             break;
     }
     let fontStyle: string = 'Poppins-Regular';
-    switch (style) {
+    switch (weight) {
         case 'xbold':
             fontStyle = 'Poppins-Black';
             break;
@@ -75,7 +76,7 @@ export default function CommonText({ children, size, style, color} : CustomTextP
             fontColor = theme.text.full;
             break;
     }
-    return <Text style={{...styles.text, fontFamily: fontStyle, fontSize: fontSize, color: fontColor}}>{children}</Text>;
+    return <Text style={{...styles.text, fontFamily: fontStyle, fontSize: fontSize, color: fontColor, ...style as object}}>{children}</Text>;
 }
 
 

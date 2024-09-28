@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/userSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import getTheme from '../utils/GetTheme';
 import CommonText from '../components/CommonText';
 import googleIcon from '../assets/images/google-icon.png';
@@ -13,7 +14,7 @@ export default function SignIn() {
         router.navigate('/');
     }
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Text onPress={() => signIn()} style={styles.title}>
                 Sign Up
             </Text>
@@ -21,8 +22,8 @@ export default function SignIn() {
             <AuthButton text='Google' icon={googleIcon} onPress={() => signIn()} />
             <LineWordLine word='or'/>
             <AuthButton text='Continue Without an Account*' onPress={() => signIn()} />
-            <CommonText size='medium' style='regular' color='semi'>*Warning: you’re data will not be backed up in the cloud (you can always change this later in settings)</CommonText>
-        </View>
+            <CommonText size='medium' weight='regular' color='semi'>*Warning: you’re data will not be backed up in the cloud (you can always change this later in settings)</CommonText>
+        </SafeAreaView>
     );
 }
 
@@ -31,7 +32,7 @@ type LineWordLineProps = {
 }
 function LineWordLine({ word } : LineWordLineProps) {
     const theme = getTheme();
-    console.log(theme);
+    
     return (
         <View style={{ flexDirection: 'row' }}>
             <View style={{...styles.line, backgroundColor: theme.text.semi}} />
@@ -53,7 +54,7 @@ function AuthButton({ text, icon, onPress }: AuthButtonProps) {
         <TouchableOpacity onPress={onPress} style={{width: '100%'}}>
             <View style={{...styles.authButton, backgroundColor: theme.button}}>
                 {icon && <Image source={icon} style={styles.authButtonIcon}/>}
-                <CommonText size='medium' style='medium' >{text}</CommonText>
+                <CommonText size='medium' weight='regular' color='full'>{text}</CommonText>
             </View>
         </TouchableOpacity>
     )
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 20,
         gap: 15,
+        backgroundColor: 'black',
     },
 
     title: {

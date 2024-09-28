@@ -10,9 +10,7 @@ export default function Root() {
   return (
     <ProviderAndPersistor>
       <SafeAreaProvider>
-        <SafeAreaView style={styles.container}>
-            <Slot/>
-        </SafeAreaView>
+          <Slot/>
       </SafeAreaProvider>
     </ProviderAndPersistor>
   );

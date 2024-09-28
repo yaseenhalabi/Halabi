@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { finishOnboarding, setPage } from '../../redux/onboardingSlice';
 import forwardArrow from '../../assets/images/forward-arrow-icon-white.png';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 export default function OnboardingLayout() {
     const dispatch = useDispatch();
     const isOnboarding = useSelector((state: any) => state.onboarding.isOnboarding);
     const pageNumber = useSelector((state: any) => state.onboarding.page);
-
+    
     const endOnboarding = () => {
         dispatch(finishOnboarding({}));
     }
@@ -29,13 +29,13 @@ export default function OnboardingLayout() {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Slot />
             <View>
                 <ProgressDots pageNumber={pageNumber} />
                 <NextPageFooter onNextPage={onNextPage} onSkip={endOnboarding} />
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
