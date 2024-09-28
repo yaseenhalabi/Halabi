@@ -1,14 +1,3 @@
-import { View, Text, StyleSheet } from 'react-native';
-import CommonText from '../../../components/CommonText';
-import PageContainer from '../../../components/PageContainer';
-export default function MyContacts() {
-  return (
-    <PageContainer>
-      <CommonText>CONTACTS</CommonText>
-    </PageContainer>
-  );
+export default function Index() {
+  return null;
 }
-
-const styles = StyleSheet.create({
-
-});

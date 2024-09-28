@@ -7,7 +7,7 @@ type HeaderIconProps = {
 }
 export default function HeaderIcon({ size, source, onPress }: HeaderIconProps) {
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} hitSlop={20}>
             <Image source={source} style={{width: size, height: size}} />
         </TouchableOpacity>
     )

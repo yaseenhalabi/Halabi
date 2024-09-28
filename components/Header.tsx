@@ -16,11 +16,14 @@ export default function Header({ navigation }: HeaderProps) {
     const route = useRoute();
     let currentRouteName = '';
     switch (route.name) {
-        case 'index':
+        case 'my-contacts':
             currentRouteName = 'My Contacts';
             break;
         case 'my-tags':
             currentRouteName = 'My Tags';
+            break;
+        default:
+            currentRouteName = '';
             break;
     }
     const onPress = () => {
