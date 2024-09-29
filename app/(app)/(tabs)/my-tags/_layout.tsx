@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import PageContainer from '../../../components/PageContainer';
+import PageContainer from '../../../../components/PageContainer';
 export default function MyTags() {
   return (
     <PageContainer>

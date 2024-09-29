@@ -15,7 +15,7 @@ export default function TabBar({ state, descriptors, navigation }: TabBarProps) 
             <LinearGradient colors={['#15616099', '#8B56D199']} end={{x: 1, y: 0}} style={styles.tabBar}>
                 {state.routes.map((route: any, index: number) => {
                     const { options } = descriptors[route.key];
-                    const icon = options.tabBarIcon({focused: state.index === index});
+                    const icon = options.tabBarIcon && options.tabBarIcon({focused: state.index === index});
                     const isFocused = state.index === index;
                     const onPress = () => {
                         const event = navigation.emit({

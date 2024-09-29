@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native';
-import CommonText from '../../../components/CommonText';
-import PageContainer from '../../../components/PageContainer';
+import CommonText from '../../../../components/CommonText';
+import PageContainer from '../../../../components/PageContainer';
 export default function MyContacts() {
 
   return (
     <PageContainer>
-      <CommonText>CONTACTS</CommonText>
+      <CommonText>A SINGLE CONTACT</CommonText>
     </PageContainer>
   );
 }

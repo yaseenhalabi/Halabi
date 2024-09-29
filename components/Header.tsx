@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { usePathname } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommonText from './CommonText';
 import getTheme from '../utils/GetTheme';
@@ -7,13 +8,16 @@ import HeaderIcon from './HeaderIcon';
 import settingsIcon from '../assets/images/settings-icon-white.png';
 import uploadIcon from '../assets/images/upload-icon-white.png';
 import profilePicIcon from '../assets/images/profile-pic-icon-white.png';
-
+import backArrowIcon from '../assets/images/back-arrow-icon-white.png';
 type HeaderProps = {
     navigation: any;
 }
 export default function Header({ navigation }: HeaderProps) {
     const theme = getTheme();
     const route = useRoute();
+    const pathname = usePathname().split('/').pop();
+    const showBackArrow = pathname == 'contact' || pathname == 'tag';
+
     let currentRouteName = '';
     switch (route.name) {
         case 'my-contacts':
@@ -26,20 +30,32 @@ export default function Header({ navigation }: HeaderProps) {
             currentRouteName = '';
             break;
     }
+
     const onPress = () => {
         console.log('pressed');
     }
+    const onPressSettings = () => {
+        navigation.navigate('settings');
+    }
+    const onPressBack = () => {
+        navigation.goBack();
+    }
 
     return (
-
         <>
         <SafeAreaView style={{backgroundColor: theme.background}}/>
         <View style={{...styles.container, backgroundColor: theme.background}}>
             <HeaderIcon size={25} source={profilePicIcon} onPress={onPress} />
-            <CommonText style={styles.headerText}>{currentRouteName}</CommonText>
+            <View style={styles.headerTextContainer}>
+                <CommonText>{currentRouteName}</CommonText>
+            </View>
             <View style={styles.iconsContainer}>
                 <HeaderIcon size={20} source={uploadIcon} onPress={onPress} />
-                <HeaderIcon size={20} source={settingsIcon} onPress={onPress} />
+                {
+                    showBackArrow ? 
+                    <HeaderIcon size={20} source={backArrowIcon} onPress={onPressBack} /> :
+                    <HeaderIcon size={20} source={settingsIcon} onPress={onPressSettings} />
+                }
             </View>
         </View>
         </>
@@ -60,11 +76,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    headerText: {
-        position: 'absolute',
-        left: '25%',
-        right: '25%',
-        bottom: '70%',
-        textAlign: 'center',
+    headerTextContainer: {
+        ...StyleSheet.absoluteFillObject,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 })

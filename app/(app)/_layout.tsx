@@ -12,11 +12,16 @@ export default function AppLayout() {
     //     return <Redirect href="/sign-in" />;
     // }
 
+    const stackOptions = {
+        headerShown: false,
+        fullScreenGestureEnabled: true,
+    }
     return (
       <>
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack screenOptions={stackOptions}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="settings" />
         </Stack>
       </>
       );
