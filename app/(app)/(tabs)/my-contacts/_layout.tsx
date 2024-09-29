@@ -15,7 +15,3 @@ export default function MyContacts() {
     </Stack>
   );
 }
-
-const styles = StyleSheet.create({
-
-});

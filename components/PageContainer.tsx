@@ -1,16 +1,19 @@
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import getTheme from '../utils/GetTheme';
+import { Keyboard } from 'react-native';
 type PageContainerProps = {
     children: React.ReactNode;
+    style?: any;
 }
 
-export default function PageContainer({ children }: PageContainerProps) {
+export default function PageContainer({ children, style }: PageContainerProps) {
     const theme = getTheme();
     return (
-        <SafeAreaView style={{...styles.container, backgroundColor: theme.background}}>
-            { children }
-        </SafeAreaView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={{...styles.container, backgroundColor: theme.background, ...style}}>
+                { children }
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -19,6 +22,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingHorizontal: '2%',
   },
 
 });

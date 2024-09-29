@@ -56,8 +56,8 @@ export default function Header({ navigation }: HeaderProps) {
                     <HeaderIcon size={20} source={backArrowIcon} onPress={onPressBack} /> :
                     <HeaderIcon size={20} source={settingsIcon} onPress={onPressSettings} />
                 }
+                </View>
             </View>
-        </View>
         </>
     )
 }
@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
         top: 0,
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 15,
+        paddingTop: 15,
+        paddingBottom: 15,
         paddingHorizontal: '2%',
         flexDirection: 'row',
     },
