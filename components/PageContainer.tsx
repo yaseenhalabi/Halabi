@@ -1,6 +1,7 @@
 import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import getTheme from '../utils/GetTheme';
 import { Keyboard } from 'react-native';
+import { useEffect, useState } from 'react';
 type PageContainerProps = {
     children: React.ReactNode;
     style?: any;
@@ -8,8 +9,15 @@ type PageContainerProps = {
 
 export default function PageContainer({ children, style }: PageContainerProps) {
     const theme = getTheme();
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
+    Keyboard.addListener('keyboardDidShow', () => {
+        setKeyboardVisible(true);
+    });
+    Keyboard.addListener('keyboardWillHide', () => {
+        setKeyboardVisible(false);
+    });
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} disabled={Keyboard.isVisible()}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} disabled={!keyboardVisible}>
             <View style={{...styles.container, backgroundColor: theme.background, ...style}}>
                 { children }
             </View>

@@ -12,6 +12,3 @@ export default function HeaderIcon({ size, source, onPress }: HeaderIconProps) {
         </TouchableOpacity>
     )
 }
-
-const styles = StyleSheet.create({
-})

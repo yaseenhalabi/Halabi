@@ -9,7 +9,7 @@ type ContactItemTagProps = {
 export default function ContactItemTag({ tag }: ContactItemTagProps) {
     return (
         <View style={styles.container}>
-            <CommonText size="xsmall">{tag.name}</CommonText>
+            <CommonText weight="regular" size="xsmall">{tag.name}</CommonText>
         </View>
     );
 }
