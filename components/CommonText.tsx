@@ -16,7 +16,7 @@ export default function CommonText({ children, size, weight, color, style} : Cus
     let fontSize: number = 14;
     switch (size) {
         case 'xsmall':
-            fontSize = 8;
+            fontSize = 9;
             break;
         case 'small':
             fontSize = 11;
