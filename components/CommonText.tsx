@@ -13,7 +13,7 @@ type CustomTextProps = {
 
 export default function CommonText({ children, size, weight, color, style} : CustomTextProps) {
     const theme = getTheme();
-    let fontSize: number = 14;
+    let fontSize: number = 0;
     switch (size) {
         case 'xsmall':
             fontSize = 9;
@@ -22,13 +22,13 @@ export default function CommonText({ children, size, weight, color, style} : Cus
             fontSize = 11;
             break;
         case 'medium':
-            fontSize = 14;
+            fontSize = 16;
             break;
         case 'large':
             fontSize = 20;
             break;
         default:
-            fontSize = 14;
+            fontSize = 16;
             break;
     }
     let fontStyle: string = 'Poppins-Regular';
@@ -76,14 +76,17 @@ export default function CommonText({ children, size, weight, color, style} : Cus
             fontColor = theme.text.full;
             break;
     }
-    return <Text style={{...styles.text, fontFamily: fontStyle, fontSize: fontSize, color: fontColor, ...style as object}}>{children}</Text>;
+    return (
+        <Text 
+            style={{
+                fontFamily: fontStyle,
+                fontSize: fontSize,
+                color: fontColor,
+                ...style as object
+            }}
+        >
+            {children}
+        </Text>
+    );
 }
 
-
-const styles = StyleSheet.create({
-    text: {
-        color: '#ffffff',
-        fontFamily: 'Poppins-Regular',
-        fontSize: 14,
-    },
-})

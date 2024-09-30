@@ -9,7 +9,7 @@ type PageContainerProps = {
 export default function PageContainer({ children, style }: PageContainerProps) {
     const theme = getTheme();
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false} disabled={Keyboard.isVisible()}>
             <View style={{...styles.container, backgroundColor: theme.background, ...style}}>
                 { children }
             </View>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: '2%',
+    paddingHorizontal: 20,
   },
 
 });

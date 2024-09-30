@@ -9,6 +9,8 @@ import editIcon from '../../../../assets/images/edit-icon-white.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
 import EditButton from '../../../../components/EditButton';
 import EditButtons from '../../../../components/EditButtons';
+import ListOfContacts from '../../../../components/ListOfContacts';
+import { testContacts } from '../../../../utils/testdata';
 export default function MyContacts() {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
@@ -28,6 +30,7 @@ export default function MyContacts() {
         editButton2={<EditButton text="Edit Contacts" onPress={placeholderfunction} source={editIcon}/>}
         editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
       />
+      <ListOfContacts contacts={testContacts} />
     </PageContainer>
   );
 }

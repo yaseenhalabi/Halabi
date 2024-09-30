@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 15,
         paddingBottom: 15,
-        paddingHorizontal: '2%',
+        paddingHorizontal: 20,
         flexDirection: 'row',
     },
     iconsContainer: {
