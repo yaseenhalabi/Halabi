@@ -11,12 +11,8 @@ export const contactsToString = (contactsWithTag: Contact[]) => {
     return contactsWithTagString;
 }
 
-<<<<<<< HEAD
-export const getFilteredTags = (tags: Tag[], contacts: Contact[], searchText?: string) => { let filteredTags = tags;
-=======
 export const getFilteredTags = (tags: Tag[], contacts: Contact[], searchText?: string) => { 
     let filteredTags = tags;
->>>>>>> 1f3f048 (feat: added list of tags)
     if (searchText) {
         filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()));
     }
