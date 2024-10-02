@@ -1,13 +1,13 @@
 export type Contact = {
     id: string;
-    tags: Tag[];
+    tags: string[]; // Changed from Tag[] to string[]
     name: string;
-    notes: string;
-    phone: string;
-    email: string;
-    address: string;
-    birthday: string;
-    socialMedia: SocialMedia[];
+    notes?: string;
+    phone?: string;
+    email?: string;
+    address?: string;
+    birthday?: string;
+    socialMedia?: SocialMedia[];
     photos: Photo[];
 }
 
@@ -16,13 +16,14 @@ export type Tag = {
     name: string;
 }
 
-export type SocialMedia = {
+export type Photo = {
     id: string;
-    name: string;
     url: string;
 }
 
-export type Photo = {
+export type SocialMedia = {
+    title: string;
     id: string;
+    type: 'facebook' | 'instagram' | 'twitter' | 'linkedin' | 'snapchat' | 'tiktok' | 'youtube' | 'other';
     url: string;
 }

@@ -2,6 +2,7 @@ import { View, Text, FlatList, StyleSheet } from "react-native";
 import ContactItem from "./ContactItem";
 import { Contact } from "../utils/types";
 import getTheme from "../utils/GetTheme";
+
 type ListOfContactsProps = {
     contacts: Contact[];
 }

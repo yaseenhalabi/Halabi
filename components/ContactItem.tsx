@@ -3,13 +3,16 @@ import CommonText from "./CommonText";
 import { LinearGradient } from "expo-linear-gradient";
 import { Contact } from "../utils/types";
 import ContactItemTag from "./ContactItemTag";
+import { testTags } from "../utils/testdata";
+import { Tag } from "../utils/types";
 type ContactItemProps = {
     contact: Contact;
     onPress: () => void;
 }
 
 export default function ContactItem({ contact, onPress }: ContactItemProps) {
-    const tags = contact.tags.map((tag) => <ContactItemTag key={tag.id} tag={tag} />);
+    const tags: Tag[] = testTags.filter((tag) => contact.tags.includes(tag.id));
+    const tagComponents = tags.map((tag) => <ContactItemTag key={tag.id} name={tag.name} />);
     return (
         <TouchableOpacity onPress={onPress}>
             <LinearGradient
@@ -20,7 +23,7 @@ export default function ContactItem({ contact, onPress }: ContactItemProps) {
         >
             <CommonText size="medium">{contact.name}</CommonText>
             <View style={styles.tagsContainer}>
-                {tags}
+                {tagComponents}
             </View>
             </LinearGradient>
         </TouchableOpacity>
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        height: 48,
+        height: 50,
         flexDirection: 'column',
         justifyContent: 'center',
         paddingHorizontal: 5,

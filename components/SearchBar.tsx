@@ -12,7 +12,6 @@ type SearchBarProps = {
 export default function SearchBar({ onChangeText, value }: SearchBarProps) {
     const theme = GetTheme();
     const inputRef = useRef<TextInput | null>(null);
-    const [isFocused, setIsFocused] = useState(false);
     const clearInput = () => {
         inputRef.current?.clear();
         onChangeText('');
@@ -22,37 +21,35 @@ export default function SearchBar({ onChangeText, value }: SearchBarProps) {
     return (
         <View style={styles.container}>
             <LinearGradient 
-            colors={['#1D142A', '#2F1B1E']}
-            end={{ x: 1, y: 0 }}
-            style={styles.insideContainer}
-        >
-            <Image 
-                source={searchIcon}
-                style={styles.icon}
-            />
-            <TextInput
-                style={[styles.input, Platform.OS === 'android' ? styles.androidInput : null]}
-                placeholder="Search"
-                placeholderTextColor={theme.text.semi}
-                onChangeText={onChangeText}
-                keyboardAppearance='dark'
-                ref={inputRef}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-            />
-            <CancelSearch clearInput={clearInput} isFocused={isFocused} hasText={hasText} />
+                colors={['#1D142A', '#2F1B1E']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1.3, y: 1.5 }}
+                style={styles.insideContainer}
+            >
+                <Image 
+                    source={searchIcon}
+                    style={styles.icon}
+                />
+                <TextInput
+                    style={[styles.input, Platform.OS === 'android' ? styles.androidInput : null]}
+                    placeholder="Search"
+                    placeholderTextColor={theme.text.semi}
+                    onChangeText={onChangeText}
+                    keyboardAppearance='dark'
+                    ref={inputRef}
+                />
+                <CancelSearch clearInput={clearInput} hasText={hasText} />
             </LinearGradient>
         </View>
     );
 }
 type CancelSearchProps = {
     clearInput: () => void;
-    isFocused: boolean;
     hasText: boolean;
 }
 
-function CancelSearch({ clearInput, isFocused, hasText }: CancelSearchProps) {
-    if (!isFocused || !hasText) return null;
+function CancelSearch({ clearInput, hasText }: CancelSearchProps) {
+    if (!hasText) return null;
     return (
         <TouchableOpacity onPress={clearInput} hitSlop={25}>
             <Image

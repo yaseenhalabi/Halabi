@@ -1,15 +1,14 @@
 import { View, Text, StyleSheet } from "react-native";
-import { Tag } from "../utils/types";   
 import CommonText from "./CommonText";
 
 type ContactItemTagProps = {
-    tag: Tag;
+    name: string;
 }
 
-export default function ContactItemTag({ tag }: ContactItemTagProps) {
+export default function ContactItemTag({ name }: ContactItemTagProps) {
     return (
         <View style={styles.container}>
-            <CommonText weight="regular" size="xsmall">{tag.name}</CommonText>
+            <CommonText weight="regular" size="xsmall">{name}</CommonText>
         </View>
     );
 }
