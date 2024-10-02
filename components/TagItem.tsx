@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, Platform} from 'react-native';
 import { Tag, Contact } from '../utils/types';
 import { LinearGradient } from 'expo-linear-gradient';
 import getTheme from '../utils/GetTheme';
@@ -27,7 +27,7 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
                     <CommonText weight='regular' size='xsmall' color='semi'>{contactsToString(contactsWithTag)}</CommonText>
                 </View>
                 <View style={styles.rightContainer}>
-                    <CommonText weight='regular' size='medium'>{contactsWithTag.length}</CommonText>
+                    <CommonText weight='regular' size='medium' style={Platform.OS === 'android' && {top: 2}}>{contactsWithTag.length}</CommonText>
                     <Image source={personIcon} style={styles.icon} />
                 </View>
             </LinearGradient>
@@ -56,10 +56,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         gap: 2,
-        opacity: .6
+        opacity: .6,
     },
     icon: {
         height: 12,
         width: 12,
+        alignSelf: 'center'
     },
 });
