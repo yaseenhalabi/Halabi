@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { usePathname } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommonText from './CommonText';
@@ -9,27 +8,34 @@ import settingsIcon from '../assets/images/settings-icon-white.png';
 import uploadIcon from '../assets/images/upload-icon-white.png';
 import profilePicIcon from '../assets/images/profile-pic-icon-white.png';
 import backArrowIcon from '../assets/images/back-arrow-icon-white.png';
+import { useEffect, useState } from 'react';
 type HeaderProps = {
     navigation: any;
+    route: any;
 }
-export default function Header({ navigation }: HeaderProps) {
+export default function Header({navigation, route}: HeaderProps) {
     const theme = getTheme();
-    const route = useRoute();
-    const pathname = usePathname().split('/').pop();
-    const showBackArrow = pathname == 'contact' || pathname == 'tag';
-
-    let currentRouteName = '';
-    switch (route.name) {
-        case 'my-contacts':
-            currentRouteName = 'My Contacts';
-            break;
-        case 'my-tags':
-            currentRouteName = 'My Tags';
-            break;
-        default:
-            currentRouteName = '';
-            break;
-    }
+    const pathname = usePathname();
+    const [showBackArrow, setShowBackArrow] = useState(false);
+    const [currentRouteName, setCurrentRouteName] = useState('My Contacts');
+    useEffect(() => {
+        switch (pathname) {
+            case '/my-contacts':
+                setCurrentRouteName('My Contacts');
+                break;
+            case '/my-tags':
+                setCurrentRouteName('My Tags');
+                break;
+            case '/settings':
+                setCurrentRouteName('Settings');
+                break;
+            default:
+                setCurrentRouteName('My Contacts');
+                break;
+        }
+        setShowBackArrow(pathname == '/my-contacts/profile' || pathname == '/my-tags/tag' || pathname == '/settings');
+    }, [route]);
+    
 
     const onPress = () => {
         console.log('pressed');

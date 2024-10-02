@@ -1,7 +1,5 @@
-import { View, Text, Button, StyleSheet } from 'react-native';
-import CommonText from '../../../../components/CommonText';
+import { StyleSheet } from 'react-native';
 import PageContainer from '../../../../components/PageContainer';
-import { useNavigation } from 'expo-router';
 import SearchBar from '../../../../components/SearchBar';
 import { useState } from 'react';
 import addIcon from '../../../../assets/images/add-icon-white.png';
@@ -14,7 +12,6 @@ import { getFilteredContacts } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
 
 export default function MyContacts() {
-  const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
   const contacts = useSelector((state: any) => state.contacts);
   const filteredContacts = getFilteredContacts(contacts, searchText);
@@ -33,7 +30,7 @@ export default function MyContacts() {
         editButton2={<EditButton text="Edit Contacts" onPress={placeholderfunction} source={editIcon}/>}
         editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
       />
-      <ListOfContacts contacts={filteredContacts} />
+      <ListOfContacts contacts={filteredContacts}/>
     </PageContainer>
   );
 }

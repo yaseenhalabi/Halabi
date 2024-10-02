@@ -13,7 +13,7 @@ export default function ListOfContacts({ contacts }: ListOfContactsProps) {
         <FlatList
             data={contacts}
             style={{ ...styles.container, backgroundColor: theme.background }}
-            renderItem={({ item }) => <ContactItem contact={item} onPress={() => {}} />}
+            renderItem={({ item }) => <ContactItem contact={item} />}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ gap: 5, flexGrow: 1 }}
         />

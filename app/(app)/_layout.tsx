@@ -1,6 +1,7 @@
 import { View, Text, StatusBar } from 'react-native';
 import { Redirect, Slot, Stack } from 'expo-router';
 import { useSelector } from 'react-redux';
+import Header from '../../components/Header';
 export default function AppLayout() {
     const onboarding: any = useSelector((state: any) => state.onboarding);
     const signedIn: boolean  = useSelector((state: any) => state.user.signedIn);
@@ -12,14 +13,14 @@ export default function AppLayout() {
     //     return <Redirect href="/sign-in" />;
     // }
 
-    const stackOptions = {
-        headerShown: false,
+    const screenOptions = {
         fullScreenGestureEnabled: true,
+        header: ({navigation, route}: any) => <Header navigation={navigation} route={route} />,
     }
     return (
       <>
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
-        <Stack screenOptions={stackOptions}>
+        <Stack screenOptions={screenOptions}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="settings" />
         </Stack>

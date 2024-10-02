@@ -36,3 +36,7 @@ export const getFilteredContacts = (contacts: Contact[], searchText?: string) =>
 export const getContactsWithTag = (tag: Tag, contacts: Contact[]) => {
     return contacts.filter((contact) => contact.tags.includes(tag.id));
 }
+
+export const getContactById = (id: string, contacts: Contact[]) => {
+    return contacts.find((contact) => contact.id === id);
+}

@@ -12,7 +12,7 @@ export default function TabLayout() {
         <Tabs 
             tabBar={props => <TabBar {...props}/>} 
             screenOptions={{
-                header: ({ navigation }) => <Header navigation={navigation} />,
+                headerShown: false
             }}
         >
             <Tabs.Screen redirect name="index" />
