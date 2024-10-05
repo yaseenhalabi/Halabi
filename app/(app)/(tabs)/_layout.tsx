@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
-import TabBar from '../../../components/TabBar';
-import TabBarIcon from '../../../components/TabBarIcon';
+import TabBar from '../../../components/bottom tab navigator/TabBar';
+import TabBarIcon from '../../../components/bottom tab navigator/TabBarIcon';
 import peopleIcon from '../../../assets/images/people-icon-white.png';
 import peopleIconBlur from '../../../assets/images/people-icon-white-blur.png';
 import tagsIcon from '../../../assets/images/tags-icon-white.png'

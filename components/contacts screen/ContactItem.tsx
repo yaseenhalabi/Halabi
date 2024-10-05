@@ -1,9 +1,9 @@
 import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native";
-import CommonText from "./CommonText";
+import CommonText from "../CommonText";
 import { LinearGradient } from "expo-linear-gradient";
-import { Contact } from "../utils/types";
+import { Contact } from "../../utils/types";
 import ContactItemTag from "./ContactItemTag";
-import { Tag } from "../utils/types";
+import { Tag } from "../../utils/types";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
 type ContactItemProps = {

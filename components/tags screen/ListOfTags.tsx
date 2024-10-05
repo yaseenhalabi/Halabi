@@ -1,8 +1,8 @@
 import { Text, FlatList, StyleSheet } from "react-native";
-import { Tag } from "../utils/types";
-import getTheme from "../utils/GetTheme";
+import { Tag } from "../../utils/types";
+import getTheme from "../../utils/GetTheme";
 import TagItem from "./TagItem";
-import { getContactsWithTag, getFilteredTags } from "../utils/helpers";
+import { getContactsWithTag, getFilteredTags } from "../../utils/helpers";
 import { useSelector } from "react-redux";
 
 type ListOfTagsProps = {

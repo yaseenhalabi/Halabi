@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import CommonText from "./CommonText";
+import CommonText from "../CommonText";
 
 type ContactItemTagProps = {
     name: string;

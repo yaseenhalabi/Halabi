@@ -1,10 +1,10 @@
 import { View, TouchableOpacity, StyleSheet, Image, Platform} from 'react-native';
-import { Tag, Contact } from '../utils/types';
+import { Tag, Contact } from '../../utils/types';
 import { LinearGradient } from 'expo-linear-gradient';
-import getTheme from '../utils/GetTheme';
-import personIcon from '../assets/images/person-icon-white.png';
-import CommonText from './CommonText';
-import { contactsToString } from '../utils/helpers';
+import getTheme from '../../utils/GetTheme';
+import personIcon from '../../assets/images/person-icon-white.png';
+import CommonText from '../CommonText';
+import { contactsToString } from '../../utils/helpers';
 type TagItemProps = {
     tag: Tag;
     contactsWithTag: Contact[];

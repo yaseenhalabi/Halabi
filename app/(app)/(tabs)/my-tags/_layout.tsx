@@ -1,13 +1,13 @@
 import { Stack } from 'expo-router';
 
 export default function MyTags() {
-  const stackOptions = {
+  const screenOptions = {
     headerShown: false,
     fullScreenGestureEnabled: true,
   }
 
   return (
-    <Stack screenOptions={stackOptions}>
+    <Stack screenOptions={screenOptions}>
       <Stack.Screen name="index"/>
     </Stack>
   );

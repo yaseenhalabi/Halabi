@@ -7,7 +7,7 @@ import editIcon from '../../../../assets/images/edit-icon-white.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
 import EditButton from '../../../../components/EditButton';
 import EditButtons from '../../../../components/EditButtons';
-import ListOfTags from '../../../../components/ListOfTags';
+import ListOfTags from '../../../../components/tags screen/ListOfTags';
 import { useSelector } from 'react-redux';
 import { getFilteredTags } from '../../../../utils/helpers';
 export default function MyTags() {

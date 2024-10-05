@@ -8,12 +8,14 @@ import NameInput from '../../../../components/profile/NameInput';
 import { useDispatch } from 'react-redux';
 import { updateContact } from '../../../../redux/contactsSlice';
 import ProfileTags from '../../../../components/profile/ProfileTags';
+import { Contact } from '../../../../utils/types';
+
 export default function MyContacts() {
   const dispatch = useDispatch();
-
   const { id } : { id: string } = useLocalSearchParams();
-  const contacts = useSelector((state: any) => state.contacts);
-  const contact = getContactById(id, contacts);
+  const contacts: Contact[] = useSelector((state: any) => state.contacts);
+  const contact: Contact | undefined = getContactById(id, contacts);
+
   if (!contact) {
     return <PageContainer><CommonText>Contact not found</CommonText></PageContainer>
   }
