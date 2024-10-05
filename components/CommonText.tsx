@@ -7,13 +7,14 @@ type Color = 'full' | 'semi' | 'muted';
 
 type CustomTextProps = {
     children: React.ReactNode;
+    numberOfLines?: number;
     size?: Size;
     weight?: Weight;
     color?: Color;
     style?: StyleProp<TextStyle>; // Accepts a style prop for customization
 };
 
-export default function CommonText({ children, size = 'medium', weight = 'regular', color = 'full', style }: CustomTextProps) {
+export default function CommonText({ children, size = 'medium', weight = 'regular', color = 'full', style, numberOfLines }: CustomTextProps) {
     const theme = getTheme();
 
     // Set font size based on the size prop
@@ -23,7 +24,10 @@ export default function CommonText({ children, size = 'medium', weight = 'regula
             fontSize = 9;
             break;
         case 'small':
-            fontSize = 11;
+            fontSize = 12;
+            break;
+        case 'medium':
+            fontSize = 16;
             break;
         case 'large':
             fontSize = 20;
@@ -79,6 +83,7 @@ export default function CommonText({ children, size = 'medium', weight = 'regula
     // Use StyleSheet.flatten to merge styles
     return (
         <Text 
+            numberOfLines={numberOfLines}
             style={StyleSheet.flatten([
                 { 
                     fontFamily: fontStyle, 

@@ -23,7 +23,7 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
                 style={styles.container}
             >
                 <View style={styles.leftContainer}>
-                    <CommonText>{tag.name}</CommonText>
+                    <CommonText numberOfLines={1}>{tag.name}</CommonText>
                     <CommonText weight='regular' size='xsmall' color='semi'>{contactsToString(contactsWithTag)}</CommonText>
                 </View>
                 <View style={styles.rightContainer}>
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
+        width: '90%',
     },
     rightContainer: {
         flexDirection: 'row',

@@ -40,5 +40,5 @@ export default function MyTags() {
 const styles = StyleSheet.create({
   container: {
     gap: 5,
-  },
+  }
 });

@@ -40,3 +40,7 @@ export const getContactsWithTag = (tag: Tag, contacts: Contact[]) => {
 export const getContactById = (id: string, contacts: Contact[]) => {
     return contacts.find((contact) => contact.id === id);
 }
+
+export const getTagById = (id: string, tags: Tag[]) => {
+    return tags.find((tag) => tag.id === id);
+}

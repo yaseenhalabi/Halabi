@@ -2,13 +2,15 @@ import { Text, FlatList, StyleSheet } from "react-native";
 import { Tag } from "../utils/types";
 import getTheme from "../utils/GetTheme";
 import TagItem from "./TagItem";
-import { testContacts } from "../utils/testdata";
 import { getContactsWithTag, getFilteredTags } from "../utils/helpers";
+import { useSelector } from "react-redux";
+
 type ListOfTagsProps = {
     tags: Tag[]
 }
 
 export default function ListOfTags({ tags }: ListOfTagsProps) {
+    const contacts = useSelector((state: any) => state.contacts);
     const theme = getTheme();
     return (
         <FlatList
@@ -17,12 +19,13 @@ export default function ListOfTags({ tags }: ListOfTagsProps) {
             renderItem={({ item }) => 
                 <TagItem 
                     tag={item} 
-                    contactsWithTag={getContactsWithTag(item, testContacts)} 
+                    contactsWithTag={getContactsWithTag(item, contacts)} 
                     onPress={() => {}} 
                 />
             }
             keyExtractor={(item) => item.id}
-            contentContainerStyle={{ gap: 5, flexGrow: 1 }}
+            contentContainerStyle={{ gap: 5, flexGrow: 1, height: '110%' }}
+            showsVerticalScrollIndicator={false}
         />
     );
 }
