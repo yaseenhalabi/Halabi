@@ -1,20 +1,22 @@
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native";
 import CommonText from "./CommonText";
 import { LinearGradient } from "expo-linear-gradient";
 import { Contact } from "../utils/types";
 import ContactItemTag from "./ContactItemTag";
-import { testTags } from "../utils/testdata";
 import { Tag } from "../utils/types";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 type ContactItemProps = {
     contact: Contact;
 }
 
 export default function ContactItem({ contact }: ContactItemProps) {
-    const tags: Tag[] = testTags.filter((tag) => contact.tags.includes(tag.id));
-    const tagComponents = tags.map((tag) => <ContactItemTag key={tag.id} name={tag.name} />);
+    const tags: Tag[] = useSelector((state: any) => state.tags);
+    const contactTags: Tag[] = tags.filter((tag: Tag) => contact.tags.includes(tag.id));
+    const tagComponents: React.ReactNode[] = contactTags.map((tag: Tag) => <ContactItemTag key={tag.id} name={tag.name} />);
     const onPress = () => {
         router.push({ pathname: "/my-contacts/profile", params: { id: contact.id } });
+        Keyboard.dismiss();
     }
     return (
         <TouchableOpacity onPress={onPress}>

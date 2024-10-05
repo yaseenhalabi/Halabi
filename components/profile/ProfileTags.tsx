@@ -42,7 +42,6 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
             {tagComponents}
             {
                 addingTag ? 
-                <>
                 <View style={[styles.addTagContainer, { borderColor: theme.button }]}>
                     <TouchableOpacity hitSlop={30} onPress={closeAddingTag}>
                         <Image source={cancelIcon} style={styles.cancelIcon} />
@@ -64,7 +63,6 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
                         setSearchText={setSearchText}
                     />
                 </View>
-                </>
                 :
                 <TouchableOpacity hitSlop={20} onPress={toggleAddingTag}>
                     <CommonText weight="regular" size="small">+ Add Tag</CommonText>
@@ -74,22 +72,6 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
     );
 }
 
-type ProfileTagProps = {    
-    tagId: string;
-    onPress?: () => void;
-    onLongPress?: () => void;
-}
-function ProfileTag({ tagId, onPress, onLongPress }: ProfileTagProps) {
-    const tags = useSelector((state: any) => state.tags);
-    const tag = tags.find((tag: Tag) => tag.id === tagId);
-    return (
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-            <View style={styles.tagContainer}>
-                <CommonText weight="regular" size="small">{tag.name}</CommonText>
-            </View>
-        </TouchableOpacity>
-    );
-}
 
 type ListOfProfileTagsProps = {
     tags: Tag[];
@@ -116,21 +98,34 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
         addTagToContact_(newTag.id);
     }
     return (
-        <ScrollView style={{paddingVertical: 5}} contentContainerStyle={styles.container}>
-                {
-                    searchText.length > 0 &&
-                    <TouchableOpacity hitSlop={20} onPress={createNewTag}>
-                        <View style={styles.createNewTagContainer}>
-                            <CommonText weight="regular" size="small">+ New Tag "{searchText}"</CommonText>
-                        </View>
-                    </TouchableOpacity>
-                }
-
+        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container} style={{paddingVertical: 5}}>
+            {
+                searchText.length > 0 &&
+                <TouchableOpacity hitSlop={20} onPress={createNewTag}>
+                    <CommonText weight="regular" size="small">+ New Tag "{searchText}"</CommonText>
+                </TouchableOpacity>
+            }
             {filteredTags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={() => addTagToContact_(tag.id)} />)}
         </ScrollView>
     );
 }
 
+type ProfileTagProps = {    
+    tagId: string;
+    onPress?: () => void;
+    onLongPress?: () => void;
+}
+function ProfileTag({ tagId, onPress, onLongPress }: ProfileTagProps) {
+    const tags = useSelector((state: any) => state.tags);
+    const tag = tags.find((tag: Tag) => tag.id === tagId);
+    return (
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+            <View style={styles.tagContainer}>
+                <CommonText weight="regular" size="small">{tag.name}</CommonText>
+            </View>
+        </TouchableOpacity>
+    );
+}
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -151,11 +146,6 @@ const styles = StyleSheet.create({
         color: 'white',
         paddingVertical: 5,
 
-    },
-    createNewTagContainer: {
-        height: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     addTagContainer: {
         borderWidth: 1,

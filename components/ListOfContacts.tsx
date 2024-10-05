@@ -12,6 +12,7 @@ export default function ListOfContacts({ contacts }: ListOfContactsProps) {
     return (
         <FlatList
             data={contacts}
+            keyboardShouldPersistTaps='handled'
             style={{ ...styles.container, backgroundColor: theme.background }}
             renderItem={({ item }) => <ContactItem contact={item} />}
             keyExtractor={(item) => item.id}

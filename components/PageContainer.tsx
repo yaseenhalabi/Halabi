@@ -19,8 +19,9 @@ export default function PageContainer({ children, style, scrollEnabled}: PageCon
     });
     if (scrollEnabled) {
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} disabled={!keyboardVisible}>
-                <ScrollView contentContainerStyle={styles.container} style={{backgroundColor: theme.background}}>
+            // <TouchableWithoutFeedback onPress={Keyboard.dismiss} disabled={!keyboardVisible}>
+            <TouchableWithoutFeedback>
+                <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container} style={{backgroundColor: theme.background}} >
                     { children }
                 </ScrollView>
             </TouchableWithoutFeedback>
