@@ -9,6 +9,7 @@ const themeSlice = createSlice({
             {
                 name: 'dark',
                 background: '#000000',
+                backgroundSecondary: '#141414',
                 button: '#202020',
                 text: {
                     full: '#ffffff',

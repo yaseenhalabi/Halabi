@@ -28,6 +28,5 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Medium',
         width: '100%',
         overflow: 'hidden',
-
     }
 })

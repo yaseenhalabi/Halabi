@@ -24,7 +24,7 @@ export default function CommonText({ children, size = 'medium', weight = 'regula
             fontSize = 9;
             break;
         case 'small':
-            fontSize = 12;
+            fontSize = 13;
             break;
         case 'medium':
             fontSize = 16;

@@ -10,7 +10,7 @@ export const testContacts: Contact[] = [
             '2', // Family tag ID
         ],
         name: 'John Doe',
-        notes: 'This is a test note',
+        notes: 'He is a great friend and a family man',
         phone: '1234567890',
         email: 'john.doe@example.com',
         address: '1234 Main St, Anytown, USA',
@@ -38,7 +38,7 @@ export const testContacts: Contact[] = [
             '5', // College tag ID
         ],
         name: 'Jane Bailey',
-        notes: 'This is a test note',
+        notes: 'She is a great friend and a family woman',
         phone: '1234567890',
         email: 'jane.doe@example.com',
         address: '1234 Main St, Anytown, USA',
@@ -61,7 +61,7 @@ export const testContacts: Contact[] = [
             '4', // College tag ID
         ],
         name: 'Adam Smith',
-        notes: 'This is a test note',
+        notes: 'He is a cool dude',
         phone: '1234567890',
         email: 'john.doe@example.com',
         address: '1234 Main St, Anytown, USA',

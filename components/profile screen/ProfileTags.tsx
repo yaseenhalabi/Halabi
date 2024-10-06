@@ -11,7 +11,7 @@ import { addTagToContact } from '../../redux/contactsSlice';
 import cancelIcon from '../../assets/images/cancel-icon-white.png';
 import { addTag } from '../../redux/tagsSlice';
 import { v4 as uuidv4 } from 'uuid';
-
+import ProfileTag from './ProfileTag';
 type ProfileTagsProps = {
     tagIds: string[];
     contactId: string;
@@ -110,36 +110,13 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
     );
 }
 
-type ProfileTagProps = {    
-    tagId: string;
-    onPress?: () => void;
-    onLongPress?: () => void;
-}
-function ProfileTag({ tagId, onPress, onLongPress }: ProfileTagProps) {
-    const tags = useSelector((state: any) => state.tags);
-    const tag = tags.find((tag: Tag) => tag.id === tagId);
-    return (
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-            <View style={styles.tagContainer}>
-                <CommonText weight="regular" size="small">{tag.name}</CommonText>
-            </View>
-        </TouchableOpacity>
-    );
-}
+
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         width: '100%',
         gap: 5
-    },
-    tagContainer: {
-        backgroundColor: '#232135',
-        borderRadius: 30,
-        height: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 15,
     },
     input: {
         width: '100%',
