@@ -12,6 +12,7 @@ import { Contact } from '../../../../utils/types';
 import NotesInput from '../../../../components/profile screen/NotesInput';
 import PhoneNumberInput from '../../../../components/profile screen/PhoneNumberInput';
 import { removeFormatting } from '../../../../utils/helpers';
+import EmailInput from '../../../../components/profile screen/EmailInput';
 export default function Profile() {
   const dispatch = useDispatch();
   const { id } : { id: string } = useLocalSearchParams();
@@ -46,6 +47,12 @@ export default function Profile() {
         onChangeText={(text) => {
           dispatch(updateContact({...contact, phone: {id: contact.phone?.id || '', countryCode: contact.phone?.countryCode || '', number: removeFormatting(text)} }));
         }} 
+      />
+      <EmailInput 
+        value={contact.email || ''} 
+        onChangeText={(text) => {
+          dispatch(updateContact({...contact, email: text}));
+        }}
       />
       {
       /* TODO: Add birthday input */

@@ -100,7 +100,7 @@ function PhoneNumberCountryCodeModal({isVisible, hide, onChangeCountryCode}: Pho
 type CountryCodeItemProps = {
     dial: string;
     name: string;
-    onPress: (countryCode: text) => void;
+    onPress: () => void;
 }
 function CountryCodeItem({ dial, name, onPress }: CountryCodeItemProps) {
     return (

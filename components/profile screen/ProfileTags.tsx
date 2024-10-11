@@ -102,7 +102,7 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
             {
                 searchText.length > 0 &&
                 <TouchableOpacity hitSlop={20} onPress={createNewTag}>
-                    <CommonText weight="regular" size="small">+ New Tag "{searchText}"</CommonText>
+                    <CommonText weight="regular" size="small">+ New tag "{searchText}"</CommonText>
                 </TouchableOpacity>
             }
             {filteredTags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={() => addTagToContact_(tag.id)} />)}

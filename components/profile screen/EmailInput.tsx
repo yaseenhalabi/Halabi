@@ -1,24 +1,24 @@
 import ProfileInputContainer from "./ProfileInputContainer";
 import { TextInput, StyleSheet } from "react-native";
 import getTheme from "../../utils/GetTheme";
-type NotesInputProps = {
+type EmailInputProps = {
     value: string;
     onChangeText: (text: string) => void;
 }
 
-export default function NotesInput({ value, onChangeText }: NotesInputProps) {
+export default function EmailInput({ value, onChangeText }: EmailInputProps) {
     const theme = getTheme();
     return (
-        <ProfileInputContainer title="Notes" hideTitle>
+        <ProfileInputContainer title="Email">
             <TextInput 
                 value={value}
                 style={styles.input} 
                 onChangeText={onChangeText} 
-                placeholder='Enter notes'
+                placeholder='Enter Email'
                 placeholderTextColor={theme.text.muted}
-                autoCapitalize='sentences'
-                autoCorrect={true}
-                multiline
+                autoCapitalize='none'
+                autoCorrect={false}
+                inputMode="email"
             />
         </ProfileInputContainer>
     )
@@ -31,8 +31,5 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Regular',
         width: '100%',
         overflow: 'hidden',
-        padding: 0,
-        margin: 0,
-        height: 80
     }
 })
