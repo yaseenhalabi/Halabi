@@ -11,7 +11,11 @@ export const testContacts: Contact[] = [
         ],
         name: 'John Doe',
         notes: 'He is a great friend and a family man',
-        phone: '1234567890',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '1234567890'
+        },
         email: 'john.doe@example.com',
         address: '1234 Main St, Anytown, USA',
         birthday: '1990-01-01',
@@ -39,7 +43,11 @@ export const testContacts: Contact[] = [
         ],
         name: 'Jane Bailey',
         notes: 'She is a great friend and a family woman',
-        phone: '1234567890',
+        phone: {
+            id: uuidv4(),
+            countryCode: '4',
+            number: '1234567890'
+        },
         email: 'jane.doe@example.com',
         address: '1234 Main St, Anytown, USA',
         birthday: '1990-01-01',
@@ -62,7 +70,11 @@ export const testContacts: Contact[] = [
         ],
         name: 'Adam Smith',
         notes: 'He is a cool dude',
-        phone: '1234567890',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '1234567890'
+        },
         email: 'john.doe@example.com',
         address: '1234 Main St, Anytown, USA',
         birthday: '1990-01-01',

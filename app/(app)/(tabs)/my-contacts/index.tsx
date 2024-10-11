@@ -16,13 +16,12 @@ export default function MyContacts() {
   const [searchText, setSearchText] = useState('');
   const contacts: Contact[] = useSelector((state: any) => state.contacts);
   const filteredContacts: Contact[] = getFilteredContacts(contacts, searchText);
-
   const onSearchTextChange = (text: string) => {
     setSearchText(text);
   }
 
   const placeholderfunction = () => {
-    console.log('placeholder function');
+    console.log('placeholder function')
   }
 
   return (

@@ -3,7 +3,7 @@ export type Contact = {
     tags: string[]; // Changed from Tag[] to string[]
     name: string;
     notes?: string;
-    phone?: string;
+    phone?: PhoneNumber;
     email?: string;
     address?: string;
     birthday?: string;
@@ -20,7 +20,11 @@ export type Photo = {
     id: string;
     url: string;
 }
-
+export type PhoneNumber ={
+    id: string;
+    countryCode: string;
+    number: string;
+}
 export type SocialMedia = {
     title: string;
     id: string;

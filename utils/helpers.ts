@@ -44,3 +44,29 @@ export const getContactById = (id: string, contacts: Contact[]) => {
 export const getTagById = (id: string, tags: Tag[]) => {
     return tags.find((tag) => tag.id === id);
 }
+
+export const formatPhoneNumber = (text: string): string => {
+    // Remove all non-digit characters
+    const cleaned = text.replace(/\D/g, '');
+    if (cleaned.length > 10) {
+        return cleaned;
+    }
+    let formatted = '';
+    
+    if (cleaned.length > 0) {
+        formatted += '(' + cleaned.substring(0, 3);
+
+        if (cleaned.length > 3) {
+            formatted += ') ' + cleaned.substring(3, 6);
+            
+            if (cleaned.length > 6) {
+                formatted += '-' + cleaned.substring(6, 10);
+            }
+        }
+    }
+    return formatted;
+};
+
+export const removeFormatting = (text: string): string => {
+    return text.replace(/\D/g, '');
+}

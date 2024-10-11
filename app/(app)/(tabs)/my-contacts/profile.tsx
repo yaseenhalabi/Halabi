@@ -10,7 +10,9 @@ import { updateContact } from '../../../../redux/contactsSlice';
 import ProfileTags from '../../../../components/profile screen/ProfileTags';
 import { Contact } from '../../../../utils/types';
 import NotesInput from '../../../../components/profile screen/NotesInput';
-export default function MyContacts() {
+import PhoneNumberInput from '../../../../components/profile screen/PhoneNumberInput';
+import { removeFormatting } from '../../../../utils/helpers';
+export default function Profile() {
   const dispatch = useDispatch();
   const { id } : { id: string } = useLocalSearchParams();
   const contacts: Contact[] = useSelector((state: any) => state.contacts);
@@ -35,7 +37,16 @@ export default function MyContacts() {
           dispatch(updateContact({...contact, notes: text}));
         }} 
       />
-      
+      <PhoneNumberInput 
+        countryCode={contact.phone?.countryCode || ''}
+        onChangeCountryCode={(countryCode) => {
+          dispatch(updateContact({...contact, phone: {id: contact.phone?.id || '', countryCode, number: contact.phone?.number || ''}}));
+        }}
+        value={contact.phone?.number || ''} 
+        onChangeText={(text) => {
+          dispatch(updateContact({...contact, phone: {id: contact.phone?.id || '', countryCode: contact.phone?.countryCode || '', number: removeFormatting(text)} }));
+        }} 
+      />
       {
       /* TODO: Add birthday input */
       /* TODO: Add phone number input */
