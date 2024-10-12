@@ -1,7 +1,7 @@
 import { StyleSheet, View, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import getTheme from '../utils/GetTheme';
 import { Keyboard } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 type PageContainerProps = {
     children: React.ReactNode;
     scrollEnabled?: boolean;
@@ -20,7 +20,7 @@ export default function PageContainer({ children, style, scrollEnabled}: PageCon
     if (scrollEnabled) {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} disabled={!keyboardVisible}>
-                <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{...styles.container, ...style}} style={{backgroundColor: theme.background}} >
+                <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{...styles.container, ...style}} style={{backgroundColor: theme.background}}>
                     { children }
                 </ScrollView>
             </TouchableWithoutFeedback>
@@ -37,7 +37,6 @@ export default function PageContainer({ children, style, scrollEnabled}: PageCon
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,

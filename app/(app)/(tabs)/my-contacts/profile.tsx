@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useLocalSearchParams } from "expo-router";
 import { getContactById } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import NotesInput from '../../../../components/profile screen/NotesInput';
 import PhoneNumberInput from '../../../../components/profile screen/PhoneNumberInput';
 import EmailInput from '../../../../components/profile screen/EmailInput';
 import BirthdayInput from '../../../../components/profile screen/BirthdayInput';
+import AddressInput from '../../../../components/profile screen/AddressInput';
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -62,6 +63,12 @@ export default function Profile() {
           dispatch(updateContact({...contact, email: text}));
         }}
       />
+      <AddressInput 
+        initialValue={contact.address || ''}
+        onChangeText={(text) => {
+          dispatch(updateContact({...contact, address: text}));
+        }}
+      />
       {
       /* todo: add birthday input */
       /* todo: add phone number input */
@@ -77,5 +84,6 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
+    paddingBottom: 300
   }
 });
