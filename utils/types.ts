@@ -6,7 +6,7 @@ export type Contact = {
     phone?: PhoneNumber;
     email?: string;
     address?: string;
-    birthday?: string;
+    birthday?: Birthday;
     socialMedia?: SocialMedia[];
     photos: Photo[];
 }
@@ -24,6 +24,10 @@ export type PhoneNumber ={
     id: string;
     countryCode: string;
     number: string;
+}
+export type Birthday = {
+    day: string;
+    month: string;
 }
 export type SocialMedia = {
     title: string;

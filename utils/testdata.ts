@@ -18,7 +18,10 @@ export const testContacts: Contact[] = [
         },
         email: 'john.doe@example.com',
         address: '1234 Main St, Anytown, USA',
-        birthday: '1990-01-01',
+        birthday: {
+            day: '01',
+            month: 'January'
+        },
         socialMedia: [
             {
                 id: uuidv4(),
@@ -50,7 +53,10 @@ export const testContacts: Contact[] = [
         },
         email: 'jane.doe@example.com',
         address: '1234 Main St, Anytown, USA',
-        birthday: '1990-01-01',
+        birthday: {
+            day: '09',
+            month: 'February'
+        },
         socialMedia: [
             {
                 id: uuidv4(),
@@ -77,7 +83,10 @@ export const testContacts: Contact[] = [
         },
         email: 'john.doe@example.com',
         address: '1234 Main St, Anytown, USA',
-        birthday: '1990-01-01',
+        birthday: {
+            day: '24',
+            month: 'December'
+        },
         socialMedia: [
             {
                 id: uuidv4(),

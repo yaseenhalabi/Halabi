@@ -72,7 +72,7 @@ function PhoneNumberCountryCodeModal({isVisible, hide, onChangeCountryCode}: Pho
     }
     
     return (
-        <Modal transparent visible={isVisible}>
+        <Modal transparent visible={isVisible} animationType="fade">
             <TouchableWithoutFeedback onPress={hide}>
                 <View style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.3)'}}>
                     <TouchableWithoutFeedback>

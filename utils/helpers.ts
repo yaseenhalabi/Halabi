@@ -1,4 +1,4 @@
-import { Contact, Tag } from "./types";
+import { Contact, Tag, Birthday } from "./types";
 
 export const contactsToString = (contactsWithTag: Contact[]) => {
     let contactsWithTagString = '';
@@ -70,3 +70,32 @@ export const formatPhoneNumber = (text: string): string => {
 export const removeFormatting = (text: string): string => {
     return text.replace(/\D/g, '');
 }
+
+export const getDaysUntilBirthday = (birthday: Birthday) : number => {
+    const today = new Date();
+    const monthToNumber: { [key: string]: number } = {
+        'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
+        'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11
+    };
+    const monthNumber = monthToNumber[birthday.month];
+    const birthdayNumber = parseInt(birthday.day);
+    const birthdayDate = new Date(today.getFullYear(), monthNumber, birthdayNumber);
+    if (birthdayDate < today) {
+        birthdayDate.setFullYear(birthdayDate.getFullYear() + 1);
+    }
+    const daysUntilBirthday = Math.ceil((birthdayDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysUntilBirthday >= 365) {
+        return daysUntilBirthday - 365;
+    }
+    return daysUntilBirthday;
+}
+export const getBirthdayText = (birthday: Birthday) => {
+    const daysUntilBirthday = getDaysUntilBirthday(birthday);
+    if (daysUntilBirthday === 0) {
+        return '~~Happy Birthday!~~';
+    }
+    if (daysUntilBirthday === 1) {
+        return '(tomorrow)';
+    }
+    return `(in ${daysUntilBirthday} days)`;
+}   

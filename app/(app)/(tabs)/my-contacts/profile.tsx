@@ -1,18 +1,20 @@
 import { View, TextInput, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from "expo-router";
-import CommonText from '../../../../components/CommonText';
-import PageContainer from '../../../../components/PageContainer';
 import { getContactById } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
-import NameInput from '../../../../components/profile screen/NameInput';
 import { useDispatch } from 'react-redux';
 import { updateContact } from '../../../../redux/contactsSlice';
-import ProfileTags from '../../../../components/profile screen/ProfileTags';
+import { removeFormatting } from '../../../../utils/helpers';
 import { Contact } from '../../../../utils/types';
+import CommonText from '../../../../components/CommonText';
+import PageContainer from '../../../../components/PageContainer';
+import NameInput from '../../../../components/profile screen/NameInput';
+import ProfileTags from '../../../../components/profile screen/ProfileTags';
 import NotesInput from '../../../../components/profile screen/NotesInput';
 import PhoneNumberInput from '../../../../components/profile screen/PhoneNumberInput';
-import { removeFormatting } from '../../../../utils/helpers';
 import EmailInput from '../../../../components/profile screen/EmailInput';
+import BirthdayInput from '../../../../components/profile screen/BirthdayInput';
+
 export default function Profile() {
   const dispatch = useDispatch();
   const { id } : { id: string } = useLocalSearchParams();
@@ -38,6 +40,12 @@ export default function Profile() {
           dispatch(updateContact({...contact, notes: text}));
         }} 
       />
+      <BirthdayInput 
+        birthday={contact.birthday}
+        onChangeBirthday={(birthday) => {
+          dispatch(updateContact({...contact, birthday}));
+        }}
+      />
       <PhoneNumberInput 
         countryCode={contact.phone?.countryCode || ''}
         onChangeCountryCode={(countryCode) => {
@@ -55,12 +63,12 @@ export default function Profile() {
         }}
       />
       {
-      /* TODO: Add birthday input */
-      /* TODO: Add phone number input */
-      /* TODO: Add email number input */
-      /* TODO: Add address input */
-      /* TODO: Add social media input */
-      /* TODO: Add contact buttons */
+      /* todo: add birthday input */
+      /* todo: add phone number input */
+      /* todo: add email number input */
+      /* todo: add address input */
+      /* todo: add social media input */
+      /* todo: add contact buttons */
       }
     </PageContainer>
   );
