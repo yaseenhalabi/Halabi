@@ -35,3 +35,7 @@ yarn-error.*
 *.tsbuildinfo
 
 secret_key.js
+
+playground-mode.tsx
+
+components/playground mode/*

@@ -1,6 +1,7 @@
 import ProfileInputContainer from "./ProfileInputContainer";
 import { TextInput, StyleSheet } from "react-native";
 import getTheme from "../../utils/GetTheme";
+
 type NotesInputProps = {
     value: string;
     onChangeText: (text: string) => void;
@@ -18,6 +19,7 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
                 placeholderTextColor={theme.text.muted}
                 autoCapitalize='sentences'
                 autoCorrect={true}
+                numberOfLines={4}
                 multiline
             />
         </ProfileInputContainer>
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         padding: 0,
         margin: 0,
-        height: 80
+        height: 80,
+        textAlignVertical: 'top',
     }
 })

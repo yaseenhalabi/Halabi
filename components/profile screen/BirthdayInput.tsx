@@ -1,5 +1,5 @@
 import ProfileInputContainer from "./ProfileInputContainer";
-import { View, Text, StyleSheet, Button, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, Modal, TouchableOpacity, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Birthday } from "../../utils/types";
 import { useState } from "react";
@@ -52,9 +52,9 @@ export default function BirthdayInput({ birthday, onChangeBirthday }: BirthdayIn
                             ))}
                         </Picker>
 
-                        <CommonText size='small' color='semi' weight='medium'>Day</CommonText>
-                        <Picker
-                            selectedValue={selectedDay}
+                                    <CommonText size='small' color='semi' weight='medium'>Day</CommonText>
+                                    <Picker
+                                selectedValue={selectedDay}
                             onValueChange={(itemValue) => setSelectedDay(itemValue)}
                             itemStyle={styles.pickerItemStyle}
                         >
@@ -62,8 +62,8 @@ export default function BirthdayInput({ birthday, onChangeBirthday }: BirthdayIn
                                 <Picker.Item color="white" key={index} label={day} value={day}/>
                             ))}
                         </Picker>
-                        <Button title="Confirm" color="white" onPress={handleConfirm} />
-                        <Button title="Cancel" color="white" onPress={() => setModalVisible(false)} />
+                        <Button title="Confirm" color={Platform.OS == "android" ? theme.backgroundSecondary : "white"} onPress={handleConfirm} />
+                        <Button title="Cancel" color={Platform.OS == "android" ? theme.backgroundSecondary : "white"} onPress={() => setModalVisible(false)} />
                     </View>
                 </View>
             </Modal>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, .8)',
     },
     pickerContainer: {
         padding: 20,
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     birthdayContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+
         gap: 5,
-    }
+    },
 })

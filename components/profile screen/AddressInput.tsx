@@ -13,13 +13,16 @@ export default function AddressInput({ initialValue, onChangeText }: AddressInpu
     const theme = getTheme();
     const inputRef: any = useRef();
     useEffect(() => {
-        inputRef.current?.setAddressText(initialValue);
+        if (inputRef.current) {
+            inputRef.current?.setAddressText(initialValue);
+        }
     }, []);
-    return (
+    return (    
         <ProfileInputContainer title="Address" style={{paddingVertical: 0, paddingHorizontal: 0}}>
             <GooglePlacesAutocomplete
                 ref={inputRef}
                 placeholder='Search'
+                debounce={300}
                 query={{
                     key: google_key,
                     language: 'en',
@@ -32,6 +35,7 @@ export default function AddressInput({ initialValue, onChangeText }: AddressInpu
                     defaultValue: initialValue,
                     placeholder: 'Enter Address',
                     placeholderTextColor: theme.text.muted,
+                    textContentType: 'none',
                 }}
                 styles={{
                     textInputContainer: {
@@ -62,12 +66,3 @@ export default function AddressInput({ initialValue, onChangeText }: AddressInpu
     )
 }
 
-const styles = StyleSheet.create({
-    input: {
-        fontSize: 13,
-        color: 'white',
-        fontFamily: 'Poppins-Regular',
-        width: '100%',
-        overflow: 'hidden',
-    }
-})

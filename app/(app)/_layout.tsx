@@ -12,6 +12,10 @@ export default function AppLayout() {
     // if (!signedIn) {
     //     return <Redirect href="/sign-in" />;
     // }
+    const playgroundMode = false;
+    if (playgroundMode) {
+      return <Redirect href="/playground-mode" />;
+    }
 
     const screenOptions = {
         fullScreenGestureEnabled: true,
