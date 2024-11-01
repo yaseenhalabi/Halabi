@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from "expo-router";
 import { getContactById } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
@@ -63,11 +63,12 @@ export default function Profile() {
           dispatch(updateContact({...contact, email: text}));
         }}
       />
-      <AddressInput 
-        initialValue={contact.address || ''}
-        onChangeText={(text) => {
-          dispatch(updateContact({...contact, address: text}));
-        }}
+      <AddressInput
+        address={contact.address || ''}
+        onChangeAddress={ (address) => {
+            dispatch(updateContact({...contact, address}));
+          }
+        }
       />
       {
       /* todo: add birthday input */

@@ -20,7 +20,7 @@ export const testContacts: Contact[] = [
         address: '1234 Main St, Anytown, USA',
         birthday: {
             day: '01',
-            month: 'January'
+            month: '02'
         },
         socialMedia: [
             {
@@ -55,7 +55,7 @@ export const testContacts: Contact[] = [
         address: '1234 Main St, Anytown, USA',
         birthday: {
             day: '09',
-            month: 'February'
+            month: '12'
         },
         socialMedia: [
             {
@@ -85,7 +85,7 @@ export const testContacts: Contact[] = [
         address: '1234 Main St, Anytown, USA',
         birthday: {
             day: '24',
-            month: 'December'
+            month: '06'
         },
         socialMedia: [
             {

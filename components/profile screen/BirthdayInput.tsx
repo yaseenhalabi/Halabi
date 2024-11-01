@@ -6,6 +6,7 @@ import { useState } from "react";
 import CommonText from "../CommonText";
 import getTheme from "../../utils/GetTheme";
 import { getBirthdayText } from "../../utils/helpers";
+import BirthdayInputModal from "./BirthdayInputModal";
 type BirthdayInputProps = {
     birthday?: Birthday,
     onChangeBirthday: (birthday: Birthday) => void;
@@ -13,60 +14,34 @@ type BirthdayInputProps = {
 
 export default function BirthdayInput({ birthday, onChangeBirthday }: BirthdayInputProps) {
     const theme = getTheme();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedMonth, setSelectedMonth] = useState(birthday?.month || '');
-    const [selectedDay, setSelectedDay] = useState(birthday?.day || '');
-
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-    const handleConfirm = () => {
-        onChangeBirthday({ month: selectedMonth, day: selectedDay });
-        setModalVisible(false);
-    };
+    const getMonthName = months[parseInt(birthday?.month || '') - 1];
+    const [modalVisible, setModalVisible] = useState(false);
+    const openModal = () => setModalVisible(true);
+    const closeModal = () => setModalVisible(false);
     return (
         <ProfileInputContainer title="Birthday">
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <TouchableOpacity onPress={openModal}>
                     {birthday ? (
                         <View style={styles.birthdayContainer}>
-                            <CommonText size='small'>{birthday.month} {birthday.day}</CommonText>
+                            <CommonText size='small'>{getMonthName} {birthday.day}</CommonText>
                             <CommonText size='small' color='semi'>{getBirthdayText(birthday)}</CommonText>
                         </View>
                     ) : (
                         <CommonText size='small' color='muted'>Select Birthday</CommonText>
                     )}
             </TouchableOpacity>
-            <Modal visible={modalVisible} transparent={true} animationType="fade">
-                <View style={styles.modalContainer}>
-                    <View style={{...styles.pickerContainer, backgroundColor: theme.backgroundSecondary}}>
-                        <CommonText size='small' color='semi' weight='medium'>Month</CommonText>
-                        <Picker
-                            selectedValue={selectedMonth}
-                            onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-                            itemStyle={styles.pickerItemStyle}
-                        >
-                            {months.map((month, index) => ( 
-                                <Picker.Item color="white" key={index} label={month} value={month} />
-                            ))}
-                        </Picker>
-
-                                    <CommonText size='small' color='semi' weight='medium'>Day</CommonText>
-                                    <Picker
-                                selectedValue={selectedDay}
-                            onValueChange={(itemValue) => setSelectedDay(itemValue)}
-                            itemStyle={styles.pickerItemStyle}
-                        >
-                            {days.map((day, index) => (
-                                <Picker.Item color="white" key={index} label={day} value={day}/>
-                            ))}
-                        </Picker>
-                        <Button title="Confirm" color={Platform.OS == "android" ? theme.backgroundSecondary : "white"} onPress={handleConfirm} />
-                        <Button title="Cancel" color={Platform.OS == "android" ? theme.backgroundSecondary : "white"} onPress={() => setModalVisible(false)} />
-                    </View>
-                </View>
-            </Modal>
+            {
+            modalVisible && 
+            <BirthdayInputModal 
+                birthday={birthday || { month: '', day: '' }}
+                onChangeBirthday={onChangeBirthday}
+                handleClose={closeModal}
+            />
+            }
         </ProfileInputContainer>
     )
 }

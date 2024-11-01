@@ -73,11 +73,7 @@ export const removeFormatting = (text: string): string => {
 
 export const getDaysUntilBirthday = (birthday: Birthday) : number => {
     const today = new Date();
-    const monthToNumber: { [key: string]: number } = {
-        'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
-        'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11
-    };
-    const monthNumber = monthToNumber[birthday.month];
+    const monthNumber = parseInt(birthday.month) - 1;
     const birthdayNumber = parseInt(birthday.day);
     const birthdayDate = new Date(today.getFullYear(), monthNumber, birthdayNumber);
     if (birthdayDate < today) {
@@ -99,3 +95,17 @@ export const getBirthdayText = (birthday: Birthday) => {
     }
     return `(in ${daysUntilBirthday} days)`;
 }   
+
+export const isValidDate = (monthStr: string, dayStr: string): boolean => {
+    const year = 2024; // Arbitrary non-leap year for consistency
+    const month = parseInt(monthStr, 10) - 1; // Month is 0-indexed in JS Date object
+    const day = parseInt(dayStr, 10);
+
+    const date = new Date(year, month, day);
+
+    // Check if the date's month and day match the input values
+    if (date.getMonth() === month && date.getDate() === day) {
+        return true;
+    }
+    return false;
+}

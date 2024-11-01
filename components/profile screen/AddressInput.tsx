@@ -1,68 +1,72 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import ProfileInputContainer from "./ProfileInputContainer";
-import { StyleSheet } from "react-native";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import getTheme from "../../utils/GetTheme";
 import google_key from "../../secret_key";
+import CommonModal from './CommonModal';
+import CommonText from '../CommonText';
+
 type AddressInputProps = {
-    initialValue: string;
-    onChangeText: (text: string) => void;
+    address: string;
+    onChangeAddress: (address: string) => void;
 }
+export default function AddressInput({ address, onChangeAddress }: AddressInputProps) {
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
-export default function AddressInput({ initialValue, onChangeText }: AddressInputProps) {
-    const theme = getTheme();
-    const inputRef: any = useRef();
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current?.setAddressText(initialValue);
-        }
-    }, []);
-    return (    
-        <ProfileInputContainer title="Address" style={{paddingVertical: 0, paddingHorizontal: 0}}>
-            <GooglePlacesAutocomplete
-                ref={inputRef}
-                placeholder='Search'
-                debounce={300}
-                query={{
-                    key: google_key,
-                    language: 'en',
-                }}
-                onPress={(data) => {
-                    onChangeText(data.description);
-                }}
-                enablePoweredByContainer={false}
-                textInputProps={{
-                    defaultValue: initialValue,
-                    placeholder: 'Enter Address',
-                    placeholderTextColor: theme.text.muted,
-                    textContentType: 'none',
-                }}
-                styles={{
-                    textInputContainer: {
-                        height: 44,
-                    },
-                    textInput: {
-                        backgroundColor: theme.backgroundSecondary,
-                        fontSize: 13,
-                        overflow: 'hidden',
-                        width: '100%',
-                        color: 'white',
-                        fontFamily: 'Poppins-Regular',
-                    },
-                    row: {
-                        backgroundColor: theme.backgroundSecondary,
-                    },
-                    listView: {
-                        position: 'absolute',
-                        top: 40,
-                    },
-                    description: {
-                        color: theme.text.semi,
+    const showModal = () => {
+        setIsModalVisible(true); 
+    };
+
+    const hideModal = () => {
+        setIsModalVisible(false);
+    };
+
+    return (
+        <>
+            <CommonModal isVisible={isModalVisible} onClose={hideModal} heightProportion={0.2}>
+                <GooglePlacesAutocomplete
+                    placeholder='Search'
+                    onPress={(data, details = null) => {
+                    }}
+                    query={{
+                        key: google_key,
+                        language: 'en',
+                    }}
+                    textInputProps={
+                        {
+                            placeholderTextColor: '#5B5B5B',
+                        }
                     }
-                }}
-                disableScroll
-            />
-        </ProfileInputContainer>
-    )
+                    styles={
+                        {
+                            textInput: {
+                                backgroundColor: '#202020',
+                                color: 'white',
+                                fontSize: 14,
+                            },
+                            container: {
+                                width: '100%',
+                            },
+                            listView: {
+                                backgroundColor: '#202020',
+                            },
+                            row: {
+                                backgroundColor: '#202020',
+                            },
+                            separator: {
+                                backgroundColor: '#202020',
+                            },
+                            description: {
+                                fontSize: 14,
+                                color: 'white'
+                            },  
+                        }
+                    }
+                />
+            </CommonModal>
+            <ProfileInputContainer title="Address" onClick={showModal}>
+                <CommonText size='small'>{address}</CommonText>
+            </ProfileInputContainer>
+        </>
+    );
 }
-
