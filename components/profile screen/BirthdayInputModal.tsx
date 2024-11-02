@@ -6,7 +6,7 @@ import CommonText from "../CommonText";
 import { isValidDate } from "../../utils/helpers";
 import cancelIcon from "../../assets/images/cancel-icon-white.png";
 import CommonModal from "./CommonModal";
-
+import SaveButton from "./SaveButton";
 type BirthdayInputModalProps = {
     birthday: Birthday;
     onChangeBirthday: (newBirthday: Birthday) => void;
@@ -98,11 +98,7 @@ export default function BirthdayInputModal({ birthday, onChangeBirthday, handleC
                 isInvalidInput ? 
                 <CommonText size='medium' color='semi' >Please enter a valid date</CommonText>
                 :
-                <>
-                    <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-                        <CommonText size='medium' color='full'>SAVE</CommonText>
-                    </TouchableOpacity>
-                </>
+                <SaveButton onPress={handleSave} />
             } 
         </CommonModal>
         );
@@ -154,13 +150,4 @@ const styles = StyleSheet.create({
     centeredText: {
         textAlign: 'center',
     },
-    saveButton: {
-        width: '80%',
-        paddingVertical: 3,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'grey',
-        justifyContent: 'center',
-        alignItems: 'center', 
-    }
 });

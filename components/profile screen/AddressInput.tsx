@@ -20,46 +20,41 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
     const hideModal = () => {
         setIsModalVisible(false);
     };
+    const addressInputRef = useRef<any>(null);
+    useEffect(() => {
+        addressInputRef.current?.setAddressText(address);
+        addressInputRef.current?.focus();
+      }, [isModalVisible]);
+
 
     return (
         <>
-            <CommonModal isVisible={isModalVisible} onClose={hideModal} heightProportion={0.2}>
+            <CommonModal isVisible={isModalVisible} onClose={hideModal} heightProportion={0.3}>
                 <GooglePlacesAutocomplete
+                    ref={addressInputRef}
                     placeholder='Search'
                     onPress={(data, details = null) => {
+                        onChangeAddress(data.description);
                     }}
                     query={{
                         key: google_key,
                         language: 'en',
                     }}
-                    textInputProps={
-                        {
-                            placeholderTextColor: '#5B5B5B',
-                        }
-                    }
+                    textInputProps={{
+                        placeholderTextColor: '#5B5B5B',
+                    }}
+                    enablePoweredByContainer={false}
                     styles={
                         {
                             textInput: {
                                 backgroundColor: '#202020',
                                 color: 'white',
-                                fontSize: 14,
+                                fontSize: 12,
                             },
-                            container: {
-                                width: '100%',
-                            },
-                            listView: {
-                                backgroundColor: '#202020',
-                            },
-                            row: {
-                                backgroundColor: '#202020',
-                            },
-                            separator: {
-                                backgroundColor: '#202020',
-                            },
-                            description: {
-                                fontSize: 14,
-                                color: 'white'
-                            },  
+                            container: { width: '100%', },
+                            row: { backgroundColor: '#202020'},
+                            separator: { backgroundColor: '#202020', },
+                            description: { fontSize: 12, color: 'white' },  
                         }
                     }
                 />

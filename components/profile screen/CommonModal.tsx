@@ -1,4 +1,4 @@
-import { View, Modal, StyleSheet, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { View, Modal, StyleSheet, TouchableWithoutFeedback, Dimensions, KeyboardAvoidingView } from 'react-native';
 import getTheme from '../../utils/GetTheme';
 import { BlurView } from 'expo-blur';
 type CommonModalProps = {
@@ -14,16 +14,16 @@ const screenHeight = Dimensions.get('window').height;
 export default function CommonModal({ isVisible, onClose, children, heightProportion, contentContainerStyle }: CommonModalProps) {
     const theme = getTheme();
     const heightToPercent = heightProportion ? screenHeight * heightProportion : screenHeight * 0.5;
-    const topToPercent = heightProportion ? screenHeight * (0.5 - heightProportion / 2) : screenHeight * 0.25;
+    const topToPercent = heightProportion ? screenHeight * (0.4 - heightProportion / 2) : screenHeight * 0.25;
 
     return (
         <Modal visible={isVisible} transparent animationType="none">
             <TouchableWithoutFeedback onPress={onClose} style={styles.backgroundTouchable}>
                 <BlurView style={styles.modalOverlay} intensity={5}/>
             </TouchableWithoutFeedback>
-            <View style={[styles.modalContent, contentContainerStyle || {}, { height: heightToPercent, top: topToPercent, backgroundColor: theme.backgroundSecondary, borderColor: theme.button}]}>
+            <KeyboardAvoidingView behavior='height' style={[styles.modalContent, contentContainerStyle || {}, { height: heightToPercent, top: topToPercent, backgroundColor: theme.backgroundSecondary, borderColor: theme.button}]}>
                 {children}
-            </View>
+            </KeyboardAvoidingView>
         </Modal>
     )
 }
