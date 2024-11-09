@@ -97,6 +97,237 @@ export const testContacts: Contact[] = [
         ],
         photos: [],
     },
+    {
+        id: uuidv4(),
+        tags: [
+            '1', // Friend tag ID
+            '2', // Family tag ID
+        ],
+        name: 'Emily Johnson',
+        notes: 'Close friend from childhood',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '0987654321'
+        },
+        email: 'emily.johnson@example.com',
+        address: '5678 Oak St, Othertown, USA',
+        birthday: {
+            day: '15',
+            month: '03'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'emily.johnson',
+                type: 'facebook',
+                url: 'https://www.facebook.com/emily.johnson'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '3', // Work tag ID
+            '4', // College tag ID
+        ],
+        name: 'Michael Brown',
+        notes: 'Colleague from the marketing team',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '5555555555'
+        },
+        email: 'michael.brown@example.com',
+        address: '6789 Maple St, Thistown, USA',
+        birthday: {
+            day: '28',
+            month: '08'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'michael.brown',
+                type: 'linkedin',
+                url: 'https://www.linkedin.com/michael.brown'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '2', // Family tag ID
+            '5', // School tag ID
+        ],
+        name: 'Sarah Lee',
+        notes: 'Cousin from the same school',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '6666666666'
+        },
+        email: 'sarah.lee@example.com',
+        address: '7890 Pine St, Thatown, USA',
+        birthday: {
+            day: '01',
+            month: '01'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'sarah.lee',
+                type: 'instagram',
+                url: 'https://www.instagram.com/sarah.lee'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '1', // Friend tag ID
+            '3', // Work tag ID
+        ],
+        name: 'David Davis',
+        notes: 'Close friend and colleague',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '7777777777'
+        },
+        email: 'david.davis@example.com',
+        address: '8901 Cedar St, Thiscity, USA',
+        birthday: {
+            day: '12',
+            month: '05'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'david.davis',
+                type: 'twitter',
+                url: 'https://www.twitter.com/david.davis'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '4', // College tag ID
+            '5', // School tag ID
+        ],
+        name: 'Jessica Martin',
+        notes: 'Classmate from college',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '8888888888'
+        },
+        email: 'jessica.martin@example.com',
+        address: '9012 Elm St, Thatcity, USA',
+        birthday: {
+            day: '20',
+            month: '11'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'jessica.martin',
+                type: 'facebook',
+                url: 'https://www.facebook.com/jessica.martin'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '1', // Friend tag ID
+            '3', // Work tag ID
+        ],
+        name: 'Michael Brown',
+        notes: 'Colleague and close friend',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '5555555555'
+        },
+        email: 'michael.brown@example.com',
+        address: '6789 Maple St, Thiscity, USA',
+        birthday: {
+            day: '28',
+            month: '08'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'michael.brown',
+                type: 'linkedin',
+                url: 'https://www.linkedin.com/michael.brown'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '2', // Family tag ID
+            '4', // College tag ID
+        ],
+        name: 'Sarah Taylor',
+        notes: 'Cousin and college friend',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '6666666666'
+        },
+        email: 'sarah.taylor@example.com',
+        address: '7890 Pine St, Thatcity, USA',
+        birthday: {
+            day: '10',
+            month: '04'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'sarah.taylor',
+                type: 'twitter',
+                url: 'https://www.twitter.com/sarah.taylor'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
+            '5', // School tag ID
+        ],
+        name: 'Kevin White',
+        notes: 'Classmate from school',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '7777777777'
+        },
+        email: 'kevin.white@example.com',
+        address: '8901 Cedar St, Thiscity, USA',
+        birthday: {
+            day: '12',
+            month: '05'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'kevin.white',
+                type: 'facebook',
+                url: 'https://www.facebook.com/kevin.white'
+            },
+        ],
+        photos: [],
+    },
     
 ]
 

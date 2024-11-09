@@ -7,7 +7,7 @@ export default function AppLayout() {
     const signedIn: boolean  = useSelector((state: any) => state.user.signedIn);
 
     // if (onboarding.isOnboarding) {
-    //     return <Redirect href={`/onboarding/page${onboarding.page}`} />;
+    //      return <Redirect href={`/onboarding/page${onboarding.page}`} />;
     // }
     // if (!signedIn) {
     //     return <Redirect href="/sign-in" />;

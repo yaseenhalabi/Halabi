@@ -43,7 +43,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
             {
                 addingTag ? 
                 <View style={[styles.addTagContainer, { borderColor: theme.button }]}>
-                    <TouchableOpacity hitSlop={30} onPress={closeAddingTag}>
+                    <TouchableOpacity hitSlop={15} onPress={closeAddingTag}>
                         <Image source={cancelIcon} style={styles.cancelIcon} />
                     </TouchableOpacity>
                     <TextInput 

@@ -5,6 +5,7 @@ import getTheme from "../../utils/GetTheme";
 import google_key from "../../secret_key";
 import CommonModal from './CommonModal';
 import CommonText from '../CommonText';
+import SaveButton from './SaveButton';
 
 type AddressInputProps = {
     address: string;
@@ -21,10 +22,18 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
         setIsModalVisible(false);
     };
     const addressInputRef = useRef<any>(null);
+    const [addressState, setAddressState] = useState(address);
     useEffect(() => {
         addressInputRef.current?.setAddressText(address);
         addressInputRef.current?.focus();
       }, [isModalVisible]);
+
+    const onSave = () => {
+        onChangeAddress(addressState);
+        hideModal();
+    }
+
+    
 
 
     return (
@@ -34,7 +43,7 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                     ref={addressInputRef}
                     placeholder='Search'
                     onPress={(data, details = null) => {
-                        onChangeAddress(data.description);
+                        setAddressState(data.description);
                     }}
                     query={{
                         key: google_key,
@@ -42,6 +51,9 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                     }}
                     textInputProps={{
                         placeholderTextColor: '#5B5B5B',
+                        onChangeText: (text) => {
+                            setAddressState(text);
+                        },
                     }}
                     enablePoweredByContainer={false}
                     styles={
@@ -58,9 +70,14 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                         }
                     }
                 />
+                <SaveButton onPress={onSave} />
             </CommonModal>
             <ProfileInputContainer title="Address" onClick={showModal}>
-                <CommonText size='small'>{address}</CommonText>
+                { address ?
+                    <CommonText size='small'>{address}</CommonText>
+                    :
+                    <CommonText size='small' color='muted'>Add Address</CommonText>
+                }
             </ProfileInputContainer>
         </>
     );

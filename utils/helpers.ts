@@ -104,8 +104,5 @@ export const isValidDate = (monthStr: string, dayStr: string): boolean => {
     const date = new Date(year, month, day);
 
     // Check if the date's month and day match the input values
-    if (date.getMonth() === month && date.getDate() === day) {
-        return true;
-    }
-    return false;
+    return (date.getMonth() === month && date.getDate() === day) || (monthStr === '' && dayStr === '');
 }

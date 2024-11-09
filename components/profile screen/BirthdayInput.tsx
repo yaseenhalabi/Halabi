@@ -25,10 +25,10 @@ export default function BirthdayInput({ birthday, onChangeBirthday }: BirthdayIn
     return (
         <ProfileInputContainer title="Birthday">
             <TouchableOpacity onPress={openModal}>
-                    {birthday ? (
+                    {birthday?.month != '' && birthday?.day != '' ? (
                         <View style={styles.birthdayContainer}>
-                            <CommonText size='small'>{getMonthName} {birthday.day}</CommonText>
-                            <CommonText size='small' color='semi'>{getBirthdayText(birthday)}</CommonText>
+                            <CommonText size='small'>{getMonthName} {birthday?.day}</CommonText>
+                            <CommonText size='small' color='semi'>{birthday && getBirthdayText(birthday)}</CommonText>
                         </View>
                     ) : (
                         <CommonText size='small' color='muted'>Select Birthday</CommonText>
