@@ -1,3 +1,3 @@
-const google_key = 'AIzaSyBS03Vo2DuX1EvVixGw2LFNXS_B8ob4Ee8';
+const google_key = 'AIzaSyCOK84rY2elsyvVugLTx83rXyECBpJvKyI';
 
 export default google_key;
