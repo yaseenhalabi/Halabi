@@ -48,14 +48,10 @@ export default function Profile() {
         }}
       />
       <PhoneNumberInput 
-        countryCode={contact.phone?.countryCode || ''}
-        onChangeCountryCode={(countryCode) => {
-          dispatch(updateContact({...contact, phone: {id: contact.phone?.id || '', countryCode, number: contact.phone?.number || ''}}));
+        phoneNumber={contact.phone || {id: '', countryCode: '1', number: ''}}
+        onChangePhoneNumber={(phoneNumber) => {
+          dispatch(updateContact({...contact, phone: phoneNumber}));
         }}
-        value={contact.phone?.number || ''} 
-        onChangeText={(text) => {
-          dispatch(updateContact({...contact, phone: {id: contact.phone?.id || '', countryCode: contact.phone?.countryCode || '', number: removeFormatting(text)} }));
-        }} 
       />
       <EmailInput 
         value={contact.email || ''} 
