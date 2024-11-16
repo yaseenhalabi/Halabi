@@ -24,13 +24,21 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
         numberInputRef.current?.focus();
     }, [isModalVisible]);
 
+    const openModal = () => {
+        setCountryCode(phoneNumber.countryCode);
+        setNumber(phoneNumber.number);
+        setIsModalVisible(true);
+    }
+    const closeModal = () => {
+        setIsModalVisible(false);
+    }
     const handleSave = () => {
         onChangePhoneNumber({id: phoneNumber.id, countryCode, number});
         setIsModalVisible(false);
     }
     return (
         <>
-        <CommonModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} heightProportion={0.12} contentContainerStyle={{gap: 10}}>
+        <CommonModal isVisible={isModalVisible} onClose={closeModal} heightProportion={0.12} contentContainerStyle={{gap: 10}}>
             <View style={styles.inputContainer}>
                 <CommonText size='medium'>+</CommonText>
                 <TextInput 
@@ -38,7 +46,7 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
                     onChangeText={setCountryCode}
                     style={styles.countryCodeInput} 
                     placeholderTextColor={theme.text.muted} 
-                    placeholder='+1'
+                    placeholder='1'
                 />
                 <TextInput 
                     keyboardType="phone-pad"
@@ -48,13 +56,13 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
                     onChangeText={(text) => setNumber(removeFormatting(text))}
                     style={styles.numberInput} 
                     placeholderTextColor={theme.text.muted} 
-                    placeholder='(___) ___-____'
+                    placeholder='(___) ___ ____'
                 />
             </View>
             <SaveButton onPress={handleSave} />
         </CommonModal>
         <ProfileInputContainer title="Phone">
-            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+            <TouchableOpacity onPress={openModal}>
                 {phoneNumber.number === '' ?
                     <CommonText size='small' color='muted'>Add phone number</CommonText> :
                     <CommonText size='small'>

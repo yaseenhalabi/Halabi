@@ -6,6 +6,7 @@ import ContactItemTag from "./ContactItemTag";
 import { Tag } from "../../utils/types";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
+
 type ContactItemProps = {
     contact: Contact;
 }
@@ -13,11 +14,28 @@ type ContactItemProps = {
 export default function ContactItem({ contact }: ContactItemProps) {
     const tags: Tag[] = useSelector((state: any) => state.tags);
     const contactTags: Tag[] = tags.filter((tag: Tag) => contact.tags.includes(tag.id));
-    const tagComponents: React.ReactNode[] = contactTags.map((tag: Tag) => <ContactItemTag key={tag.id} name={tag.name} />);
+    
+    // Maximum number of tags to display before summarizing
+    const maxTags = 4;
+    const displayedTags = contactTags.slice(0, maxTags);
+    const remainingTags = contactTags.length - displayedTags.length;
+
+    const tagComponents: React.ReactNode[] = displayedTags.map((tag: Tag) => (
+        <ContactItemTag key={tag.id} name={tag.name} />
+    ));
+
+    // Add "+n more" if there are more tags than maxTags
+    if (remainingTags > 0) {
+        tagComponents.push(
+            <CommonText key="more" size="xsmall" weight="light" color="semi">{`+${remainingTags} tags`}</CommonText>
+        );
+    }
+
     const onPress = () => {
         router.push({ pathname: "/my-contacts/profile", params: { id: contact.id } });
         Keyboard.dismiss();
     }
+
     return (
         <TouchableOpacity onPress={onPress}>
             <LinearGradient
@@ -50,5 +68,3 @@ const styles = StyleSheet.create({
         gap: 5,
     },
 });
-
-
