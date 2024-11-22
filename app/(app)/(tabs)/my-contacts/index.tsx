@@ -6,7 +6,7 @@ import addIcon from '../../../../assets/images/add-icon-white.png';
 import editIcon from '../../../../assets/images/edit-icon-white.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
 import EditButton from '../../../../components/EditButton';
-import EditButtons from '../../../../components/EditButtons';
+import EditButtonsContainer from '../../../../components/EditButtonsContainer';
 import ListOfContacts from '../../../../components/contacts screen/ListOfContacts';
 import { getFilteredContacts } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
@@ -23,15 +23,23 @@ export default function MyContacts() {
   const placeholderfunction = () => {
     console.log('placeholder function')
   }
+  type modes = "default" | "edit" | "filter" | "add";
 
+  const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText}/>
-      <EditButtons 
-        editButton1={<EditButton text="Add Contact" onPress={placeholderfunction} source={addIcon}/>}
-        editButton2={<EditButton text="Edit Contacts" onPress={placeholderfunction} source={editIcon}/>}
-        editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
-      />
+      {
+        editButtonsMode === "default" &&
+        <EditButtonsContainer 
+          editButton1={<EditButton text="Add Contact" onPress={placeholderfunction} source={addIcon}/>}
+          editButton2={<EditButton text="Edit Contacts" onPress={placeholderfunction} source={editIcon}/>}
+          editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
+        />
+      }
+      {
+        // editButtonsMode === "add" &&
+      }
       <ListOfContacts contacts={filteredContacts}/>
     </PageContainer>
   );

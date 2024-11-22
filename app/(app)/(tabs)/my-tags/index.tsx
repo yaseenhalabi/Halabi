@@ -6,7 +6,7 @@ import addIcon from '../../../../assets/images/add-icon-white.png';
 import editIcon from '../../../../assets/images/edit-icon-white.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
 import EditButton from '../../../../components/EditButton';
-import EditButtons from '../../../../components/EditButtons';
+import EditButtonsContainer from '../../../../components/EditButtonsContainer';
 import ListOfTags from '../../../../components/tags screen/ListOfTags';
 import { useSelector } from 'react-redux';
 import { getFilteredTags } from '../../../../utils/helpers';
@@ -27,7 +27,7 @@ export default function MyTags() {
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText} />
-      <EditButtons 
+      <EditButtonsContainer 
         editButton1={<EditButton text="Add Tag" onPress={placeholderfunction} source={addIcon}/>}
         editButton2={<EditButton text="Edit Tags" onPress={placeholderfunction} source={editIcon}/>}
         editButton3={<EditButton text="Filter Tags" onPress={placeholderfunction} source={filterIcon}/>}

@@ -129,6 +129,35 @@ export const testContacts: Contact[] = [
     {
         id: uuidv4(),
         tags: [
+            '9', // Family tag ID
+            '10', // College tag ID
+        ],
+        name: 'Ahmed Khan',
+        notes: 'Stupid retard',
+        phone: {
+            id: uuidv4(),
+            countryCode: '1',
+            number: '3316662119'
+        },
+        email: 'ahmedk2@illinois.edu',
+        address: 'snyder hall',
+        birthday: {
+            day: '9',
+            month: '02'
+        },
+        socialMedia: [
+            {
+                id: uuidv4(),
+                title: 'ahmed.khan',
+                type: 'instagram',
+                url: 'https://www.twitter.com/sarah.taylor'
+            },
+        ],
+        photos: [],
+    },
+    {
+        id: uuidv4(),
+        tags: [
             '3', // Work tag ID
             '4', // College tag ID
         ],
@@ -271,35 +300,7 @@ export const testContacts: Contact[] = [
         ],
         photos: [],
     },
-    {
-        id: uuidv4(),
-        tags: [
-            '2', // Family tag ID
-            '4', // College tag ID
-        ],
-        name: 'Sarah Taylor',
-        notes: 'Cousin and college friend',
-        phone: {
-            id: uuidv4(),
-            countryCode: '1',
-            number: '6666666666'
-        },
-        email: 'sarah.taylor@example.com',
-        address: '7890 Pine St, Thatcity, USA',
-        birthday: {
-            day: '10',
-            month: '04'
-        },
-        socialMedia: [
-            {
-                id: uuidv4(),
-                title: 'sarah.taylor',
-                type: 'twitter',
-                url: 'https://www.twitter.com/sarah.taylor'
-            },
-        ],
-        photos: [],
-    },
+    
     {
         id: uuidv4(),
         tags: [
@@ -351,5 +352,13 @@ export const testTags: Tag[] = [
     {
         id: '5',
         name: 'School',
+    },
+    {
+        id: '9',
+        name: 'UIUC',
+    },
+    {
+        id: '10',
+        name: 'Aerospace Engineering',
     }
 ]

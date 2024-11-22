@@ -2,13 +2,14 @@ import { View, StyleSheet } from 'react-native';
 import { ReactNode } from 'react';
 import EditButton from './EditButton';
 import { LinearGradient } from 'expo-linear-gradient';
-type EditButtonsProps = {
+import { useState } from 'react';
+type EditButtonsContainerProps = {
     editButton1: ReactNode;
     editButton2: ReactNode;
     editButton3: ReactNode;
 }
 
-export default function EditButtons({ editButton1, editButton2, editButton3 }: EditButtonsProps) {
+export default function EditButtonsContainer({ editButton1, editButton2, editButton3 }: EditButtonsContainerProps) {
     return (
         <LinearGradient colors={['#000000', '#1D1D1D']} start={{ x: -1.3, y: -1 }} end={{ x: 2, y: 2 }}  style={styles.container}>
             {editButton1}
