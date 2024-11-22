@@ -3,7 +3,7 @@ import getTheme from '../utils/GetTheme';
 
 type Size = 'xsmall' | 'small' | 'medium' | 'large';
 type Weight = 'xbold' | 'bold' | 'light' | 'medium' | 'regular' | 'semiBold' | 'thin' | 'xlight';
-type Color = 'full' | 'semi' | 'muted';
+type Color = 'full' | 'semi-full' | 'semi' | 'muted';
 
 type CustomTextProps = {
     children: React.ReactNode;
@@ -21,7 +21,7 @@ export default function CommonText({ children, size = 'medium', weight = 'regula
     let fontSize: number;
     switch (size) {
         case 'xsmall':
-            fontSize = 9;
+            fontSize = 11;
             break;
         case 'small':
             fontSize = 13;
@@ -74,6 +74,9 @@ export default function CommonText({ children, size = 'medium', weight = 'regula
             break;
         case 'muted':
             fontColor = theme.text.muted;
+            break;
+        case 'semi-full':
+            fontColor = theme.text.semiFull;
             break;
         default:
             fontColor = theme.text.full;

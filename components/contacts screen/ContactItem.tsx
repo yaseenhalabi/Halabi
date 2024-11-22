@@ -57,10 +57,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        height: 50,
+        height: 60,
         flexDirection: 'column',
         justifyContent: 'center',
         paddingHorizontal: 5,
+
     },
     tagsContainer: {
         flexDirection: 'row',

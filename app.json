@@ -7,6 +7,7 @@
     "icon": "./assets/images/halabi-icon.png",
     "userInterfaceStyle": "light",
     "scheme": "halabi",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/halabi-splash-screen.png",
       "resizeMode": "contain",
@@ -37,7 +38,8 @@
           ]
         }
       ],
-      "expo-router"
+      "expo-router",
+      "expo-build-properties"
     ],
     "extra": {
       "router": {

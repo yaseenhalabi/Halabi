@@ -24,7 +24,7 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
             >
                 <View style={styles.leftContainer}>
                     <CommonText numberOfLines={1}>{tag.name}</CommonText>
-                    <CommonText weight='regular' size='xsmall' color='semi'>{contactsToString(contactsWithTag)}</CommonText>
+                    <CommonText weight='regular' size='xsmall' color='semi' numberOfLines={1}>{contactsToString(contactsWithTag)}</CommonText>
                 </View>
                 <View style={styles.rightContainer}>
                     <CommonText weight='regular' size='medium' style={Platform.OS === 'android' && {top: 2}}>{contactsWithTag.length}</CommonText>
@@ -37,20 +37,16 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
 
 const styles = StyleSheet.create({
     container: {
-        height: 50,
+        height: 60,
         width: '100%',
         borderTopRightRadius: 100,
         borderBottomRightRadius: 100,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingLeft: 5,
         paddingRight: 10,
     },
     leftContainer: {
-        flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'flex-start',
         width: '90%',
     },
     rightContainer: {

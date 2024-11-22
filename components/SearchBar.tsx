@@ -63,12 +63,12 @@ function CancelSearch({ clearInput, hasText }: CancelSearchProps) {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 35,
+        height: 45,
     },
     insideContainer: {
         width: '100%',
         alignItems: 'center',
-        height: 35,
+        height: 45,
         paddingHorizontal: 10,
         borderRadius: 40,
         flexDirection: 'row',

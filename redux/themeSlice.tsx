@@ -15,6 +15,7 @@ const themeSlice = createSlice({
                     full: '#ffffff',
                     semi: '#A6A6A6',
                     muted: '#5B5B5B',
+                    semiFull: '#DBDBDB',
                 },
             },
             {
