@@ -11,6 +11,7 @@ import ListOfContacts from '../../../../components/contacts screen/ListOfContact
 import { getFilteredContacts } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
 import { Contact, Tag } from '../../../../utils/types';
+import AddContactInput from '../../../../components/contacts screen/AddContactInput';
 
 export default function MyContacts() {
   const [searchText, setSearchText] = useState('');
@@ -24,18 +25,32 @@ export default function MyContacts() {
     console.log('placeholder function')
   }
   type modes = "default" | "edit" | "filter" | "add";
-
   const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
+
+  const onAddNameConfirm = () => {
+    setEditButtonsMode("default");
+  }
+
+  const onAddNameCancel = () => {
+    setEditButtonsMode("default");
+  }
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText}/>
       {
         editButtonsMode === "default" &&
         <EditButtonsContainer 
-          editButton1={<EditButton text="Add Contact" onPress={placeholderfunction} source={addIcon}/>}
+          editButton1={<EditButton text="Add Contact" onPress={() => setEditButtonsMode("add")} source={addIcon}/>}
           editButton2={<EditButton text="Edit Contacts" onPress={placeholderfunction} source={editIcon}/>}
           editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
         />
+      }
+      {
+        editButtonsMode === "add" &&
+        <AddContactInput onConfirm={onAddNameConfirm} onCancel={onAddNameCancel}/>
+      }
+      {
+        // editButtonsMode === "filter" &&
       }
       {
         // editButtonsMode === "add" &&

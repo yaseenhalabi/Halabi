@@ -21,6 +21,7 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
                 autoCorrect={true}
                 numberOfLines={4}
                 multiline
+                keyboardAppearance='dark'
             />
         </ProfileInputContainer>
     )

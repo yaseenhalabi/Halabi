@@ -1,5 +1,5 @@
 import { Contact, Tag, Birthday } from "./types";
-
+import { v4 as uuidv4 } from 'uuid';
 export const contactsToString = (contactsWithTag: Contact[]) => {
     let contactsWithTagString = '';
     for (let i = 0; i < contactsWithTag.length; i++) {
@@ -105,4 +105,16 @@ export const isValidDate = (monthStr: string, dayStr: string): boolean => {
 
     // Check if the date's month and day match the input values
     return (date.getMonth() === month && date.getDate() === day) || (monthStr === '' && dayStr === '');
+}
+
+export const createNewContactWithName = (name: string): Contact => {
+    return {
+        id: uuidv4(),
+        name,
+        phone: { number: '', countryCode: '', id: uuidv4() },
+        email: '',
+        tags: [],
+        birthday: { month: '', day: '' },
+        photos: [],
+    };
 }

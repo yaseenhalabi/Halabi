@@ -16,14 +16,6 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
     const theme = getTheme();
     const [countryCode, setCountryCode] = useState('1');
     const [number, setNumber] = useState('');
-    const numberInputRef = useRef<any>(null);
-    const selectAllTextInNumberInput = () => {
-        numberInputRef.current?.setNativeProps({ selection: { start: 0, end: formatPhoneNumber(number).length} });
-    }
-    useEffect(() => {
-        numberInputRef.current?.focus();
-    }, [isModalVisible]);
-
     const openModal = () => {
         setCountryCode(phoneNumber.countryCode);
         setNumber(phoneNumber.number);
@@ -43,20 +35,22 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
                 <CommonText size='medium'>+</CommonText>
                 <TextInput 
                     value={countryCode}
+                    selectTextOnFocus
                     onChangeText={setCountryCode}
                     style={styles.countryCodeInput} 
                     placeholderTextColor={theme.text.muted} 
                     placeholder='1'
+                    keyboardAppearance="dark"
                 />
                 <TextInput 
                     keyboardType="phone-pad"
-                    ref={numberInputRef}
-                    onFocus={selectAllTextInNumberInput}
-                    value={formatPhoneNumber(number)}
+                    selectTextOnFocus
+                    value={number}  
                     onChangeText={(text) => setNumber(removeFormatting(text))}
                     style={styles.numberInput} 
                     placeholderTextColor={theme.text.muted} 
                     placeholder='(___) ___ ____'
+                    keyboardAppearance="dark"
                 />
             </View>
             <SaveButton onPress={handleSave} />

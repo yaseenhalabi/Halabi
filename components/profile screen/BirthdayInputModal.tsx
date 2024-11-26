@@ -15,8 +15,6 @@ type BirthdayInputModalProps = {
 
 export default function BirthdayInputModal({ birthday, onChangeBirthday, handleClose }: BirthdayInputModalProps) {
     const theme = getTheme();
-    const dayInputRef = useRef<TextInput>(null); // Reference for the day input
-    const monthInputRef = useRef<TextInput>(null); // Reference for the month input
     const [birthdayState, setBirthdayState] = useState<Birthday>({ month: birthday.month, day: birthday.day });
     const [isInvalidInput, setIsInvalidInput] = useState(false);
 
@@ -29,16 +27,9 @@ export default function BirthdayInputModal({ birthday, onChangeBirthday, handleC
         }
     }, [birthdayState]);
 
-    useEffect(() => {
-        monthInputRef.current?.focus();
-    }, []);
-
     // Handle changes in the month input
     const handleMonthChange = (text: string) => {
         const cleaned = text.replace(/\D/g, ''); // Remove non-numeric characters
-        if (cleaned.length === 2) {
-            dayInputRef.current?.focus(); // Automatically move to day input after 2 digits
-        }
         setBirthdayState(prevState => ({ ...prevState, month: cleaned }));
     };
 
@@ -46,13 +37,6 @@ export default function BirthdayInputModal({ birthday, onChangeBirthday, handleC
     const handleDayChange = (text: string) => {
         const cleaned = text.replace(/\D/g, ''); // Remove non-numeric characters
         setBirthdayState(prevState => ({ ...prevState, day: cleaned }));
-    };
-
-    // Select all text when input is focused
-    const handleSelectAllText = (inputRef: any, length: number) => {
-        inputRef.current?.setNativeProps({
-            selection: { start: 0, end: length },
-        });
     };
 
     const handleSave = () => {
@@ -69,29 +53,29 @@ export default function BirthdayInputModal({ birthday, onChangeBirthday, handleC
         <CommonModal isVisible={true} onClose={handleClose} heightProportion={0.15}>
             <View style={{flexDirection: 'row'}}>
                 <TextInput
-                    ref={monthInputRef}
                     style={[styles.textInput, styles.extraLargeText, styles.centeredText]}
                     value={birthdayState.month}
                     placeholder="mm"
                     placeholderTextColor={theme.text.muted}
                     onChangeText={handleMonthChange}
-                    onFocus={() => handleSelectAllText(monthInputRef, birthdayState.month.length)}
                     keyboardType="numeric"
                     maxLength={2}
                     returnKeyType="next"
+                    selectTextOnFocus
+                    keyboardAppearance='dark'
                 />
                 <Text style={[styles.slashText, styles.extraLargeText]}>/</Text>
                 <TextInput
-                    ref={dayInputRef}
                     style={[styles.textInput, styles.extraLargeText, styles.centeredText]}
                     value={birthdayState.day}
                     placeholder="dd"
+                    selectTextOnFocus
                     placeholderTextColor={theme.text.muted}
                     onChangeText={handleDayChange}
-                    onFocus={() => handleSelectAllText(dayInputRef, birthdayState.day.length)}
                     keyboardType="numeric"
                     maxLength={2}
                     returnKeyType="done"
+                    keyboardAppearance='dark'
                 />
             </View>
             {

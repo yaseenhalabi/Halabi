@@ -25,7 +25,6 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
     const [addressState, setAddressState] = useState(address);
     useEffect(() => {
         addressInputRef.current?.setAddressText(address);
-        addressInputRef.current?.focus();
       }, [isModalVisible]);
 
     const onSave = () => {
@@ -54,6 +53,7 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                         onChangeText: (text) => {
                             setAddressState(text);
                         },
+                        keyboardAppearance: 'dark',
                     }}
                     enablePoweredByContainer={false}
                     styles={

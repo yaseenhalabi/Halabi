@@ -17,6 +17,7 @@ export default function NameInput({ onChangeText, value}: NameInputProps) {
             returnKeyType='done'
             maxLength={35}
             value={value}
+            keyboardAppearance='dark'
         />
     )
 }

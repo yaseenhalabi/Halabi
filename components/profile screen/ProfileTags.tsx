@@ -54,6 +54,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
                         autoFocus={true}
                         style={{...styles.input}}
                         returnKeyType='done'
+                        keyboardAppearance='dark'
                     />
                     <ListOfProfileTags 
                         tags={allTags} 

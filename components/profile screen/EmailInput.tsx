@@ -11,12 +11,6 @@ type EmailInputProps = {
 }
         
 export default function EmailInput({ value, onChangeText }: EmailInputProps) {
-    const handleSelectAllText = (inputRef: any, length: number) => {
-        inputRef.current?.setNativeProps({
-            selection: { start: 0, end: length },
-        });
-    };
-    const inputRef = useRef<TextInput>(null)
     const theme = getTheme();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const showModal = () => {
@@ -29,17 +23,11 @@ export default function EmailInput({ value, onChangeText }: EmailInputProps) {
     const [email, setEmail] = useState("");
 
 
-    useEffect(() => {
-        if (isModalVisible) {
-            inputRef.current?.focus();
-        }
-    }, [isModalVisible]);
 
     return (
         <>
             <CommonModal isVisible={isModalVisible} onClose={hideModal} heightProportion={0.12} contentContainerStyle={styles.modalContentContainer}>
                 <TextInput 
-                    ref={inputRef}
                     value={email}
                     style={styles.input} 
                     onChangeText={setEmail} 
@@ -48,7 +36,9 @@ export default function EmailInput({ value, onChangeText }: EmailInputProps) {
                     autoCapitalize='none'
                     autoCorrect={false}
                     inputMode="email"
-                    onFocus={() => handleSelectAllText(inputRef, email.length)}
+                    selectTextOnFocus
+                    keyboardAppearance="dark"
+
                 />
                 <SaveButton onPress={() => {
                     onChangeText(email);
