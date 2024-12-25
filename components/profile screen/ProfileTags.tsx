@@ -24,10 +24,8 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
     const onTagPress = () => {
         router.push("my-tags");
     }
-    const onTagLongPress = () => {
-        console.log('long press');
-    }
-    const tagComponents = tags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={onTagPress} onLongPress={onTagLongPress} />);
+
+    const tagComponents = tags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={onTagPress} contactId={contactId} canDelete/>);
     const [addingTag, setAddingTag] = useState(false);
     const [searchText, setSearchText] = useState('');
     const toggleAddingTag = () => {
@@ -43,7 +41,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
             {
                 addingTag ? 
                 <View style={[styles.addTagContainer, { borderColor: theme.button }]}>
-                    <TouchableOpacity hitSlop={15} onPress={closeAddingTag}>
+                    <TouchableOpacity hitSlop={5} onPress={closeAddingTag}>
                         <Image source={cancelIcon} style={styles.cancelIcon} />
                     </TouchableOpacity>
                     <TextInput 
@@ -55,6 +53,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
                         style={{...styles.input}}
                         returnKeyType='done'
                         keyboardAppearance='dark'
+                        autoCapitalize='words'
                     />
                     <ListOfProfileTags 
                         tags={allTags} 
@@ -86,11 +85,11 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
     const contacts = useSelector((state: any) => state.contacts);
     const contact = getContactById(contactId, contacts);
     const tagIds = contact?.tags ||[];
-    const filteredTags = tags.filter((tag: Tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()) && !tagIds.includes(tag.id));
+    let filteredTags = tags.filter((tag: Tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()) && !tagIds.includes(tag.id));
+    filteredTags = filteredTags.slice(0, 5); 
     const theme = getTheme();
     const addTagToContact_ = (tagId: string) => {
         dispatch(addTagToContact({ contactId: contactId, tagId: tagId }));
-        closeAddingTag();
         setSearchText('');
     }
     const createNewTag = () => {
@@ -99,15 +98,25 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
         addTagToContact_(newTag.id);
     }
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container} style={{paddingVertical: 5}}>
-            {
-                searchText.length > 0 &&
-                <TouchableOpacity hitSlop={20} onPress={createNewTag}>
-                    <CommonText weight="regular" size="small">+ New tag "{searchText}"</CommonText>
-                </TouchableOpacity>
-            }
-            {filteredTags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={() => addTagToContact_(tag.id)} />)}
-        </ScrollView>
+        <View style={{width: '100%', position: 'relative'}}>
+            <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container} style={{paddingVertical: 5}}>
+                {
+                    searchText.length > 0 &&
+                    <TouchableOpacity hitSlop={10} onPress={createNewTag}>
+                        <CommonText weight="regular" size="small">+ New tag "{searchText}"</CommonText>
+                    </TouchableOpacity>
+                }
+                {filteredTags.map((tag: Tag) => (
+                    <ProfileTag 
+                        key={tag.id} 
+                        tagId={tag.id} 
+                        onPress={() => addTagToContact_(tag.id)} 
+                        contactId={contactId} 
+                        canDelete={false}
+                    />
+                ))}
+            </ScrollView>
+        </View>
     );
 }
 
@@ -115,9 +124,10 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
+        alignItems: 'center',
         flexWrap: 'wrap',
         width: '100%',
-        gap: 5
+        gap: 8,
     },
     input: {
         width: '100%',

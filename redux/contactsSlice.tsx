@@ -15,7 +15,6 @@ const contactsSlice = createSlice({
             return state.map(contact => contact.id === action.payload.id ? action.payload : contact);
         },
         addContact: (state, action: PayloadAction<Contact>) => {
-            console.log('addContact', action.payload);
             return [action.payload, ...state];
         },
         removeContact: (state, action: PayloadAction<{ id: string }>) => {
@@ -23,10 +22,16 @@ const contactsSlice = createSlice({
         },
         addTagToContact: (state, action: PayloadAction<{ contactId: string, tagId: string }>) => {
             return state.map(contact => contact.id === action.payload.contactId ? { ...contact, tags: [...contact.tags, action.payload.tagId] } : contact);
+        },
+        removeTagFromContact: (state, action: PayloadAction<{ contactId: string, tagId: string }>) => {
+            return state.map(contact => contact.id === action.payload.contactId ? { ...contact, tags: contact.tags.filter(tagId => tagId !== action.payload.tagId) } : contact);
+        },
+        deleteSelectedContacts: (state, action: PayloadAction<string[]>) => {
+            return state.filter(contact => !action.payload.includes(contact.id));
         }
     }
 });
 
-export const { setContacts, updateContact, addContact, removeContact, addTagToContact } = contactsSlice.actions;
+export const { setContacts, updateContact, addContact, removeContact, addTagToContact, removeTagFromContact } = contactsSlice.actions;
 
 export default contactsSlice.reducer;

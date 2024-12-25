@@ -5,6 +5,7 @@ import getTheme from '../../utils/GetTheme';
 import personIcon from '../../assets/images/person-icon-white.png';
 import CommonText from '../CommonText';
 import { contactsToString } from '../../utils/helpers';
+
 type TagItemProps = {
     tag: Tag;
     contactsWithTag: Contact[];
@@ -37,24 +38,27 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
 
 const styles = StyleSheet.create({
     container: {
-        height: 60,
+        height: 65,
         width: '100%',
         borderTopRightRadius: 100,
         borderBottomRightRadius: 100,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingRight: 10,
+        paddingRight: 15,
+        paddingLeft: 5,
+
     },
     leftContainer: {
         justifyContent: 'center',
         width: '90%',
+        gap: 3,
     },
     rightContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        gap: 2,
-        opacity: .6,
+        gap: 3,
+        opacity: .5,
     },
     icon: {
         height: 12,

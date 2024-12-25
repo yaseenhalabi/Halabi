@@ -54,6 +54,7 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                             setAddressState(text);
                         },
                         keyboardAppearance: 'dark',
+                        autoFocus: address === '',
                     }}
                     enablePoweredByContainer={false}
                     styles={

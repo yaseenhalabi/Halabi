@@ -5,16 +5,20 @@ import { Contact } from "../../utils/types";
 import ContactItemTag from "./ContactItemTag";
 import { Tag } from "../../utils/types";
 import { router } from "expo-router";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import getTheme from "../../utils/GetTheme";
+import { addSelectedContact } from "../../redux/selectionSlice";
+import { setContactsSelectionMode } from "../../redux/selectionSlice";
+import * as Haptics from 'expo-haptics';
 type ContactItemProps = {
     contact: Contact;
+    isSelected?: boolean;
 }
 
-export default function ContactItem({ contact }: ContactItemProps) {
+export default function ContactItem({ contact, isSelected }: ContactItemProps) {
     const tags: Tag[] = useSelector((state: any) => state.tags);
     const contactTags: Tag[] = tags.filter((tag: Tag) => contact.tags.includes(tag.id));
-    
+    const dispatch = useDispatch(); 
     // Maximum number of tags to display before summarizing
     const maxTags = 4;
     const displayedTags = contactTags.slice(0, maxTags);
@@ -30,19 +34,36 @@ export default function ContactItem({ contact }: ContactItemProps) {
             <CommonText key="more" size="xsmall" weight="light" color="semi">{`+${remainingTags} tags`}</CommonText>
         );
     }
-
+    const inContactSelectionMode: boolean = useSelector((state: any) => state.selection.contactsSelectionMode);
     const onPress = () => {
-        router.push({ pathname: "/my-contacts/profile", params: { id: contact.id } });
-        Keyboard.dismiss();
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+        if (inContactSelectionMode) {
+            if (isSelected) {
+                dispatch({ type: 'selection/removeSelectedContact', payload: { id: contact.id } });
+            }
+            else {
+                dispatch(addSelectedContact({ id: contact.id }));
+            }
+        }
+        else {
+            router.push({ pathname: "/my-contacts/profile", params: { id: contact.id } });
+            Keyboard.dismiss();
+        }
+    }
+
+    const onLongPress = () => { 
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+        dispatch(setContactsSelectionMode(true));
+        dispatch(addSelectedContact({ id: contact.id }));
     }
 
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
             <LinearGradient
                 colors={['#000000', '#1D1D1D']}
                 start={{ x: -.4, y: -.6 }}
                 end={{ x: 1.3, y: 1.5 }}
-                style={styles.container}
+                style={[styles.container, { borderColor: '#777777', borderWidth: isSelected ? 1 : 0 }]}
             >
                 <CommonText size="medium">{contact.name}</CommonText>
                 <View style={styles.tagsContainer}>
@@ -55,13 +76,13 @@ export default function ContactItem({ contact }: ContactItemProps) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         width: '100%',
-        height: 60,
+        height: 65,
         flexDirection: 'column',
         justifyContent: 'center',
         paddingHorizontal: 5,
-
+        borderWidth: 1,
+        gap: 3
     },
     tagsContainer: {
         flexDirection: 'row',

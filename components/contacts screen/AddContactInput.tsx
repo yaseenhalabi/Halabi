@@ -1,22 +1,21 @@
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createNewContactWithName } from '../../utils/helpers';
 import { addContact } from '../../redux/contactsSlice';
 import { router } from "expo-router";
+
 type AddContactInputProps = {
-    onConfirm: () => void;
-    onCancel: () => void;
+    endEditing: () => void;
 };
 
-export default function AddContactInput({ onConfirm, onCancel }: AddContactInputProps) {
+export default function AddContactInput({ endEditing }: AddContactInputProps) {
     const [text, setText] = useState('');
     const dispatch = useDispatch();
 
     const onConfirmLocal = () => {
-        console.log(createNewContactWithName(text));
-        onConfirm();
+        endEditing();
         const new_contact = createNewContactWithName(text);
         dispatch(addContact(new_contact));
         router.push({ pathname: "/my-contacts/profile", params: { id: new_contact.id } });
@@ -33,8 +32,9 @@ export default function AddContactInput({ onConfirm, onCancel }: AddContactInput
                 autoComplete='off'
                 returnKeyType='done'
                 keyboardAppearance='dark'
+                autoCorrect={false}
             />
-            <TouchableOpacity onPress={onCancel} hitSlop={10}>
+            <TouchableOpacity onPress={endEditing} hitSlop={10}>
                 <SymbolView name="xmark" size={17} tintColor="white" style={styles.symbol} />
             </TouchableOpacity>
 

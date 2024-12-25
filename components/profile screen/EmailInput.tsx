@@ -31,11 +31,12 @@ export default function EmailInput({ value, onChangeText }: EmailInputProps) {
                     value={email}
                     style={styles.input} 
                     onChangeText={setEmail} 
-                    placeholder='Enter Email'
+                    placeholder='john.doe@gmail.com'
                     placeholderTextColor={theme.text.muted}
                     autoCapitalize='none'
                     autoCorrect={false}
                     inputMode="email"
+                    autoFocus={email === ''}
                     selectTextOnFocus
                     keyboardAppearance="dark"
 
@@ -45,15 +46,13 @@ export default function EmailInput({ value, onChangeText }: EmailInputProps) {
                     hideModal();
                 }}/>
             </CommonModal>
-            <ProfileInputContainer title="Email">
-                <TouchableOpacity onPress={showModal}>
+            <ProfileInputContainer title="Email" onClick={showModal}>
                     {
                         value ? 
                         <CommonText size='small'>{value}</CommonText>
                         :
                         <CommonText size='small' color='muted'>Enter Email</CommonText>
                     }
-                </TouchableOpacity>
             </ProfileInputContainer>
         </>
     )
@@ -62,11 +61,14 @@ export default function EmailInput({ value, onChangeText }: EmailInputProps) {
 
 const styles = StyleSheet.create({
     input: {
-        fontSize: 14,
+        fontSize: 16,
+        paddingVertical: 5,
         color: 'white',
         fontFamily: 'Poppins-Regular',
         width: '100%',
         overflow: 'hidden',
+        borderBottomColor: 'gray',
+        borderBottomWidth: 1,
     },
     modalContentContainer: {
         flex: 1,

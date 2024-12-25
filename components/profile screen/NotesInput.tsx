@@ -29,7 +29,7 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
 
 const styles = StyleSheet.create({
     input: {
-        fontSize: 13,
+        fontSize: 14,
         color: 'white',
         fontFamily: 'Poppins-Regular',
         width: '100%',

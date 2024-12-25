@@ -1,5 +1,7 @@
 import { TouchableOpacity, Text, Image, StyleSheet} from 'react-native';
 import CommonText from './CommonText';
+import * as Haptics from 'expo-haptics';
+
 type EditButtonProps = {
     source: any;
     text: string;
@@ -7,8 +9,12 @@ type EditButtonProps = {
 }
 
 export default function EditButton({ source, text, onPress }: EditButtonProps) {
+    const handlePress = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+        onPress();
+    }
     return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={handlePress} style={styles.container}>
             <Image source={source} style={styles.icon} />
             <CommonText weight='light' size='xsmall'>{text}</CommonText> 
         </TouchableOpacity>

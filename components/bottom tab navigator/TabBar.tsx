@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-
+import * as Haptics from 'expo-haptics';
 type TabBarProps = {
     state: any;
     descriptors: any;
@@ -18,6 +18,7 @@ export default function TabBar({ state, descriptors, navigation }: TabBarProps) 
                     const icon = options.tabBarIcon && options.tabBarIcon({focused: state.index === index});
                     const isFocused = state.index === index;
                     const onPress = () => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                         const event = navigation.emit({
                             type: 'tabPress',
                             target: route.key,

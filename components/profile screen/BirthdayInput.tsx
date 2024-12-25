@@ -23,17 +23,15 @@ export default function BirthdayInput({ birthday, onChangeBirthday }: BirthdayIn
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
     return (
-        <ProfileInputContainer title="Birthday">
-            <TouchableOpacity onPress={openModal}>
-                    {birthday?.month != '' && birthday?.day != '' ? (
-                        <View style={styles.birthdayContainer}>
-                            <CommonText size='small'>{getMonthName} {birthday?.day}</CommonText>
-                            <CommonText size='small' color='semi'>{birthday && getBirthdayText(birthday)}</CommonText>
-                        </View>
-                    ) : (
-                        <CommonText size='small' color='muted'>Select Birthday</CommonText>
-                    )}
-            </TouchableOpacity>
+        <ProfileInputContainer title="Birthday" onClick={openModal}>
+            {birthday?.month != '' && birthday?.day != '' ? (
+                <View style={styles.birthdayContainer}>
+                    <CommonText size='small'>{getMonthName} {birthday?.day}</CommonText>
+                    <CommonText size='small' color='semi'>{birthday && getBirthdayText(birthday)}</CommonText>
+                </View>
+            ) : (
+                <CommonText size='small' color='muted'>Select Birthday</CommonText>
+            )}
             {
             modalVisible && 
             <BirthdayInputModal 

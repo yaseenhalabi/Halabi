@@ -1,4 +1,4 @@
-import { View, StyleSheet, KeyboardAvoidingView, Touchable, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Touchable, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import CommonText from '../CommonText';
 import getTheme from '../../utils/GetTheme';
 type ProfileInputContainerProps = {
@@ -15,9 +15,16 @@ export default function ProfileInputContainer({ title, children, hideTitle, styl
         <View style={styles.container}>
             {!hideTitle && <CommonText size='xsmall' color='semi' weight='regular'>{title}</CommonText>}
                 <View style={[styles.inputContainer, { backgroundColor: theme.backgroundSecondary }, style]}>
-                    <TouchableOpacity onPress={onClick}>
+                    {
+                    onClick ?
+                    <TouchableOpacity onPress={onClick} hitSlop={5}>
                         {children}
                     </TouchableOpacity >
+                    :
+                    <View>
+                        {children}
+                    </View> 
+                    }
                 </View>
         </View>
     );

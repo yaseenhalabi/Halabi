@@ -24,7 +24,7 @@ export default function ListOfTags({ tags }: ListOfTagsProps) {
                 />
             }
             keyExtractor={(item) => item.id}
-            contentContainerStyle={{ gap: 5, flexGrow: 1, height: '110%' }}
+            contentContainerStyle={{ gap: 5, flexGrow: 1, paddingBottom: 300 }}
             showsVerticalScrollIndicator={false}
         />
     );

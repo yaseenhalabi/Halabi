@@ -18,7 +18,7 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
     const [number, setNumber] = useState('');
     const openModal = () => {
         setCountryCode(phoneNumber.countryCode);
-        setNumber(phoneNumber.number);
+        setNumber(formatPhoneNumber(phoneNumber.number));
         setIsModalVisible(true);
     }
     const closeModal = () => {
@@ -44,19 +44,20 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
                 />
                 <TextInput 
                     keyboardType="phone-pad"
+                    autoFocus={phoneNumber.number === ''}
                     selectTextOnFocus
                     value={number}  
-                    onChangeText={(text) => setNumber(removeFormatting(text))}
+                    onChangeText={(text) => setNumber(formatPhoneNumber(text))}
                     style={styles.numberInput} 
                     placeholderTextColor={theme.text.muted} 
-                    placeholder='(___) ___ ____'
+                    placeholder='___-___-____'
                     keyboardAppearance="dark"
                 />
             </View>
             <SaveButton onPress={handleSave} />
         </CommonModal>
         <ProfileInputContainer title="Phone">
-            <TouchableOpacity onPress={openModal}>
+            <TouchableOpacity onPress={openModal} hitSlop={20}>
                 {phoneNumber.number === '' ?
                     <CommonText size='small' color='muted'>Add phone number</CommonText> :
                     <CommonText size='small'>
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     countryCodeInput: {
-        fontSize: 14,
+        fontSize: 16,
         color: 'white',
         fontFamily: 'Poppins-Medium',
         width: '10%',
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     numberInput: {
-        fontSize: 14,
+        fontSize: 16,
         color: 'white',
         fontFamily: 'Poppins-Medium',
         width: '80%',

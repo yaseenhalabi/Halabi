@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import PageContainer from '../../../../components/PageContainer';
 import SearchBar from '../../../../components/SearchBar';
 import { useEffect, useState } from 'react';
@@ -9,11 +9,13 @@ import EditButton from '../../../../components/EditButton';
 import EditButtonsContainer from '../../../../components/EditButtonsContainer';
 import ListOfContacts from '../../../../components/contacts screen/ListOfContacts';
 import { getFilteredContacts } from '../../../../utils/helpers';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Contact, Tag } from '../../../../utils/types';
 import AddContactInput from '../../../../components/contacts screen/AddContactInput';
+import EditContact from '../../../../components/contacts screen/EditContacts';
 
 export default function MyContacts() {
+  const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const contacts: Contact[] = useSelector((state: any) => state.contacts);
   const filteredContacts: Contact[] = getFilteredContacts(contacts, searchText);
@@ -27,12 +29,43 @@ export default function MyContacts() {
   type modes = "default" | "edit" | "filter" | "add";
   const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
 
-  const onAddNameConfirm = () => {
+  const endEditing = () => {
     setEditButtonsMode("default");
+    dispatch({ type: 'selection/resetSelectedContacts' });
   }
 
-  const onAddNameCancel = () => {
-    setEditButtonsMode("default");
+  const onEditContacts = () => {
+    setEditButtonsMode("edit");
+    dispatch({ type: 'selection/setContactsSelectionMode', payload: true });
+  }
+  const inEditMode: boolean = useSelector((state: any) => state.selection.contactsSelectionMode);
+  useEffect(() => {
+    if (inEditMode) {
+      setEditButtonsMode("edit");
+    }
+  }, [inEditMode]);
+  const selectedContacts: string[] = useSelector((state: any) => state.selection.selectedContacts);
+  const trashContacts = () => {
+    Alert.alert(
+      'Confirm', // Message of the alert
+      `Are you sure you want to delete ${selectedContacts.length} contact${selectedContacts.length > 1 ? 's' : ''}?`, // Title of the alert
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel', // iOS-specific style for cancel button
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            dispatch({ type: 'contacts/deleteSelectedContacts', payload: selectedContacts });
+            dispatch({ type: 'selection/resetSelectedContacts' });
+            setEditButtonsMode("default");
+          },
+        },
+      ],
+      { cancelable: true } // Dismiss the alert by tapping outside
+    );
   }
   return (
     <PageContainer style={styles.container}>
@@ -41,19 +74,20 @@ export default function MyContacts() {
         editButtonsMode === "default" &&
         <EditButtonsContainer 
           editButton1={<EditButton text="Add Contact" onPress={() => setEditButtonsMode("add")} source={addIcon}/>}
-          editButton2={<EditButton text="Edit Contacts" onPress={placeholderfunction} source={editIcon}/>}
+          editButton2={<EditButton text="Edit Contacts" onPress={onEditContacts} source={editIcon}/>}
           editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
         />
       }
       {
-        editButtonsMode === "add" &&
-        <AddContactInput onConfirm={onAddNameConfirm} onCancel={onAddNameCancel}/>
+        editButtonsMode === "add"  &&
+        <AddContactInput endEditing={endEditing}/>
       }
       {
         // editButtonsMode === "filter" &&
       }
       {
-        // editButtonsMode === "add" &&
+        editButtonsMode === "edit" &&
+        <EditContact endEditing={endEditing} trashContacts={trashContacts}/>
       }
       <ListOfContacts contacts={filteredContacts}/>
     </PageContainer>

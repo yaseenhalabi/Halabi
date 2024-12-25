@@ -7,6 +7,7 @@ import themeSlice from './themeSlice';
 import onboardingSlice from './onboardingSlice';
 import contactsSlice from './contactsSlice';
 import tagsSlice from './tagsSlice';
+import selectionSlice from './selectionSlice';
 
 const persistConfig = {
   key: 'root',
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   onboarding: onboardingSlice,
   contacts: contactsSlice,
   tags: tagsSlice,
+  selection: selectionSlice,
 });
 // const persistedReducer = persistReducer(persistConfig, rootReducer);
 

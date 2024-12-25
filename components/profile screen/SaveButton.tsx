@@ -15,7 +15,7 @@ export default function SaveButton({onPress} : SaveButtonProps) {
 const styles = StyleSheet.create({
     saveButton: {
         width: '100%',
-        paddingVertical: 3,
+        paddingVertical: 8,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'grey',
