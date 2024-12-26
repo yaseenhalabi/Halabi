@@ -9,6 +9,7 @@ export default function MyTags() {
   return (
     <Stack screenOptions={screenOptions}>
       <Stack.Screen name="index"/>
+      <Stack.Screen name="tag" />
     </Stack>
   );
 }

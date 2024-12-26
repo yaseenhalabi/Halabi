@@ -23,14 +23,20 @@ export default function Header({navigation, route}: HeaderProps) {
             case '/my-contacts':
                 setCurrentRouteName('My Contacts');
                 break;
+            case '/my-contacts/profile':
+                setCurrentRouteName('My Contacts');
+                break;
             case '/my-tags':
+                setCurrentRouteName('My Tags');
+                break;
+            case '/my-tags/tag':
                 setCurrentRouteName('My Tags');
                 break;
             case '/settings':
                 setCurrentRouteName('Settings');
                 break;
             default:
-                setCurrentRouteName('My Contacts');
+                setCurrentRouteName('Halabi');
                 break;
         }
         setShowBackArrow(pathname == '/my-contacts/profile' || pathname == '/my-tags/tag' || pathname == '/settings');

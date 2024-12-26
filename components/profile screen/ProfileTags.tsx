@@ -21,11 +21,11 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
     const allTags = useSelector((state: any) => state.tags)
     const tags = allTags.filter((tag: Tag) => tagIds.includes(tag.id));
 
-    const onTagPress = () => {
-        router.push("my-tags");
+    const onTagPress = (tagId: string) => {
+        router.push({ pathname: '/my-tags/tag', params: { id: tagId } });
     }
 
-    const tagComponents = tags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={onTagPress} contactId={contactId} canDelete/>);
+    const tagComponents = tags.map((tag: Tag) => <ProfileTag key={tag.id} tagId={tag.id} onPress={() => onTagPress(tag.id)} contactId={contactId} canDelete/>);
     const [addingTag, setAddingTag] = useState(false);
     const [searchText, setSearchText] = useState('');
     const toggleAddingTag = () => {

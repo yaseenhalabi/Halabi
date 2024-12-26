@@ -5,6 +5,7 @@ import TagItem from "./TagItem";
 import { getContactsWithTag, getFilteredTags } from "../../utils/helpers";
 import { useSelector, useDispatch } from "react-redux";
 import { setTagsSelectionMode } from '../../redux/selectTagsSlice';
+import { useRouter } from 'expo-router';
 
 type ListOfTagsProps = {
     tags: Tag[]
@@ -14,9 +15,10 @@ export default function ListOfTags({ tags }: ListOfTagsProps) {
     const contacts = useSelector((state: any) => state.contacts);
     const theme = getTheme();
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const handleTagPress = (tagId: string) => {
-        console.log(`Tag with id ${tagId} pressed`);
+        router.push({ pathname: '/my-tags/tag', params: { id: tagId } });
     };
 
     return (

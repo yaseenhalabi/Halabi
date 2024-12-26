@@ -24,13 +24,11 @@ export default function MyTags() {
   const isReversed = useSelector((state: any) => state.filterTags.reverse);
   const filteredTags = getFilteredTags(tags, contacts, searchText, sortBy, isReversed);
   const inTagSelectionMode = useSelector((state: any) => state.tagSelection.tagsSelectionMode);
-  console.log(inTagSelectionMode)
 
   const dispatch = useDispatch();
   type modes = "default" | "edit" | "filter" | "add";
   const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
   useEffect(() => {
-    console.log(inTagSelectionMode);
     if (inTagSelectionMode) {
       setEditButtonsMode("edit");
     }

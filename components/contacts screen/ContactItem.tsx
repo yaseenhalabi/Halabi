@@ -63,7 +63,7 @@ export default function ContactItem({ contact, isSelected }: ContactItemProps) {
                 colors={['#000000', '#1D1D1D']}
                 start={{ x: -.4, y: -.6 }}
                 end={{ x: 1.3, y: 1.5 }}
-                style={[styles.container, { borderColor: '#777777', borderWidth: isSelected ? 1 : 0 }]}
+                style={[styles.container, { borderColor: isSelected ? 'white' : 'transparent', borderWidth: 1 }]}
             >
                 <CommonText size="medium">{contact.name}</CommonText>
                 <View style={styles.tagsContainer}>
