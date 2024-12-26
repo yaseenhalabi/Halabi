@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Contact, Tag } from '../../../../utils/types';
 import AddContactInput from '../../../../components/contacts screen/AddContactInput';
 import EditContact from '../../../../components/contacts screen/EditContacts';
+import FilterContacts from '../../../../components/contacts screen/FilterContacts';
 
 export default function MyContacts() {
   const dispatch = useDispatch();
@@ -67,6 +68,15 @@ export default function MyContacts() {
       { cancelable: true } // Dismiss the alert by tapping outside
     );
   }
+
+  const onFilterContacts = () => {
+    setEditButtonsMode("filter");
+  }
+
+  const selectedTagIds = useSelector((state: any) => state.filter.selectedTagIds);
+  const sortBy = useSelector((state: any) => state.filter.sortBy);
+  const filterCount = selectedTagIds.length + (sortBy ? 1 : 0);
+
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText}/>
@@ -75,7 +85,7 @@ export default function MyContacts() {
         <EditButtonsContainer 
           editButton1={<EditButton text="Add Contact" onPress={() => setEditButtonsMode("add")} source={addIcon}/>}
           editButton2={<EditButton text="Edit Contacts" onPress={onEditContacts} source={editIcon}/>}
-          editButton3={<EditButton text="Filter Contacts" onPress={placeholderfunction} source={filterIcon}/>}
+          editButton3={<EditButton text="Filter Contacts" onPress={onFilterContacts} source={filterIcon} badgeCount={filterCount}/>}
         />
       }
       {
@@ -83,7 +93,8 @@ export default function MyContacts() {
         <AddContactInput endEditing={endEditing}/>
       }
       {
-        // editButtonsMode === "filter" &&
+        editButtonsMode === "filter" &&
+        <FilterContacts endEditing={endEditing}/>
       }
       {
         editButtonsMode === "edit" &&

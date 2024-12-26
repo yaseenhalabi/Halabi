@@ -49,7 +49,7 @@ export default function Header({navigation, route}: HeaderProps) {
 
     return (
         <>
-        <SafeAreaView style={{backgroundColor: theme.background}}/>
+        <SafeAreaView edges={['top']} />
         <View style={{...styles.container, backgroundColor: theme.background}}>
             <HeaderIcon size={25} source={profilePicIcon} onPress={onPress} />
             <View style={styles.headerTextContainer}>
@@ -73,8 +73,7 @@ const styles = StyleSheet.create({
         top: 0,
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 15,
-        paddingBottom: 15,
+        paddingVertical: 15,
         paddingHorizontal: 20,
         flexDirection: 'row',
     },

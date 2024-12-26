@@ -1,44 +1,43 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CommonText from '../CommonText';
 import { Tag } from '../../utils/types';
-import { removeTagFromContact } from '../../redux/contactsSlice';
 import * as Haptics from 'expo-haptics';
+import { removeTagFromContact } from '../../redux/contactsSlice';
+
 type ProfileTagProps = {    
     contactId: string;
     tagId: string;
-    onPress?: () => void;
+    onPress: () => void;
     canDelete?: boolean;
+    isSelected?: boolean;
 };
 
 export default function ProfileTag({ contactId, tagId, onPress, canDelete }: ProfileTagProps) {
     const tags = useSelector((state: any) => state.tags);
     const tag = tags.find((tag: Tag) => tag.id === tagId);
     const dispatch = useDispatch();
-    const [isDeleting, setIsDeleting] = useState(false);
-
     const handlePress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        if (onPress) {
-            onPress();
-        }
+        onPress();
     }
     const onLongPress = () => {
-        if (!canDelete) return;
+        if(!canDelete) return;
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        setIsDeleting(true);
-    };
-
-    const handleDelete = () => {
-    dispatch(removeTagFromContact({ contactId: contactId, tagId: tagId }));
+        dispatch(removeTagFromContact({ contactId, tagId }));
     };
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={isDeleting ? handleDelete : handlePress} onLongPress={onLongPress} hitSlop={10}>
-                <View style={[styles.tagContainer, {backgroundColor: isDeleting ? 'black' : '#232135', borderWidth: isDeleting ? 1 : 0}]}>
-                    <CommonText weight="regular" size="small" style={isDeleting ? {color: 'red'} : {}}>{!isDeleting ? tag?.name || 'Unknown Tag' : 'Delete'}</CommonText>
+            <TouchableOpacity onPress={handlePress} delayLongPress={500} onLongPress={onLongPress} hitSlop={10}>
+                <View style={ styles.tagContainer }>
+                    <CommonText 
+                        weight="regular" 
+                        size="small" 
+                    >
+                        {tag.name}
+                    </CommonText>
                 </View>
             </TouchableOpacity>
         </View>
@@ -50,6 +49,7 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     tagContainer: {
+        backgroundColor:  '#232135',
         borderRadius: 30,
         height: 25,
         justifyContent: 'center',

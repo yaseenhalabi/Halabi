@@ -12,12 +12,12 @@ type PageContainerProps = {
 export default function PageContainer({ children, style, scrollEnabled}: PageContainerProps) {
     const theme = getTheme();
     const [keyboardVisible, setKeyboardVisible] = useState(false);
-    Keyboard.addListener('keyboardDidShow', () => {
-        setKeyboardVisible(true);
-    });
-    Keyboard.addListener('keyboardWillHide', () => {
-        setKeyboardVisible(false);
-    });
+    // Keyboard.addListener('keyboardDidShow', () => {
+    //     setKeyboardVisible(true);
+    // });
+    // Keyboard.addListener('keyboardWillHide', () => {
+    //     setKeyboardVisible(false);
+    // });
     if (scrollEnabled) {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} disabled={!keyboardVisible}>

@@ -5,6 +5,8 @@ import getTheme from '../../utils/GetTheme';
 import personIcon from '../../assets/images/person-icon-white.png';
 import CommonText from '../CommonText';
 import { contactsToString } from '../../utils/helpers';
+import { useSelector, useDispatch } from 'react-redux';
+import { addSelectedTag, removeSelectedTag, setTagsSelectionMode } from '../../redux/selectTagsSlice';
 
 type TagItemProps = {
     tag: Tag;
@@ -14,14 +16,34 @@ type TagItemProps = {
 
 export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps) {
     const theme = getTheme();
+    const dispatch = useDispatch();
+    const selectedTags = useSelector((state: any) => state.tagSelection.selectedTags);
+
+    const inTagSelectionMode: boolean = useSelector((state: any) => state.tagSelection.tagsSelectionMode);
+    const onTagPress = () => {
+        if (inTagSelectionMode) {
+            if (selectedTags.includes(tag.id)) {
+                dispatch(removeSelectedTag(tag.id));
+            } else {
+                dispatch(addSelectedTag(tag.id));
+            }
+        } else {
+            onPress();
+        }
+    };
+
+    const onTagLongPress = () => {
+        dispatch(setTagsSelectionMode(true));
+        dispatch(addSelectedTag(tag.id));
+    };
 
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onTagPress} onLongPress={onTagLongPress}>
             <LinearGradient
                 colors={['#000000', '#1D1D1D']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={styles.container}
+                style={[styles.container, { borderColor: selectedTags.includes(tag.id) ? 'white' : 'transparent', borderWidth: 1 }]}
             >
                 <View style={styles.leftContainer}>
                     <CommonText numberOfLines={1}>{tag.name}</CommonText>

@@ -36,6 +36,7 @@ export default function SearchBar({ onChangeText, value }: SearchBarProps) {
                     placeholderTextColor={theme.text.semi}
                     onChangeText={onChangeText}
                     keyboardAppearance='dark'
+                    returnKeyType='search'
                     ref={inputRef}
                 />
                 <CancelSearch clearInput={clearInput} hasText={hasText} />

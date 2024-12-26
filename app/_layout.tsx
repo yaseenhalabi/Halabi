@@ -9,7 +9,7 @@ export default function Root() {
   if (!loaded) return null;
   return (
     <ProviderAndPersistor>
-      <SafeAreaProvider>
+      <SafeAreaProvider style={styles.container}>
           <Slot/>
       </SafeAreaProvider>
     </ProviderAndPersistor>
@@ -18,9 +18,6 @@ export default function Root() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

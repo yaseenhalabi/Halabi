@@ -112,7 +112,6 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
                         tagId={tag.id} 
                         onPress={() => addTagToContact_(tag.id)} 
                         contactId={contactId} 
-                        canDelete={false}
                     />
                 ))}
             </ScrollView>

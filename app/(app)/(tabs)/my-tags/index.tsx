@@ -1,37 +1,97 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import PageContainer from '../../../../components/PageContainer';
 import SearchBar from '../../../../components/SearchBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import addIcon from '../../../../assets/images/add-icon-white.png';
 import editIcon from '../../../../assets/images/edit-icon-white.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
 import EditButton from '../../../../components/EditButton';
 import EditButtonsContainer from '../../../../components/EditButtonsContainer';
 import ListOfTags from '../../../../components/tags screen/ListOfTags';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getFilteredTags } from '../../../../utils/helpers';
+import AddTagInput from '../../../../components/tags screen/AddTagInput';
+import EditTags from '../../../../components/tags screen/EditTags';
+import FilterTags from '../../../../components/tags screen/FilterTags';
+import { deleteSelectedTags } from '../../../../redux/tagsSlice';
+import { resetSelectedTags, setTagsSelectionMode } from '../../../../redux/selectTagsSlice';
+
 export default function MyTags() {
   const [searchText, setSearchText] = useState('');
   const tags = useSelector((state: any) => state.tags);
   const contacts = useSelector((state: any) => state.contacts);
-  const filteredTags = getFilteredTags(tags, contacts, searchText);
+  const sortBy = useSelector((state: any) => state.filterTags.sortBy);
+  const isReversed = useSelector((state: any) => state.filterTags.reverse);
+  const filteredTags = getFilteredTags(tags, contacts, searchText, sortBy, isReversed);
+  const inTagSelectionMode = useSelector((state: any) => state.tagSelection.tagsSelectionMode);
+  console.log(inTagSelectionMode)
 
+  const dispatch = useDispatch();
+  type modes = "default" | "edit" | "filter" | "add";
+  const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
+  useEffect(() => {
+    console.log(inTagSelectionMode);
+    if (inTagSelectionMode) {
+      setEditButtonsMode("edit");
+    }
+  }, [inTagSelectionMode]);
   const onSearchTextChange = (text: string) => {
     setSearchText(text);
   }
 
-  const placeholderfunction = () => {
-    console.log('placeholder function');
+  const endEditing = () => {
+    setEditButtonsMode("default");
+    dispatch(resetSelectedTags());
+    dispatch(setTagsSelectionMode(false));
   }
+
+  const onAddTag = () => {
+    setEditButtonsMode("add");
+  }
+
+  const onEditTags = () => {
+    setEditButtonsMode("edit");
+    dispatch(setTagsSelectionMode(true)); 
+  }
+
+  const onFilterTags = () => {
+    setEditButtonsMode("filter");
+  }
+
+  const selectedTagIds = useSelector((state: any) => state.tagSelection.selectedTags);
+  const trashTags = () => {
+    const numberOfSelectedTags = selectedTagIds.length;
+    Alert.alert(
+      'Delete Tags',
+      `Are you sure you want to delete ${numberOfSelectedTags} tags?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => {
+            dispatch(deleteSelectedTags(selectedTagIds));
+            dispatch(resetSelectedTags());
+            endEditing();
+          }
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const activeFiltersCount = (sortBy ? 1 : 0) + (isReversed ? 1 : 0);
 
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText} />
-      <EditButtonsContainer 
-        editButton1={<EditButton text="Add Tag" onPress={placeholderfunction} source={addIcon}/>}
-        editButton2={<EditButton text="Edit Tags" onPress={placeholderfunction} source={editIcon}/>}
-        editButton3={<EditButton text="Filter Tags" onPress={placeholderfunction} source={filterIcon}/>}
-      />
+      {editButtonsMode === "default" && (
+        <EditButtonsContainer 
+          editButton1={<EditButton text="Add Tag" onPress={onAddTag} source={addIcon}/>} 
+          editButton2={<EditButton text="Edit Tags" onPress={onEditTags} source={editIcon}/>} 
+          editButton3={<EditButton text="Filter Tags" onPress={onFilterTags} source={filterIcon} badgeCount={activeFiltersCount}/>} 
+        />
+      )}
+      {editButtonsMode === "add" && <AddTagInput endEditing={endEditing} />}
+      {editButtonsMode === "edit" && <EditTags endEditing={endEditing} trashTags={trashTags} />}
+      {editButtonsMode === "filter" && <FilterTags endEditing={endEditing} />}
       <ListOfTags tags={filteredTags} />
     </PageContainer>
   );

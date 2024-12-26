@@ -7,8 +7,8 @@ import { Tag } from "../../utils/types";
 import { router } from "expo-router";
 import { useSelector, useDispatch } from "react-redux";
 import getTheme from "../../utils/GetTheme";
-import { addSelectedContact } from "../../redux/selectionSlice";
-import { setContactsSelectionMode } from "../../redux/selectionSlice";
+import { addSelectedContact } from "../../redux/selectContactsSlice";
+import { setContactsSelectionMode } from "../../redux/selectContactsSlice";
 import * as Haptics from 'expo-haptics';
 type ContactItemProps = {
     contact: Contact;

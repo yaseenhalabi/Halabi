@@ -11,7 +11,7 @@ export const contactsToString = (contactsWithTag: Contact[]) => {
     return contactsWithTagString;
 }
 
-export const getFilteredTags = (tags: Tag[], contacts: Contact[], searchText?: string) => { 
+export const getFilteredTags = (tags: Tag[], contacts: Contact[], searchText?: string, sortBy?: string, isReversed?: boolean) => { 
     let filteredTags = [...tags];
     if (searchText) {
         filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()));
@@ -20,7 +20,22 @@ export const getFilteredTags = (tags: Tag[], contacts: Contact[], searchText?: s
     filteredTags.forEach((tag) => {
         frequency.set(tag.id, getContactsWithTag(tag, contacts).length);
     });
-    filteredTags.sort((a, b) => frequency.get(b.id)! - frequency.get(a.id)!);
+
+    // Apply sorting
+    if (sortBy) {
+        switch (sortBy) {
+            case 'name':
+                filteredTags.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'peopleCount':
+                filteredTags.sort((a, b) => frequency.get(b.id)! - frequency.get(a.id)!);
+                break;
+        }
+    }
+    if (isReversed) {
+        filteredTags.reverse();
+    }
+
     return filteredTags;
 }
 
@@ -106,5 +121,45 @@ export const createNewContactWithName = (name: string): Contact => {
         tags: [],
         birthday: { month: '', day: '' },
         photos: [],
+    };
+}
+
+export const applyFilters = (contacts: Contact[], selectedTagIds: string[], sortBy: string | null) => {
+  let filteredContacts = [...contacts];
+
+  // Filter by tags
+  if (selectedTagIds.length > 0) {
+    filteredContacts = filteredContacts.filter(contact => 
+      selectedTagIds.every(tagId => contact.tags.includes(tagId))
+    );
+  }
+
+  // Apply sorting
+  switch (sortBy) {
+    case 'name':
+      filteredContacts.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'birthday':
+      filteredContacts.sort((a, b) => {
+        // Handle cases where birthday is empty
+        if (!a.birthday?.month || !a.birthday?.day) return 1;
+        if (!b.birthday?.month || !b.birthday?.day) return -1;
+        
+        // Use getDaysUntilBirthday to sort by upcoming birthdays
+        return getDaysUntilBirthday(a.birthday) - getDaysUntilBirthday(b.birthday);
+      });
+      break;
+    case 'tagCount':
+      filteredContacts.sort((a, b) => b.tags.length - a.tags.length);
+      break;
+  }
+
+  return filteredContacts;
+};
+
+export const createNewTagWithName = (name: string): Tag => {
+    return {
+        id: uuidv4(),
+        name,
     };
 }

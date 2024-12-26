@@ -14,7 +14,7 @@ const initialState: SelectionState = {
     selectedTags: [],
     selectedContacts: []
 }
-const selectionSlice = createSlice({
+const selectContactsSlice = createSlice({
     name: 'selection',
     initialState: initialState,
     reducers: {
@@ -70,6 +70,6 @@ const selectionSlice = createSlice({
     }
 });
 
-export const { setContactsSelectionMode, setTagsSelectMode, addSelectedContact, addSelectedTag, removeSelectedContact, removeSelectedTag, resetSelectedContacts, resetSelectedTags } = selectionSlice.actions;
+export const { setContactsSelectionMode, setTagsSelectMode, addSelectedContact, addSelectedTag, removeSelectedContact, removeSelectedTag, resetSelectedContacts, resetSelectedTags } = selectContactsSlice.actions;
 
-export default selectionSlice.reducer;
+export default selectContactsSlice.reducer;

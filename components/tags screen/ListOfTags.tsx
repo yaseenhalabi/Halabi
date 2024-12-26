@@ -3,7 +3,8 @@ import { Tag } from "../../utils/types";
 import getTheme from "../../utils/GetTheme";
 import TagItem from "./TagItem";
 import { getContactsWithTag, getFilteredTags } from "../../utils/helpers";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setTagsSelectionMode } from '../../redux/selectTagsSlice';
 
 type ListOfTagsProps = {
     tags: Tag[]
@@ -12,6 +13,12 @@ type ListOfTagsProps = {
 export default function ListOfTags({ tags }: ListOfTagsProps) {
     const contacts = useSelector((state: any) => state.contacts);
     const theme = getTheme();
+    const dispatch = useDispatch();
+
+    const handleTagPress = (tagId: string) => {
+        console.log(`Tag with id ${tagId} pressed`);
+    };
+
     return (
         <FlatList
             data={tags}
@@ -20,11 +27,11 @@ export default function ListOfTags({ tags }: ListOfTagsProps) {
                 <TagItem 
                     tag={item} 
                     contactsWithTag={getContactsWithTag(item, contacts)} 
-                    onPress={() => {}} 
+                    onPress={() => handleTagPress(item.id)} 
                 />
             }
             keyExtractor={(item) => item.id}
-            contentContainerStyle={{ gap: 5, flexGrow: 1, paddingBottom: 300 }}
+            contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}
         />
     );
@@ -32,7 +39,7 @@ export default function ListOfTags({ tags }: ListOfTagsProps) {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
+        height: '10%',
         width: '100%',
     },
 });
