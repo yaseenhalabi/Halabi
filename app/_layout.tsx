@@ -4,20 +4,23 @@ import FontLoader from '../utils/FontLoader';
 import ProviderAndPersistor from '../components/ProviderAndPersistor';
 import { SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { Slot } from 'expo-router'
+import getTheme from '../utils/GetTheme';
+import { useSelector } from 'react-redux';
 export default function Root() {
   const loaded = FontLoader();
   if (!loaded) return null;
   return (
     <ProviderAndPersistor>
-      <SafeAreaProvider style={styles.container}>
-          <Slot/>
-      </SafeAreaProvider>
+      <App /> 
     </ProviderAndPersistor>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#000',
-  },
-});
+function App() {
+  const theme = useSelector((state: any) => state.theme.themes[state.theme.index]);
+  return (
+    <SafeAreaProvider style={{ backgroundColor: theme.background}}>
+      <Slot />
+    </SafeAreaProvider>
+  );
+}

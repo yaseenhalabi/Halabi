@@ -1,11 +1,13 @@
 import { View, Text, StatusBar } from 'react-native';
 import { Redirect, Slot, Stack } from 'expo-router';
-import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
+import { useSelector } from 'react-redux';
+import getTheme from '../../utils/GetTheme';
 export default function AppLayout() {
     const onboarding: any = useSelector((state: any) => state.onboarding);
     const signedIn: boolean  = useSelector((state: any) => state.user.signedIn);
 
+    const theme = getTheme();
     // if (onboarding.isOnboarding) {
     //      return <Redirect href={`/onboarding/page${onboarding.page}`} />;
     // }
@@ -23,7 +25,7 @@ export default function AppLayout() {
     }
     return (
       <>
-        <StatusBar barStyle="light-content" backgroundColor="#000000" />
+        <StatusBar barStyle={theme.name == "light" ? "light-content" : "dark-content"} backgroundColor={theme.background} />
         <Stack screenOptions={screenOptions}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="settings" />

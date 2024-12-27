@@ -20,8 +20,15 @@ const themeSlice = createSlice({
             },
             {
                 name: 'light',
-                background: '#ffffff',
-                text: '#000000',
+                background: 'white',
+                backgroundSecondary: '#141414',
+                button: '#202020',
+                text: {
+                    full: 'black',
+                    semi: '#A6A6A6',
+                    muted: '#5B5B5B',
+                    semiFull: '#DBDBDB',
+                },
             },
         ],
     },

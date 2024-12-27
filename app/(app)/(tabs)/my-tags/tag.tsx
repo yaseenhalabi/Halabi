@@ -31,6 +31,10 @@ export default function TagScreen() {
         }} 
         value={tag.name} 
       />
+      <View style={{width: '100%'}}>
+
+        <CommonText color='semi'>Contacts with this tag:</CommonText>
+      </View>
       <FlatList
         style={{ width: '100%' }}
         data={contactsWithTag}
@@ -47,5 +51,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 300,
     width: '100%',
+    gap: 10,
   }
 }); 
