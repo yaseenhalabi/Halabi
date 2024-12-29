@@ -20,15 +20,16 @@ export default function AppLayout() {
     }
 
     const screenOptions = {
+        
         fullScreenGestureEnabled: true,
         header: ({navigation, route}: any) => <Header navigation={navigation} route={route} />,
-    }
+      }
     return (
       <>
-        <StatusBar barStyle={theme.name == "light" ? "light-content" : "dark-content"} backgroundColor={theme.background} />
+        <StatusBar barStyle={theme.name == "light" ? "dark-content" : "light-content"} backgroundColor={theme.background} />
         <Stack screenOptions={screenOptions}>
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="settings" />
+          <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
         </Stack>
       </>
       );

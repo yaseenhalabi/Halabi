@@ -3,6 +3,7 @@ import { Tag, Contact } from '../../utils/types';
 import { LinearGradient } from 'expo-linear-gradient';
 import getTheme from '../../utils/GetTheme';
 import personIcon from '../../assets/images/person-icon-white.png';
+import personIconBlack from '../../assets/images/person-icon-black.png';
 import CommonText from '../CommonText';
 import { contactsToString } from '../../utils/helpers';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,6 +21,8 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
     const selectedTags = useSelector((state: any) => state.tagSelection.selectedTags);
 
     const inTagSelectionMode: boolean = useSelector((state: any) => state.tagSelection.tagsSelectionMode);
+
+
     const onTagPress = () => {
         if (inTagSelectionMode) {
             if (selectedTags.includes(tag.id)) {
@@ -40,10 +43,16 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
     return (
         <TouchableOpacity onPress={onTagPress} onLongPress={onTagLongPress}>
             <LinearGradient
-                colors={['#000000', '#1D1D1D']}
+                colors={theme.name === "dark" ? ['#000000', '#1D1D1D'] : ['#FFFFFF', '#F0F0F0']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={[styles.container, { borderColor: selectedTags.includes(tag.id) ? 'white' : 'transparent', borderWidth: 1 }]}
+                style={[
+                    styles.container, 
+                    { 
+                        borderColor: selectedTags.includes(tag.id) ? (theme.name === "dark" ? 'white' : 'black') : 'transparent', 
+                        borderWidth: 1 
+                    }
+                ]}
             >
                 <View style={styles.leftContainer}>
                     <CommonText numberOfLines={1}>{tag.name}</CommonText>
@@ -51,7 +60,7 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
                 </View>
                 <View style={styles.rightContainer}>
                     <CommonText weight='regular' size='medium' style={Platform.OS === 'android' && {top: 2}}>{contactsWithTag.length}</CommonText>
-                    <Image source={personIcon} style={styles.icon} />
+                    <Image source={theme.name === "dark" ? personIcon : personIconBlack} style={styles.icon} />
                 </View>
             </LinearGradient>
         </TouchableOpacity>

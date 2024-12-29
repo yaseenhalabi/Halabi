@@ -1,10 +1,11 @@
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { SymbolView } from 'expo-symbols';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { createNewContactWithName } from '../../utils/helpers';
 import { addContact } from '../../redux/contactsSlice';
 import { router } from "expo-router";
+import getTheme from '../../utils/GetTheme';
 
 type AddContactInputProps = {
     endEditing: () => void;
@@ -12,7 +13,17 @@ type AddContactInputProps = {
 
 export default function AddContactInput({ endEditing }: AddContactInputProps) {
     const [text, setText] = useState('');
+    const theme = getTheme();
     const dispatch = useDispatch();
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+        }).start();
+    }, []);
 
     const onConfirmLocal = () => {
         endEditing();
@@ -20,13 +31,14 @@ export default function AddContactInput({ endEditing }: AddContactInputProps) {
         dispatch(addContact(new_contact));
         router.push({ pathname: "/my-contacts/profile", params: { id: new_contact.id } });
     }
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme.text.full }]}
                 autoFocus
                 placeholder="Enter name..."
-                placeholderTextColor="#ccc"
+                placeholderTextColor={theme.text.muted}
                 onChangeText={setText}
                 autoCapitalize="words"
                 autoComplete='off'
@@ -35,13 +47,12 @@ export default function AddContactInput({ endEditing }: AddContactInputProps) {
                 autoCorrect={false}
             />
             <TouchableOpacity onPress={endEditing} hitSlop={10}>
-                <SymbolView name="xmark" size={17} tintColor="white" style={styles.symbol} />
+                <SymbolView name="xmark" size={17} tintColor={theme.text.full} style={styles.symbol} />
             </TouchableOpacity>
-
             <TouchableOpacity onPress={onConfirmLocal} hitSlop={10}>
-                <SymbolView name="checkmark" size={17} tintColor="white" style={styles.symbol} />
+                <SymbolView name="checkmark" size={17} tintColor={theme.text.full} style={styles.symbol} />
             </TouchableOpacity>
-        </View>
+        </Animated.View>
     );
 }
 
@@ -56,7 +67,6 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1, 
-        color: 'white',
         fontSize: 16,
         paddingHorizontal: 10,
         height: '100%',

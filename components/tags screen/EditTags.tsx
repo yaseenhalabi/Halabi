@@ -1,26 +1,37 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import CommonText from '../CommonText';
 import { useSelector, useDispatch } from 'react-redux';
-import { Tag } from '../../utils/types';
-import { setTagsSelectionMode, addSelectedTag, removeSelectedTag, resetSelectedTags } from '../../redux/selectTagsSlice';
-import { useState } from 'react';
-
+import getTheme from '../../utils/GetTheme';
+import { useEffect, useRef } from 'react';
 export default function EditTags({ endEditing, trashTags }: { endEditing: () => void, trashTags: () => void }) {
-    const numberOfSelectedTags: number = useSelector((state: any) => state.tagSelection.selectedTags.length);
+    const numberOfSelectedTags = useSelector((state: any) => state.tagSelection.selectedTags.length);
     const dispatch = useDispatch();
+    const theme = getTheme();
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+        }).start();
+    }, []);
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[
+            styles.container, 
+            { backgroundColor: theme.background, opacity: fadeAnim }
+        ]}>
             <CommonText size='small' color='full'>Selected {numberOfSelectedTags} tags</CommonText>
             <View style={{flexDirection: 'row', gap: 20}}>
                 <TouchableOpacity onPress={endEditing} hitSlop={10}>
-                    <SymbolView name="xmark" size={17} tintColor="white" style={styles.symbol} />
+                    <SymbolView name="xmark" size={17} tintColor={theme.text.full} style={styles.symbol} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={trashTags} hitSlop={10}>
-                    <SymbolView name="trash" size={17} tintColor="white" style={styles.symbol} />
+                    <SymbolView name="trash" size={17} tintColor={theme.text.full} style={styles.symbol} />
                 </TouchableOpacity>
             </View>
-        </View>
+        </Animated.View>
     );
 }
 

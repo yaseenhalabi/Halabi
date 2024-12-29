@@ -4,10 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CommonText from './CommonText';
 import getTheme from '../utils/GetTheme';
 import HeaderIcon from './HeaderIcon';
-import settingsIcon from '../assets/images/settings-icon-white.png';
-import uploadIcon from '../assets/images/upload-icon-white.png';
-import profilePicIcon from '../assets/images/profile-pic-icon-white.png';
-import backArrowIcon from '../assets/images/back-arrow-icon-white.png';
+import whiteSettingsIcon from '../assets/images/settings-icon-white.png';
+import whiteUploadIcon from '../assets/images/upload-icon-white.png';
+import whiteProfilePicIcon from '../assets/images/profile-pic-icon-white.png';
+import whiteBackArrowIcon from '../assets/images/back-arrow-icon-white.png';
+import blackSettingsIcon from '../assets/images/settings-icon-black.png';
+import blackUploadIcon from '../assets/images/upload-icon-black.png';
+import blackProfilePicIcon from '../assets/images/profile-pic-icon-black.png';
+import blackBackArrowIcon from '../assets/images/back-arrow-icon-black.png';
 import { useEffect, useState } from 'react';
 type HeaderProps = {
     navigation: any;
@@ -57,16 +61,16 @@ export default function Header({navigation, route}: HeaderProps) {
         <>
         <SafeAreaView edges={['top']} />
         <View style={{...styles.container, backgroundColor: theme.background}}>
-            <HeaderIcon size={25} source={profilePicIcon} onPress={onPress} />
+            <HeaderIcon size={25} source={theme.name === "dark" ? whiteProfilePicIcon : blackProfilePicIcon} onPress={onPress}/>
             <View style={styles.headerTextContainer}>
                 <CommonText>{currentRouteName}</CommonText>
             </View>
             <View style={styles.iconsContainer}>
-                <HeaderIcon size={20} source={uploadIcon} onPress={onPress} />
+                <HeaderIcon size={20} source={theme.name === "dark" ? whiteUploadIcon : blackUploadIcon} onPress={onPress} />
                 {
                     showBackArrow ? 
-                    <HeaderIcon size={20} source={backArrowIcon} onPress={onPressBack} /> :
-                    <HeaderIcon size={20} source={settingsIcon} onPress={onPressSettings} />
+                    <HeaderIcon size={20} source={theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon} onPress={onPressBack} /> :
+                    <HeaderIcon size={20} source={theme.name === "dark" ? whiteSettingsIcon : blackSettingsIcon} onPress={onPressSettings} />
                 }
                 </View>
             </View>

@@ -16,6 +16,7 @@ type ContactItemProps = {
 }
 
 export default function ContactItem({ contact, isSelected }: ContactItemProps) {
+    const theme = getTheme();
     const tags: Tag[] = useSelector((state: any) => state.tags);
     const contactTags: Tag[] = tags.filter((tag: Tag) => contact.tags.includes(tag.id));
     const dispatch = useDispatch(); 
@@ -60,10 +61,10 @@ export default function ContactItem({ contact, isSelected }: ContactItemProps) {
     return (
         <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
             <LinearGradient
-                colors={['#000000', '#1D1D1D']}
+                colors={theme.name === "dark" ? ['#000000', '#1D1D1D'] : ['#FFFFFF', '#F0F0F0']}
                 start={{ x: -.4, y: -.6 }}
                 end={{ x: 1.3, y: 1.5 }}
-                style={[styles.container, { borderColor: isSelected ? 'white' : 'transparent', borderWidth: 1 }]}
+                style={[styles.container, { borderColor: isSelected ? theme.text.full : 'transparent', borderWidth: 1 }]}
             >
                 <CommonText size="medium">{contact.name}</CommonText>
                 <View style={styles.tagsContainer}>

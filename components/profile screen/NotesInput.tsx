@@ -13,7 +13,7 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
         <ProfileInputContainer title="Notes" hideTitle>
             <TextInput 
                 value={value}
-                style={styles.input} 
+                style={[styles.input, { color: theme.text.full }]} 
                 onChangeText={onChangeText} 
                 placeholder='Enter notes'
                 placeholderTextColor={theme.text.muted}
@@ -30,7 +30,6 @@ export default function NotesInput({ value, onChangeText }: NotesInputProps) {
 const styles = StyleSheet.create({
     input: {
         fontSize: 14,
-        color: 'white',
         fontFamily: 'Poppins-Regular',
         width: '100%',
         overflow: 'hidden',

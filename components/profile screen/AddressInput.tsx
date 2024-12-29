@@ -13,7 +13,7 @@ type AddressInputProps = {
 }
 export default function AddressInput({ address, onChangeAddress }: AddressInputProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
-
+    const theme = getTheme();
     const showModal = () => {
         setIsModalVisible(true); 
     };
@@ -49,7 +49,7 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                         language: 'en',
                     }}
                     textInputProps={{
-                        placeholderTextColor: '#5B5B5B',
+                        placeholderTextColor: theme.text.semi,
                         onChangeText: (text) => {
                             setAddressState(text);
                         },
@@ -60,14 +60,14 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                     styles={
                         {
                             textInput: {
-                                backgroundColor: '#202020',
-                                color: 'white',
+                                backgroundColor: theme.text.backgroundSecondary,
+                                color: theme.text.full,
                                 fontSize: 12,
                             },
                             container: { width: '100%', },
-                            row: { backgroundColor: '#202020'},
-                            separator: { backgroundColor: '#202020', },
-                            description: { fontSize: 12, color: 'white' },  
+                            row: { backgroundColor: theme.backgroundSecondary},
+                            separator: { backgroundColor: theme.backgroundSecondary, },
+                            description: { fontSize: 12, color: theme.text.full },  
                         }
                     }
                 />
@@ -75,9 +75,9 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
             </CommonModal>
             <ProfileInputContainer title="Address" onClick={showModal}>
                 { address ?
-                    <CommonText size='small'>{address}</CommonText>
+                    <CommonText size='small' color='full'>{address}</CommonText>
                     :
-                    <CommonText size='small' color='muted'>Add Address</CommonText>
+                    <CommonText size='small' color='semi'>Add Address</CommonText>
                 }
             </ProfileInputContainer>
         </>

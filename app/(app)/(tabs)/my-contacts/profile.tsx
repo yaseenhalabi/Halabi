@@ -4,7 +4,6 @@ import { getContactById } from '../../../../utils/helpers';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { updateContact } from '../../../../redux/contactsSlice';
-import { removeFormatting } from '../../../../utils/helpers';
 import { Contact } from '../../../../utils/types';
 import CommonText from '../../../../components/CommonText';
 import PageContainer from '../../../../components/PageContainer';

@@ -4,7 +4,6 @@ import FontLoader from '../utils/FontLoader';
 import ProviderAndPersistor from '../components/ProviderAndPersistor';
 import { SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { Slot } from 'expo-router'
-import getTheme from '../utils/GetTheme';
 import { useSelector } from 'react-redux';
 export default function Root() {
   const loaded = FontLoader();

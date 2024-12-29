@@ -4,13 +4,14 @@ import { createSlice } from '@reduxjs/toolkit';
 const themeSlice = createSlice({
     name: 'theme',
     initialState: {
-        index: 0,
+        index: 1,
         themes: [
             {
                 name: 'dark',
                 background: '#000000',
                 backgroundSecondary: '#141414',
                 button: '#202020',
+                smallTag: '#232135',
                 text: {
                     full: '#ffffff',
                     semi: '#A6A6A6',
@@ -21,13 +22,14 @@ const themeSlice = createSlice({
             {
                 name: 'light',
                 background: 'white',
-                backgroundSecondary: '#141414',
-                button: '#202020',
+                backgroundSecondary: '#F0F0F0',
+                button: '#E9E9E9',
+                smallTag: '#E9E9E9',
                 text: {
                     full: 'black',
-                    semi: '#A6A6A6',
-                    muted: '#5B5B5B',
-                    semiFull: '#DBDBDB',
+                    semi: '#666666',
+                    muted: '#333333',
+                    semiFull: '#333333',
                 },
             },
         ],

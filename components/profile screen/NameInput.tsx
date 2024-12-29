@@ -8,10 +8,10 @@ export default function NameInput({ onChangeText, value}: NameInputProps) {
     const theme = getTheme();
     return (
         <TextInput 
-            style={styles.input} 
+            style={[styles.input, { color: theme.text.full }]} 
             onChangeText={onChangeText} 
             placeholder='Enter name'
-            placeholderTextColor={theme.text.muted}
+            placeholderTextColor={theme.text.semi}
             autoCapitalize='words'
             autoCorrect={false}
             returnKeyType='done'
@@ -25,7 +25,6 @@ export default function NameInput({ onChangeText, value}: NameInputProps) {
 const styles = StyleSheet.create({
     input: {
         fontSize: 28,
-        color: 'white',
         fontFamily: 'Poppins-Medium',
         width: '100%',
         overflow: 'hidden',

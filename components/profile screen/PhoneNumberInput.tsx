@@ -37,8 +37,8 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
                     value={countryCode}
                     selectTextOnFocus
                     onChangeText={setCountryCode}
-                    style={styles.countryCodeInput} 
-                    placeholderTextColor={theme.text.muted} 
+                    style={[styles.countryCodeInput, { color: theme.text.full }]} 
+                    placeholderTextColor={theme.text.semi} 
                     placeholder='1'
                     keyboardAppearance="dark"
                 />
@@ -48,8 +48,8 @@ export default function PhoneNumberInput({phoneNumber, onChangePhoneNumber}: Pho
                     selectTextOnFocus
                     value={number}  
                     onChangeText={(text) => setNumber(formatPhoneNumber(text))}
-                    style={styles.numberInput} 
-                    placeholderTextColor={theme.text.muted} 
+                    style={[styles.numberInput, { color: theme.text.full }]} 
+                    placeholderTextColor={theme.text.semi} 
                     placeholder='___-___-____'
                     keyboardAppearance="dark"
                 />
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
     },
     countryCodeInput: {
         fontSize: 16,
-        color: 'white',
         fontFamily: 'Poppins-Medium',
         width: '10%',
         borderColor: 'transparent',

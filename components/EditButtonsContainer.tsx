@@ -1,8 +1,7 @@
 import { View, StyleSheet } from 'react-native';
 import { ReactNode } from 'react';
-import EditButton from './EditButton';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from 'react';
+import getTheme from '../utils/GetTheme';
 type EditButtonsContainerProps = {
     editButton1: ReactNode;
     editButton2: ReactNode;
@@ -10,8 +9,11 @@ type EditButtonsContainerProps = {
 }
 
 export default function EditButtonsContainer({ editButton1, editButton2, editButton3 }: EditButtonsContainerProps) {
+    const theme = getTheme();
+    const gradientColors: [string, string] = theme.name === "dark" ? ['#000000', '#1D1D1D'] : ['white', '#D9D9D9'] ;
+
     return (
-        <LinearGradient colors={['#000000', '#1D1D1D']} start={{ x: -1.3, y: -1 }} end={{ x: 2, y: 2 }}  style={styles.container}>
+        <LinearGradient colors={gradientColors} start={{ x: -.2, y: -3 }} end={{ x: 2, y: 2 }} style={styles.container}>
             {editButton1}
             {editButton2}
             {editButton3}

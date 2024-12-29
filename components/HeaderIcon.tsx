@@ -1,5 +1,4 @@
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
-
 type HeaderIconProps = {
     size: number;
     source: any;

@@ -1,10 +1,12 @@
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import CommonText from '../CommonText';
 import { setSelectedFilterTags, setSortBy, resetFilters, setReverse } from '../../redux/filterTagsSlice';
 import getTheme from '../../utils/GetTheme';
 import cancelIcon from '../../assets/images/cancel-icon-white.png';
+import blackCancelIcon from '../../assets/images/cancel-icon-black.png';
+
 type FilterTagsProps = {
     endEditing: () => void;
 }
@@ -13,7 +15,17 @@ export default function FilterTags({ endEditing } : FilterTagsProps) {
   const dispatch = useDispatch();
   const theme = getTheme();
   const currentSortBy = useSelector((state: any) => state.filterTags.sortBy);
-    const isReversed = useSelector((state: any) => state.filterTags.reverse);
+  const isReversed = useSelector((state: any) => state.filterTags.reverse);
+  const heightAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(heightAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, []);
+
   const handleSortPress = (sortType: 'name' | 'peopleCount') => {
     dispatch(setSortBy(currentSortBy === sortType ? null : sortType));
   };
@@ -25,28 +37,40 @@ export default function FilterTags({ endEditing } : FilterTagsProps) {
   const handleReversePress = () => {
     dispatch(setReverse(!isReversed));
   };
+
   return (
-    <View style={styles.container}>
+    <Animated.View 
+      style={[
+        styles.container,
+        {
+          maxHeight: heightAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 500]
+          }),
+          opacity: heightAnim
+        }
+      ]}
+    >
       <TouchableOpacity 
         style={styles.closeButton} 
         onPress={endEditing}
         hitSlop={15}
       >
-        <Image source={cancelIcon} style={styles.closeIcon} />
+        <Image source={theme.name == "light" ? blackCancelIcon : cancelIcon} style={styles.closeIcon} />
       </TouchableOpacity>
 
       <View style={styles.section}>
         <CommonText weight="regular" size="medium">Sort By:</CommonText>
         <View style={styles.sortButtons}>
           <TouchableOpacity 
-            style={[styles.sortButton, currentSortBy === 'name' && styles.selectedButton]} 
+            style={[styles.sortButton, { backgroundColor: theme.backgroundSecondary }, currentSortBy === 'name' && { borderColor: theme.text.muted }]} 
             onPress={() => handleSortPress('name')}
           >
             <CommonText weight="regular" size="small">Name (A-Z)</CommonText>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={[styles.sortButton, currentSortBy === 'peopleCount' && styles.selectedButton]} 
+            style={[styles.sortButton, { backgroundColor: theme.backgroundSecondary }, currentSortBy === 'peopleCount' && { borderColor: theme.text.muted }]} 
             onPress={() => handleSortPress('peopleCount')}
           >
             <CommonText weight="regular" size="small">People Count</CommonText>
@@ -57,7 +81,7 @@ export default function FilterTags({ endEditing } : FilterTagsProps) {
       <View style={styles.section}>
         <CommonText weight="regular" size="medium">Order:</CommonText>
         <TouchableOpacity 
-          style={[styles.sortButton, isReversed && styles.selectedButton, styles.reverseButton]} 
+          style={[styles.sortButton, { backgroundColor: theme.backgroundSecondary }, isReversed && { borderColor: theme.text.muted }, styles.reverseButton]} 
           onPress={handleReversePress}
         >
           <CommonText weight="regular" size="small">Reverse</CommonText>
@@ -76,7 +100,7 @@ export default function FilterTags({ endEditing } : FilterTagsProps) {
           Remove Filters
         </CommonText>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -85,6 +109,7 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 10,
     paddingTop: 5,
+    overflow: 'hidden',
   },
   section: {
     gap: 10,
@@ -99,10 +124,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'transparent',
-    backgroundColor: '#121212',
   },
   selectedButton: {
-    borderColor: 'white',
   },
   closeButton: {
     position: 'absolute',

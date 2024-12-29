@@ -1,26 +1,40 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import CommonText from '../CommonText';
 import { useSelector, useDispatch } from 'react-redux';
+import getTheme from '../../utils/GetTheme';
+import { useEffect, useRef } from 'react';
+
 type EditContactsProps = {
     endEditing : () => void;
     trashContacts : () => void;
 };
 
 export default function EditContacts({ endEditing, trashContacts }: EditContactsProps) {
-    const numberOfSelectedContacts: number = useSelector((state: any) => state.selection.selectedContacts.length);
+    const theme = getTheme();
+    const numberOfSelectedContacts = useSelector((state: any) => state.selection.selectedContacts.length);
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+        }).start();
+    }, []);
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
             <CommonText size='small' color='full'>Selected {numberOfSelectedContacts} contacts</CommonText>
             <View style={{flexDirection: 'row', gap: 20}}>
                 <TouchableOpacity onPress={endEditing} hitSlop={10}>
-                    <SymbolView name="xmark" size={17} tintColor="white" style={styles.symbol} />
+                    <SymbolView name="xmark" size={17} tintColor={theme.text.full} style={styles.symbol} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={trashContacts} hitSlop={10}>
-                    <SymbolView name="trash" size={17} tintColor="white" style={styles.symbol} />
+                    <SymbolView name="trash" size={17} tintColor={theme.text.full} style={styles.symbol} />
                 </TouchableOpacity>
             </View>
-        </View>
+        </Animated.View>
     );
 }
 

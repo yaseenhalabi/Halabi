@@ -12,7 +12,7 @@ const tagsSlice = createSlice({
             return action.payload;
         },
         addTag: (state, action: PayloadAction<Tag>) => {
-            return [...state, action.payload];
+            return [action.payload, ...state];
         },
         removeTag: (state, action: PayloadAction<{ id: string }>) => {
             return state.filter(tag => tag.id !== action.payload.id);

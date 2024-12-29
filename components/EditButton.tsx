@@ -1,6 +1,7 @@
 import { TouchableOpacity, Text, Image, StyleSheet, View } from 'react-native';
 import CommonText from './CommonText';
 import * as Haptics from 'expo-haptics';
+import getTheme from '../utils/GetTheme';
 
 type EditButtonProps = {
     source: any;
@@ -10,6 +11,7 @@ type EditButtonProps = {
 }
 
 export default function EditButton({ source, text, onPress, badgeCount }: EditButtonProps) {
+    const theme = getTheme();
     const handlePress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
         onPress();
@@ -19,8 +21,8 @@ export default function EditButton({ source, text, onPress, badgeCount }: EditBu
             <View style={styles.iconContainer}>
                 <Image source={source} style={styles.icon} />
                 {badgeCount !== undefined && badgeCount > 0 && (
-                    <View style={styles.badge}>
-                        <CommonText weight='medium' size='xsmall' style={styles.badgeText}>
+                    <View style={[styles.badge, { backgroundColor: theme.text.semiFull }]}>
+                        <CommonText weight='medium' size='xsmall' style={[styles.badgeText, { color: theme.background }]}>
                             {badgeCount}
                         </CommonText>
                     </View>
@@ -48,7 +50,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: -4,
         right: -4,
-        backgroundColor: 'lightgrey',
         borderRadius: 10,
         minWidth: 17,
         height: 17,
@@ -58,6 +59,5 @@ const styles = StyleSheet.create({
     },
     badgeText: {
         fontFamily: 'poppins-medium',
-        color: 'black',
     }
 });

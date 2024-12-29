@@ -2,18 +2,21 @@ import CommonText from '../../components/CommonText';
 import PageContainer from '../../components/PageContainer';
 import { StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import themeSlice from '../../redux/themeSlice';
+import SettingToggle from '../../components/settings screen/SettingToggle';
+import getTheme from '../../utils/GetTheme';
 import { setTheme } from '../../redux/themeSlice';
+
 export default function Settings() {
     const dispatch = useDispatch();
+    const theme = getTheme();
     return (
         <PageContainer style={styles.container}>
-            <TouchableOpacity onPress={() => dispatch(setTheme('dark'))}>
-                <CommonText>Dark</CommonText>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => dispatch(setTheme('light'))}>
-                <CommonText>Light</CommonText>
-            </TouchableOpacity>
+
+            <SettingToggle 
+                toggled={theme.name === 'dark'} 
+                title="Dark Mode" 
+                onToggle={() => dispatch(setTheme(theme.name === 'dark' ? 'light' : 'dark'))} 
+            />
         </PageContainer>
     );
 }

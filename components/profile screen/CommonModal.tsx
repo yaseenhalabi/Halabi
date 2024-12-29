@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: '10%',
         width: '80%',
-        backgroundColor: 'gray',
         borderWidth: 5,
         padding: 10,
         borderRadius: 15,

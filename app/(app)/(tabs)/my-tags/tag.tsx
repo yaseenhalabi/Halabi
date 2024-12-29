@@ -33,7 +33,7 @@ export default function TagScreen() {
       />
       <View style={{width: '100%'}}>
 
-        <CommonText color='semi'>Contacts with this tag:</CommonText>
+        <CommonText color='semi'>{contactsWithTag.length > 0 ? "Contacts with this tag:" : "No contacts with this tag"}</CommonText>
       </View>
       <FlatList
         style={{ width: '100%' }}

@@ -3,8 +3,11 @@ import PageContainer from '../../../../components/PageContainer';
 import SearchBar from '../../../../components/SearchBar';
 import { useEffect, useState } from 'react';
 import addIcon from '../../../../assets/images/add-icon-white.png';
+import blackAddIcon from '../../../../assets/images/add-icon-black.png';
 import editIcon from '../../../../assets/images/edit-icon-white.png';
+import blackEditIcon from '../../../../assets/images/edit-icon-black.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
+import blackFilterIcon from '../../../../assets/images/filter-icon-black.png';
 import EditButton from '../../../../components/EditButton';
 import EditButtonsContainer from '../../../../components/EditButtonsContainer';
 import ListOfTags from '../../../../components/tags screen/ListOfTags';
@@ -15,6 +18,7 @@ import EditTags from '../../../../components/tags screen/EditTags';
 import FilterTags from '../../../../components/tags screen/FilterTags';
 import { deleteSelectedTags } from '../../../../redux/tagsSlice';
 import { resetSelectedTags, setTagsSelectionMode } from '../../../../redux/selectTagsSlice';
+import getTheme from '../../../../utils/GetTheme';
 
 export default function MyTags() {
   const [searchText, setSearchText] = useState('');
@@ -76,15 +80,16 @@ export default function MyTags() {
   };
 
   const activeFiltersCount = (sortBy ? 1 : 0) + (isReversed ? 1 : 0);
+  const theme = getTheme();
 
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText} />
       {editButtonsMode === "default" && (
         <EditButtonsContainer 
-          editButton1={<EditButton text="Add Tag" onPress={onAddTag} source={addIcon}/>} 
-          editButton2={<EditButton text="Edit Tags" onPress={onEditTags} source={editIcon}/>} 
-          editButton3={<EditButton text="Filter Tags" onPress={onFilterTags} source={filterIcon} badgeCount={activeFiltersCount}/>} 
+          editButton1={<EditButton text="Add Tag" onPress={onAddTag} source={theme.name === "dark" ? addIcon : blackAddIcon}/>} 
+          editButton2={<EditButton text="Edit Tags" onPress={onEditTags} source={theme.name === "dark" ? editIcon : blackEditIcon}/>} 
+          editButton3={<EditButton text="Filter Tags" onPress={onFilterTags} source={theme.name === "dark" ? filterIcon : blackFilterIcon} badgeCount={activeFiltersCount}/>} 
         />
       )}
       {editButtonsMode === "add" && <AddTagInput endEditing={endEditing} />}

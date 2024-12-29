@@ -1,12 +1,12 @@
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Animated } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import CommonText from '../CommonText';
-import { Tag } from '../../utils/types';
-import { setSelectedFilterTags, setSortBy, resetFilters } from '../../redux/filterContactsSlice';
+import { setSortBy, resetFilters } from '../../redux/filterContactsSlice';
 import FilterContactsByTags from './FilterContactsByTags';
 import getTheme from '../../utils/GetTheme';
 import cancelIcon from '../../assets/images/cancel-icon-white.png';
+import blackCancelIcon from '../../assets/images/cancel-icon-black.png';
 
 type FilterContactsProps = {
   endEditing: () => void;
@@ -15,9 +15,16 @@ type FilterContactsProps = {
 export default function FilterContacts({ endEditing }: FilterContactsProps) {
   const dispatch = useDispatch();
   const theme = getTheme();
-  const [isSelectingTags, setIsSelectingTags] = useState(false);
-  const selectedTagIds = useSelector((state: any) => state.filter.selectedTagIds);
   const currentSortBy = useSelector((state: any) => state.filter.sortBy);
+  const heightAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(heightAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, []);
 
   const handleSortPress = (sortType: 'name' | 'birthday' | 'tagCount') => {
     dispatch(setSortBy(currentSortBy === sortType ? null : sortType));
@@ -28,13 +35,24 @@ export default function FilterContacts({ endEditing }: FilterContactsProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View 
+      style={[
+        styles.container,
+        {
+          maxHeight: heightAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 500] // Adjust this value based on your content
+          }),
+          opacity: heightAnim
+        }
+      ]}
+    >
       <TouchableOpacity 
         style={styles.closeButton} 
         onPress={endEditing}
         hitSlop={15}
       >
-        <Image source={cancelIcon} style={styles.closeIcon} />
+        <Image source={theme.name == "light" ? blackCancelIcon : cancelIcon} style={styles.closeIcon} />
       </TouchableOpacity>
 
       <View style={styles.section}>
@@ -46,21 +64,21 @@ export default function FilterContacts({ endEditing }: FilterContactsProps) {
         <CommonText weight="regular" size="medium">Sort By:</CommonText>
         <View style={styles.sortButtons}>
           <TouchableOpacity 
-            style={[styles.sortButton, currentSortBy === 'name' && styles.selectedButton]} 
+            style={[styles.sortButton, { backgroundColor: theme.backgroundSecondary }, currentSortBy === 'name' && { borderColor: theme.text.muted }]} 
             onPress={() => handleSortPress('name')}
           >
             <CommonText weight="regular" size="small">Name (A-Z)</CommonText>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={[styles.sortButton, currentSortBy === 'birthday' && styles.selectedButton]} 
+            style={[styles.sortButton, { backgroundColor: theme.backgroundSecondary }, currentSortBy === 'birthday' && { borderColor: theme.text.muted }]} 
             onPress={() => handleSortPress('birthday')}
           >
             <CommonText weight="regular" size="small">Birthday</CommonText>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={[styles.sortButton, currentSortBy === 'tagCount' && styles.selectedButton]} 
+            style={[styles.sortButton, { backgroundColor: theme.backgroundSecondary }, currentSortBy === 'tagCount' && { borderColor: theme.text.muted }]} 
             onPress={() => handleSortPress('tagCount')}
           >
             <CommonText weight="regular" size="small"># of Tags</CommonText>
@@ -80,7 +98,7 @@ export default function FilterContacts({ endEditing }: FilterContactsProps) {
           Remove Filters
         </CommonText>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -89,6 +107,7 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 10,
     paddingTop: 5,
+    overflow: 'hidden',
   },
   section: {
     gap: 10,

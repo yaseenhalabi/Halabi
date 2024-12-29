@@ -1,10 +1,9 @@
-import { Text, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { Tag } from "../../utils/types";
 import getTheme from "../../utils/GetTheme";
 import TagItem from "./TagItem";
-import { getContactsWithTag, getFilteredTags } from "../../utils/helpers";
-import { useSelector, useDispatch } from "react-redux";
-import { setTagsSelectionMode } from '../../redux/selectTagsSlice';
+import { getContactsWithTag } from "../../utils/helpers";
+import { useSelector } from "react-redux";
 import { useRouter } from 'expo-router';
 
 type ListOfTagsProps = {
@@ -14,7 +13,6 @@ type ListOfTagsProps = {
 export default function ListOfTags({ tags }: ListOfTagsProps) {
     const contacts = useSelector((state: any) => state.contacts);
     const theme = getTheme();
-    const dispatch = useDispatch();
     const router = useRouter();
 
     const handleTagPress = (tagId: string) => {

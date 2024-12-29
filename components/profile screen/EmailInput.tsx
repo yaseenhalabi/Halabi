@@ -29,10 +29,10 @@ export default function EmailInput({ value, onChangeText }: EmailInputProps) {
             <CommonModal isVisible={isModalVisible} onClose={hideModal} heightProportion={0.12} contentContainerStyle={styles.modalContentContainer}>
                 <TextInput 
                     value={email}
-                    style={styles.input} 
+                    style={[styles.input, { color: theme.text.full }]} 
                     onChangeText={setEmail} 
                     placeholder='john.doe@gmail.com'
-                    placeholderTextColor={theme.text.muted}
+                    placeholderTextColor={theme.text.semi}
                     autoCapitalize='none'
                     autoCorrect={false}
                     inputMode="email"
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
         width: '100%',
         overflow: 'hidden',
         borderBottomColor: 'gray',
-        borderBottomWidth: 1,
     },
     modalContentContainer: {
         flex: 1,

@@ -5,6 +5,7 @@ import CommonText from '../CommonText';
 import { Tag } from '../../utils/types';
 import * as Haptics from 'expo-haptics';
 import { removeTagFromContact } from '../../redux/contactsSlice';
+import getTheme from '../../utils/GetTheme';
 
 type ProfileTagProps = {    
     contactId: string;
@@ -15,6 +16,7 @@ type ProfileTagProps = {
 };
 
 export default function ProfileTag({ contactId, tagId, onPress, canDelete }: ProfileTagProps) {
+    const theme = getTheme();
     const tags = useSelector((state: any) => state.tags);
     const tag = tags.find((tag: Tag) => tag.id === tagId);
     const dispatch = useDispatch();
@@ -31,7 +33,7 @@ export default function ProfileTag({ contactId, tagId, onPress, canDelete }: Pro
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handlePress} delayLongPress={500} onLongPress={onLongPress} hitSlop={10}>
-                <View style={ styles.tagContainer }>
+                <View style={[styles.tagContainer, { backgroundColor: theme.smallTag }]}>
                     <CommonText 
                         weight="regular" 
                         size="small" 
@@ -49,12 +51,10 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     tagContainer: {
-        backgroundColor:  '#232135',
         borderRadius: 30,
         height: 25,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
-        borderColor: 'red',
     },
 });

@@ -58,10 +58,10 @@ export default function BirthdayInputModal({ birthday, onChangeBirthday, handleC
             <View style={{flexDirection: 'row'}}>
                 <TextInput
                     ref={monthInputRef}
-                    style={[styles.textInput, styles.extraLargeText, styles.centeredText]}
+                    style={[styles.textInput, styles.extraLargeText, styles.centeredText, { color: theme.text.full }]}
                     value={birthdayState.month}
                     placeholder="mm"
-                    placeholderTextColor={theme.text.muted}
+                    placeholderTextColor={theme.text.semi}
                     onChangeText={handleMonthChange}
                     keyboardType="numeric"
                     maxLength={2}
@@ -70,14 +70,14 @@ export default function BirthdayInputModal({ birthday, onChangeBirthday, handleC
                     selectTextOnFocus
                     keyboardAppearance='dark'
                 />
-                <Text style={[styles.slashText, styles.extraLargeText]}>/</Text>
+                <Text style={[styles.slashText, styles.extraLargeText, { color: theme.text.semi }]}>/</Text>
                 <TextInput
                     ref={dayInputRef}
-                    style={[styles.textInput, styles.extraLargeText, styles.centeredText]}
+                    style={[styles.textInput, styles.extraLargeText, styles.centeredText, { color: theme.text.full }]}
                     value={birthdayState.day}
                     placeholder="dd"
                     selectTextOnFocus
-                    placeholderTextColor={theme.text.muted}
+                    placeholderTextColor={theme.text.semi}
                     onChangeText={handleDayChange}
                     keyboardType="numeric"
                     maxLength={2}
@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
     },
     extraLargeText: {
         fontSize: 35,
-        color: 'white',
         fontFamily: 'Poppins-Medium',
     },
     textInput: {

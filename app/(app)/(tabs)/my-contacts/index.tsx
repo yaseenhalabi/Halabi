@@ -3,8 +3,11 @@ import PageContainer from '../../../../components/PageContainer';
 import SearchBar from '../../../../components/SearchBar';
 import { useEffect, useState } from 'react';
 import addIcon from '../../../../assets/images/add-icon-white.png';
+import blackAddIcon from '../../../../assets/images/add-icon-black.png';
 import editIcon from '../../../../assets/images/edit-icon-white.png';
+import blackEditIcon from '../../../../assets/images/edit-icon-black.png';
 import filterIcon from '../../../../assets/images/filter-icon-white.png';
+import blackFilterIcon from '../../../../assets/images/filter-icon-black.png';
 import EditButton from '../../../../components/EditButton';
 import EditButtonsContainer from '../../../../components/EditButtonsContainer';
 import ListOfContacts from '../../../../components/contacts screen/ListOfContacts';
@@ -14,6 +17,7 @@ import { Contact, Tag } from '../../../../utils/types';
 import AddContactInput from '../../../../components/contacts screen/AddContactInput';
 import EditContact from '../../../../components/contacts screen/EditContacts';
 import FilterContacts from '../../../../components/contacts screen/FilterContacts';
+import getTheme from '../../../../utils/GetTheme';
 
 export default function MyContacts() {
   const dispatch = useDispatch();
@@ -77,15 +81,17 @@ export default function MyContacts() {
   const sortBy = useSelector((state: any) => state.filter.sortBy);
   const filterCount = selectedTagIds.length + (sortBy ? 1 : 0);
 
+  const theme = getTheme();
+
   return (
     <PageContainer style={styles.container}>
       <SearchBar onChangeText={onSearchTextChange} value={searchText}/>
       {
         editButtonsMode === "default" &&
         <EditButtonsContainer 
-          editButton1={<EditButton text="Add Contact" onPress={() => setEditButtonsMode("add")} source={addIcon}/>}
-          editButton2={<EditButton text="Edit Contacts" onPress={onEditContacts} source={editIcon}/>}
-          editButton3={<EditButton text="Filter Contacts" onPress={onFilterContacts} source={filterIcon} badgeCount={filterCount}/>}
+          editButton1={<EditButton text="Add Contact" onPress={() => setEditButtonsMode("add")} source={theme.name === "dark" ? addIcon : blackAddIcon}/>}
+          editButton2={<EditButton text="Edit Contacts" onPress={onEditContacts} source={theme.name === "dark" ? editIcon : blackEditIcon}/>}
+          editButton3={<EditButton text="Filter Contacts" onPress={onFilterContacts} source={theme.name === "dark" ? filterIcon : blackFilterIcon} badgeCount={filterCount}/>}
         />
       }
       {

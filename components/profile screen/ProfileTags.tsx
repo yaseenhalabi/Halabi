@@ -9,6 +9,7 @@ import getTheme from '../../utils/GetTheme';
 import { useDispatch } from 'react-redux';
 import { addTagToContact } from '../../redux/contactsSlice';
 import cancelIcon from '../../assets/images/cancel-icon-white.png';
+import blackCancelIcon from '../../assets/images/cancel-icon-black.png';
 import { addTag } from '../../redux/tagsSlice';
 import { v4 as uuidv4 } from 'uuid';
 import ProfileTag from './ProfileTag';
@@ -42,7 +43,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
                 addingTag ? 
                 <View style={[styles.addTagContainer, { borderColor: theme.button }]}>
                     <TouchableOpacity hitSlop={5} onPress={closeAddingTag}>
-                        <Image source={cancelIcon} style={styles.cancelIcon} />
+                        <Image source={theme.name === "dark" ? cancelIcon : blackCancelIcon} style={styles.cancelIcon} />
                     </TouchableOpacity>
                     <TextInput 
                         value={searchText} 
@@ -50,7 +51,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
                         placeholder="Search for a tag"
                         placeholderTextColor={theme.text.muted}
                         autoFocus={true}
-                        style={{...styles.input}}
+                        style={{...styles.input, color: theme.text.full}}
                         returnKeyType='done'
                         keyboardAppearance='dark'
                         autoCapitalize='words'
@@ -130,7 +131,6 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        color: 'white',
         paddingVertical: 5,
 
     },
