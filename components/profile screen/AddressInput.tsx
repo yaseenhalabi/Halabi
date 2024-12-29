@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from 'react';
 import ProfileInputContainer from "./ProfileInputContainer";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import getTheme from "../../utils/GetTheme";
-import google_key from "../../secret_key";
 import CommonModal from './CommonModal';
 import CommonText from '../CommonText';
 import SaveButton from './SaveButton';
@@ -32,7 +31,6 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
         hideModal();
     }
 
-    
 
 
     return (
@@ -45,7 +43,7 @@ export default function AddressInput({ address, onChangeAddress }: AddressInputP
                         setAddressState(data.description);
                     }}
                     query={{
-                        key: google_key,
+                        key: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
                         language: 'en',
                     }}
                     textInputProps={{
