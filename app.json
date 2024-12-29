@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "halabi",
+    "name": "Halabi",
     "slug": "halabi-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yaseenhalabi.halabifrontend"
+      "bundleIdentifier": "com.contactapp.thecontactapp"
     },
     "android": {},
     "web": {
