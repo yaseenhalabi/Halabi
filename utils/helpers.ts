@@ -1,5 +1,29 @@
-import { Contact, Tag, Birthday } from "./types";
+import { Contact, Tag, Birthday, SocialMedia, PhoneNumber, Photo } from "./types";
+import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid';
+
+
+export const appleContactsToHalabiContacts = (data: any) => {
+    const contacts: Contact[] = data.data.map((item: any) => {
+        return {
+        id: uuidv4(),
+        tags: [], // Changed from Tag[] to string[]
+        name: item.firstName + ' ' + item.lastName,
+        notes: '',
+        phone: {
+            countryCode: '1',
+            number: '',
+            id: uuidv4(),
+        },
+        email: '',
+        address: '',
+        birthday: {},
+        socialMedia: [],
+        photos: [],
+        }
+    })
+    return contacts;
+}
 export const contactsToString = (contactsWithTag: Contact[]) => {
     let contactsWithTagString = '';
     for (let i = 0; i < contactsWithTag.length; i++) {

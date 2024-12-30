@@ -16,7 +16,7 @@ export default function OnboardingLayout() {
     }
 
     const onNextPage = () => {
-        if (pageNumber === 4) {
+        if (pageNumber === 5) {
             endOnboarding();
             return;
         }
@@ -51,6 +51,7 @@ function ProgressDots({pageNumber} : ProgressDotsProps) {
             <View style={pageNumber == 2 ? styles.filledDot : styles.emptyDot}/>
             <View style={pageNumber == 3 ? styles.filledDot : styles.emptyDot}/>
             <View style={pageNumber == 4 ? styles.filledDot : styles.emptyDot}/>
+            <View style={pageNumber == 5 ? styles.filledDot : styles.emptyDot}/>
         </View>
     )
 }

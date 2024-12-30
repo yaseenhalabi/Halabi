@@ -23,6 +23,7 @@
     },
     "plugins": [
       [
+        
         "expo-font",
         {
           "fonts": [
@@ -39,7 +40,13 @@
         }
       ],
       "expo-router",
-      "expo-build-properties"
+      "expo-build-properties",
+      [
+      "expo-contacts",
+      {
+        "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+        }
+      ]
     ],
     "extra": {
       "router": {

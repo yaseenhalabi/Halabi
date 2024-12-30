@@ -6,7 +6,7 @@ export default function page1() {
         <View style={styles.container}>
             <Text style={styles.mainText}>Welcome to Halabi! 👋</Text>
             <View style={{height: '25%'}}/>
-            <CommonText size='large' >This marks your first step towards <CommonText size='large' style='bold'>never forgetting a name again!</CommonText></CommonText>
+            <CommonText style={{color: "white" }} size='large' >This marks your first step towards <CommonText size='large' style={{color: "white" }} weight='bold'>never forgetting a name again!</CommonText></CommonText>
         </View>
     );
 }

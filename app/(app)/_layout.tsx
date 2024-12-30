@@ -8,16 +8,16 @@ export default function AppLayout() {
     const signedIn: boolean  = useSelector((state: any) => state.user.signedIn);
 
     const theme = getTheme();
-    // if (onboarding.isOnboarding) {
-    //      return <Redirect href={`/onboarding/page${onboarding.page}`} />;
-    // }
-    // if (!signedIn) {
-    //     return <Redirect href="/sign-in" />;
-    // }
-    const playgroundMode = false;
-    if (playgroundMode) {
-      return <Redirect href="/playground-mode" />;
+    if (onboarding.isOnboarding) {
+         return <Redirect href={`/onboarding/page${onboarding.page}`} />;
     }
+    if (!signedIn) {
+        return <Redirect href="/sign-in" />;
+    }
+    // const playgroundMode = false;
+    // if (playgroundMode) {
+    //   return <Redirect href="/playground-mode" />;
+    // }
 
     const screenOptions = {
         

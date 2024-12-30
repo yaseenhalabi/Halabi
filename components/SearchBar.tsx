@@ -35,7 +35,7 @@ export default function SearchBar({ onChangeText, value }: SearchBarProps) {
                 <TextInput
                     style={[
                         styles.input, 
-                        { color: theme.text.primary }, 
+                        { color: theme.text.full }, 
                         Platform.OS === 'android' ? styles.androidInput : null
                     ]}
                     placeholder="Search"
