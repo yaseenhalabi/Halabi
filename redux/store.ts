@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers } from '@reduxjs/toolkit';
 import userSlice from './userSlice';
 import themeSlice from './themeSlice';
-import onboardingSlice from './onboardingSlice';
 import contactsSlice from './contactsSlice';
 import tagsSlice from './tagsSlice';
 import selectContactsSlice from './selectContactsSlice';
@@ -20,7 +19,6 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSlice,
   theme: themeSlice,
-  onboarding: onboardingSlice,
   contacts: contactsSlice,
   tags: tagsSlice,
   selection: selectContactsSlice,
