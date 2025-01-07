@@ -9,19 +9,23 @@ import { Alert } from "react-native";
 export const importContacts = async (dispatch: any) => {
     console.log('importing contacts');
     const { granted } = await Contacts.requestPermissionsAsync();
-    console.log('granted', granted);
     if (granted) {
         const { data } = await Contacts.getContactsAsync();
+        console.log('data', data[0].birthday);
         if (data.length > 0) {
             const contacts: Contact[] = data.map((item: any) => {
                 return {
                     id: uuidv4(),
                     tags: [],
-                    name: (item.firstName || '') + ' ' + (item.lastName || ''),
+                    name: (item.firstName || '') + (item.lastName ? ' ' + item.lastName : ''),
+                    birthday: {
+                        month: String(item.birthday?.month+1 || ''),
+                        day: String(item.birthday?.day || ''),
+                    },
                     notes: '',
                     phone: {
                         countryCode: '1',
-                        number: item.phoneNumbers?.[0]?.number || '',
+                        number: item.phoneNumbers?.[0]?.digits || '',
                         id: uuidv4(),
                     },
                     email: item.emails?.[0]?.email || '',

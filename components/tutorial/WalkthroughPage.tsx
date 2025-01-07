@@ -126,8 +126,18 @@ export default function WalkthroughPage({ stage, onComplete }: WalkthroughPagePr
     };
   });
 
+  const [isCooldown, setIsCooldown] = useState(false);
+
+  const handlePress = () => {
+    if (!isCooldown) {
+      onComplete();
+      setIsCooldown(true);
+      setTimeout(() => setIsCooldown(false), 500);
+    }
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={onComplete}>
+    <TouchableWithoutFeedback onPress={handlePress}>
       <SafeAreaView style={styles.container}>
         {/* Top dark overlay */}
         <Animated.View style={[styles.overlay, topOverlayStyle]} />

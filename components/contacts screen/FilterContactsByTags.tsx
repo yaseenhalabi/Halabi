@@ -53,7 +53,7 @@ export default function FilterContactsByTags() {
                     onChangeText={setSearchText} 
                     placeholder="Search tags"
                     placeholderTextColor={theme.text.muted}
-                    style={styles.searchInput}
+                    style={[styles.searchInput, { color: theme.text.full }]}
                     returnKeyType='done'
                     keyboardAppearance='dark'
                     autoCapitalize='words'

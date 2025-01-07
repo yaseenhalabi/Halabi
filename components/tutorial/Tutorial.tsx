@@ -14,6 +14,7 @@ export default function Tutorial() {
   const [currentStage, setCurrentStage] = useState(0);
   const dispatch = useDispatch();
   const incrementStage = () => {
+    
     if (currentStage === 12) {
       // ask user if they want to import contacts
       // if they do, import contacts
