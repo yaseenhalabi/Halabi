@@ -1,28 +1,43 @@
 import { Contact, Tag, Birthday, SocialMedia, PhoneNumber, Photo } from "./types";
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid';
+import { setContacts } from "../redux/contactsSlice";
+import * as Contacts from 'expo-contacts';
+import { useDispatch } from "react-redux";
+import { Alert } from "react-native";
 
-
-export const appleContactsToHalabiContacts = (data: any) => {
-    const contacts: Contact[] = data.data.map((item: any) => {
-        return {
-        id: uuidv4(),
-        tags: [], // Changed from Tag[] to string[]
-        name: item.firstName + ' ' + item.lastName,
-        notes: '',
-        phone: {
-            countryCode: '1',
-            number: '',
-            id: uuidv4(),
-        },
-        email: '',
-        address: '',
-        birthday: {},
-        socialMedia: [],
-        photos: [],
+export const importContacts = async (dispatch: any) => {
+    console.log('importing contacts');
+    const { granted } = await Contacts.requestPermissionsAsync();
+    console.log('granted', granted);
+    if (granted) {
+        const { data } = await Contacts.getContactsAsync();
+        if (data.length > 0) {
+            const contacts: Contact[] = data.map((item: any) => {
+                return {
+                    id: uuidv4(),
+                    tags: [],
+                    name: (item.firstName || '') + ' ' + (item.lastName || ''),
+                    notes: '',
+                    phone: {
+                        countryCode: '1',
+                        number: item.phoneNumbers?.[0]?.number || '',
+                        id: uuidv4(),
+                    },
+                    email: item.emails?.[0]?.email || '',
+                    address: item.addresses?.[0]?.street || '',
+                    socialMedia: [],
+                    photos: [],
+                }
+            });
+            console.log("contacts.length", contacts.length);
+            dispatch(setContacts(contacts));
+            return contacts;
         }
-    })
-    return contacts;
+    } else {
+        Alert.alert('Error', 'Please grant permission to import contacts');
+    }
+    return [];
 }
 export const contactsToString = (contactsWithTag: Contact[]) => {
     let contactsWithTagString = '';

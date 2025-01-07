@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Tag } from '../utils/types';
 import { testTags } from '../utils/testdata';
-
 const initialState: Tag[] = testTags;
 
 const tagsSlice = createSlice({
@@ -22,10 +21,13 @@ const tagsSlice = createSlice({
         },
         deleteSelectedTags: (state, action: PayloadAction<string[]>) => {
             return state.filter(tag => !action.payload.includes(tag.id));
+        },
+        resetTags: (state) => {
+            return [] as Tag[];
         }
     }
 });
 
-export const { setTags, addTag, removeTag, updateTag, deleteSelectedTags } = tagsSlice.actions;
+export const { setTags, addTag, removeTag, updateTag, deleteSelectedTags, resetTags } = tagsSlice.actions;
 
 export default tagsSlice.reducer;

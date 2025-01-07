@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const testContacts: Contact[] = [
     {
-        id: uuidv4(),
+        id: '1',
         tags: [
             '1', // Friend tag ID
             '2', // Family tag ID

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import SettingToggle from '../../components/settings screen/SettingToggle';
 import getTheme from '../../utils/GetTheme';
 import { setTheme } from '../../redux/themeSlice';
-
+import { importContacts } from '../../utils/helpers';
 export default function Settings() {
     const dispatch = useDispatch();
     const theme = getTheme();
@@ -16,6 +16,11 @@ export default function Settings() {
                 toggled={theme.name === 'dark'} 
                 title="Dark Mode" 
                 onToggle={() => dispatch(setTheme(theme.name === 'dark' ? 'light' : 'dark'))} 
+            />
+            <SettingToggle 
+                toggled={true} 
+                title="Import Contacts" 
+                onToggle={importContacts} 
             />
         </PageContainer>
     );

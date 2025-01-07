@@ -31,10 +31,13 @@ const contactsSlice = createSlice({
         },
         deleteSelectedContacts: (state, action: PayloadAction<string[]>) => {
             return state.filter(contact => !action.payload.includes(contact.id));
+        },
+        resetContacts: (state) => {
+            return [] as Contact[];
         }
     }
 });
 
-export const { setContacts, updateContact, addContact, addMultipleContacts, removeContact, addTagToContact, removeTagFromContact } = contactsSlice.actions;
+export const { setContacts, updateContact, addContact, addMultipleContacts, removeContact, addTagToContact, removeTagFromContact, resetContacts } = contactsSlice.actions;
 
 export default contactsSlice.reducer;
