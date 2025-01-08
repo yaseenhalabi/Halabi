@@ -19,6 +19,7 @@ import FilterTags from '../../../../components/tags screen/FilterTags';
 import { deleteSelectedTags } from '../../../../redux/tagsSlice';
 import { resetSelectedTags, setTagsSelectionMode } from '../../../../redux/selectTagsSlice';
 import getTheme from '../../../../utils/GetTheme';
+import { deleteSelectedTagsFromContacts } from '../../../../redux/contactsSlice';
 
 export default function MyTags() {
   const [searchText, setSearchText] = useState('');
@@ -70,6 +71,7 @@ export default function MyTags() {
         { text: 'Cancel', style: 'cancel' },
         { text: 'Delete', style: 'destructive', onPress: () => {
             dispatch(deleteSelectedTags(selectedTagIds));
+            dispatch(deleteSelectedTagsFromContacts(selectedTagIds));
             dispatch(resetSelectedTags());
             endEditing();
           }
