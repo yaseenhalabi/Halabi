@@ -56,7 +56,8 @@ export default function IntroPage({ onComplete }: IntroPageProps) {
         <Animated.View style={{ opacity: fadeAnim2 }}>
           <CommonText 
             style={{fontSize: 28, color: '#4E4E4E'}}
-            weight="bold"
+            weight="semiBold"
+            
           >
             Thank you for downloading Halabi!
           </CommonText>

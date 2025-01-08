@@ -66,7 +66,7 @@ export default function Header({navigation, route}: HeaderProps) {
                 <CommonText>{currentRouteName}</CommonText>
             </View>
             <View style={styles.iconsContainer}>
-                <HeaderIcon size={20} source={theme.name === "dark" ? whiteUploadIcon : blackUploadIcon} onPress={onPress} />
+                {/* <HeaderIcon size={20} source={theme.name === "dark" ? whiteUploadIcon : blackUploadIcon} onPress={onPress} /> */}
                 {
                     showBackArrow ? 
                     <HeaderIcon size={20} source={theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon} onPress={onPressBack} /> :

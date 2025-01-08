@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setTutorialComplete } from "../../redux/userSlice";
 import { resetContacts, setContacts } from "../../redux/contactsSlice";
 import { resetTags } from "../../redux/tagsSlice";
-import { importContacts } from "../../utils/helpers";
+import { importContacts } from "../../utils/SyncContactScripts";
 import { Alert } from "react-native";
 
 export default function Tutorial() {
@@ -20,7 +20,7 @@ export default function Tutorial() {
       // if they do, import contacts
       Alert.alert(
         "Import Contacts",
-        "Would you like to import your contacts?",
+        "Would you like to import your contacts? You can always do this later in settings.",
         [
           {
             text: "No",

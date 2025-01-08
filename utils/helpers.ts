@@ -1,48 +1,6 @@
-import { Contact, Tag, Birthday, SocialMedia, PhoneNumber, Photo } from "./types";
+import { Contact, Tag, Birthday } from "./types";
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid';
-import { setContacts } from "../redux/contactsSlice";
-import * as Contacts from 'expo-contacts';
-import { useDispatch } from "react-redux";
-import { Alert } from "react-native";
-
-export const importContacts = async (dispatch: any) => {
-    console.log('importing contacts');
-    const { granted } = await Contacts.requestPermissionsAsync();
-    if (granted) {
-        const { data } = await Contacts.getContactsAsync();
-        console.log('data', data[0].birthday);
-        if (data.length > 0) {
-            const contacts: Contact[] = data.map((item: any) => {
-                return {
-                    id: uuidv4(),
-                    tags: [],
-                    name: (item.firstName || '') + (item.lastName ? ' ' + item.lastName : ''),
-                    birthday: {
-                        month: String(item.birthday?.month+1 || ''),
-                        day: String(item.birthday?.day || ''),
-                    },
-                    notes: '',
-                    phone: {
-                        countryCode: '1',
-                        number: item.phoneNumbers?.[0]?.digits || '',
-                        id: uuidv4(),
-                    },
-                    email: item.emails?.[0]?.email || '',
-                    address: item.addresses?.[0]?.street || '',
-                    socialMedia: [],
-                    photos: [],
-                }
-            });
-            console.log("contacts.length", contacts.length);
-            dispatch(setContacts(contacts));
-            return contacts;
-        }
-    } else {
-        Alert.alert('Error', 'Please grant permission to import contacts');
-    }
-    return [];
-}
 export const contactsToString = (contactsWithTag: Contact[]) => {
     let contactsWithTagString = '';
     for (let i = 0; i < contactsWithTag.length; i++) {
@@ -136,7 +94,7 @@ export const getDaysUntilBirthday = (birthday: Birthday) : number => {
 export const getBirthdayText = (birthday: Birthday) => {
     const daysUntilBirthday = getDaysUntilBirthday(birthday);
     if (daysUntilBirthday === 0) {
-        return '~~Happy Birthday!~~';
+        return 'Happy Birthday ';
     }
     if (daysUntilBirthday === 1) {
         return '(tomorrow)';

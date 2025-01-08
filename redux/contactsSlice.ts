@@ -14,6 +14,9 @@ const contactsSlice = createSlice({
         updateContact: (state, action: PayloadAction<Contact>) => {
             return state.map(contact => contact.id === action.payload.id ? action.payload : contact);
         },
+        updateContactId: (state, action: PayloadAction<{ oldId: string, newId: string }>) => {
+            return state.map(contact => contact.id === action.payload.oldId ? { ...contact, id: action.payload.newId } : contact);
+        },
         addContact: (state, action: PayloadAction<Contact>) => {
             return [action.payload, ...state];
         },
@@ -38,6 +41,6 @@ const contactsSlice = createSlice({
     }
 });
 
-export const { setContacts, updateContact, addContact, addMultipleContacts, removeContact, addTagToContact, removeTagFromContact, resetContacts } = contactsSlice.actions;
+export const { setContacts, updateContact, updateContactId, addContact, addMultipleContacts, removeContact, addTagToContact, removeTagFromContact, resetContacts } = contactsSlice.actions;
 
 export default contactsSlice.reducer;

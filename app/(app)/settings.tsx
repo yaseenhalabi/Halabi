@@ -5,10 +5,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import SettingToggle from '../../components/settings screen/SettingToggle';
 import getTheme from '../../utils/GetTheme';
 import { setTheme } from '../../redux/themeSlice';
-import { importContacts } from '../../utils/helpers';
+import SettingButton from '../../components/settings screen/SettingButton';
+import { syncContactsToHalabi, syncContactsToNative } from '../../utils/SyncContactScripts';
 export default function Settings() {
     const dispatch = useDispatch();
     const theme = getTheme();
+    const contacts = useSelector((state: any) => state.contacts);
+    const onSyncContactsToHalabi = async () => {
+        await syncContactsToHalabi(dispatch, contacts);
+    }
+    const onSyncContactsToNative = async () => {
+        await syncContactsToNative(dispatch, contacts);
+    }
+
     return (
         <PageContainer style={styles.container}>
 
@@ -17,10 +26,13 @@ export default function Settings() {
                 title="Dark Mode" 
                 onToggle={() => dispatch(setTheme(theme.name === 'dark' ? 'light' : 'dark'))} 
             />
-            <SettingToggle 
-                toggled={true} 
-                title="Import Contacts" 
-                onToggle={importContacts} 
+            <SettingButton 
+                title="Sync iPhone Contacts to Halabi" 
+                onPress={onSyncContactsToHalabi}
+            />
+            <SettingButton 
+                title="Sync Halabi Contacts to iPhone" 
+                onPress={onSyncContactsToNative}
             />
         </PageContainer>
     );

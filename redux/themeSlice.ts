@@ -10,6 +10,7 @@ const themeSlice = createSlice({
                 name: 'dark',
                 background: '#000000',
                 backgroundSecondary: '#141414',
+                backgroundTertiary: '#202020',
                 button: '#202020',
                 smallTag: '#232135',
                 text: {
@@ -23,6 +24,7 @@ const themeSlice = createSlice({
                 name: 'light',
                 background: 'white',
                 backgroundSecondary: '#F0F0F0',
+                backgroundTertiary: '#E0E0E0',
                 button: '#E9E9E9',
                 smallTag: '#E9E9E9',
                 text: {
