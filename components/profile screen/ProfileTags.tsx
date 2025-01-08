@@ -65,7 +65,7 @@ export default function ProfileTags({ tagIds, contactId }: ProfileTagsProps) {
                     />
                 </View>
                 :
-                <TouchableOpacity hitSlop={20} onPress={toggleAddingTag}>
+                <TouchableOpacity style={{paddingVertical: 5}} hitSlop={10} onPress={toggleAddingTag}>
                     <CommonText weight="regular" size="small">+ Add Tag</CommonText>
                 </TouchableOpacity>
             }
@@ -88,12 +88,17 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
     const tagIds = contact?.tags ||[];
     let filteredTags = tags.filter((tag: Tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()) && !tagIds.includes(tag.id));
     filteredTags = filteredTags.slice(0, 5); 
-    const theme = getTheme();
     const addTagToContact_ = (tagId: string) => {
         dispatch(addTagToContact({ contactId: contactId, tagId: tagId }));
         setSearchText('');
     }
     const createNewTag = () => {
+        if (searchText.length === 0) return;
+        const existingTag = tags.find((tag: Tag) => tag.name.toLowerCase() === searchText.toLowerCase());
+        if (existingTag && !tagIds.includes(existingTag.id)) {
+            addTagToContact_(existingTag.id);
+            return;
+        }
         const newTag = { id: uuidv4(), name: searchText };
         dispatch(addTag(newTag));
         addTagToContact_(newTag.id);
