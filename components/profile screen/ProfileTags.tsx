@@ -2,7 +2,7 @@ import { View, TextInput, StyleSheet, TouchableOpacity, ScrollView, Image } from
 import { useSelector } from 'react-redux';
 import { Tag } from '../../utils/types';
 import CommonText from '../CommonText';
-import { getContactById } from '../../utils/helpers';
+import { getContactById, getContactsWithTag } from '../../utils/helpers';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import getTheme from '../../utils/GetTheme';
@@ -87,7 +87,12 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
     const contact = getContactById(contactId, contacts);
     const tagIds = contact?.tags ||[];
     let filteredTags = tags.filter((tag: Tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()) && !tagIds.includes(tag.id));
-    filteredTags = filteredTags.slice(0, 5); 
+    filteredTags.sort((a: Tag, b: Tag) => {
+       const aContactCount = getContactsWithTag(a, contacts).length;
+       const bContactCount = getContactsWithTag(b, contacts).length;
+       return bContactCount - aContactCount;
+    });
+    filteredTags = filteredTags.slice(0, 10); 
     const addTagToContact_ = (tagId: string) => {
         dispatch(addTagToContact({ contactId: contactId, tagId: tagId }));
         setSearchText('');
@@ -105,7 +110,11 @@ function ListOfProfileTags({ tags, searchText, contactId, closeAddingTag, setSea
     }
     return (
         <View style={{width: '100%', position: 'relative'}}>
-            <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container} style={{paddingVertical: 5}}>
+            <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container} scrollEnabled={false} style={{paddingVertical: 5}}>
+                {
+                    searchText.length === 0 && filteredTags.length === 0 &&
+                    <CommonText weight="light" size="small" color='muted'>No tags found</CommonText>
+                }
                 {
                     searchText.length > 0 &&
                     <TouchableOpacity hitSlop={10} onPress={createNewTag}>
@@ -136,13 +145,14 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        paddingVertical: 5,
+        paddingVertical: 10,
 
     },
     addTagContainer: {
         borderWidth: 1,
         width: '100%',
         paddingHorizontal: 15,
+        paddingVertical: 10,
         borderRadius: 5,
     },
     cancelIcon: {
@@ -150,6 +160,6 @@ const styles = StyleSheet.create({
         height: 20,
         position: 'absolute',
         right: -25,
-        top: -10
+        top: -20
     }
 });

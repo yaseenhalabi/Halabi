@@ -8,6 +8,7 @@ import CommonText from '../CommonText';
 import { contactsToString } from '../../utils/helpers';
 import { useSelector, useDispatch } from 'react-redux';
 import { addSelectedTag, removeSelectedTag, setTagsSelectionMode } from '../../redux/selectTagsSlice';
+import * as Haptics from 'expo-haptics';
 
 type TagItemProps = {
     tag: Tag;
@@ -24,6 +25,7 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
 
 
     const onTagPress = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         if (inTagSelectionMode) {
             if (selectedTags.includes(tag.id)) {
                 dispatch(removeSelectedTag(tag.id));
@@ -36,6 +38,7 @@ export default function TagItem({ tag, contactsWithTag, onPress }: TagItemProps)
     };
 
     const onTagLongPress = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         dispatch(setTagsSelectionMode(true));
         dispatch(addSelectedTag(tag.id));
     };
