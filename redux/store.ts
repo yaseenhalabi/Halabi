@@ -10,10 +10,10 @@ import selectContactsSlice from './selectContactsSlice';
 import filterContactsSlice from './filterContactsSlice';
 import filterTagsSlice from './filterTagsSlice';
 import selectTagsSlice from './selectTagsSlice';
-
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  whitelist: ['user', 'theme', 'contacts', 'tags', 'filter', 'filterTags']  // Only persist these slices
 };
 
 const rootReducer = combineReducers({
@@ -26,22 +26,22 @@ const rootReducer = combineReducers({
   filterTags: filterTagsSlice,
   tagSelection: selectTagsSlice,
 });
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = configureStore({
-  // reducer: persistedReducer,
-  reducer: rootReducer,
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+export const store = configureStore({
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/PURGE', 'persist/REHYDRATE'],
+        ignoredActions: [
+          'persist/PERSIST',
+          'persist/PURGE',
+          'persist/REHYDRATE',
+        ],
         ignoredPaths: ['register', 'rehydrate'],
       },
     }),
 });
 
-// const persistor = persistStore(store);
-
-// export { store, persistor };
-export { store };
+export const persistor = persistStore(store);
