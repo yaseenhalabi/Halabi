@@ -1,19 +1,51 @@
-import React from 'react';
-import { View, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, Switch, StyleSheet, TouchableOpacity, ActivityIndicator, Animated, Alert, Easing } from 'react-native';
 import getTheme from '../../utils/GetTheme';
 import CommonText from '../CommonText';
+import { Ionicons } from '@expo/vector-icons';
 
 type SettingButtonProps = {
   title: string;
-  onPress: () => void;
+  color?: string;
+  onPress: () => Promise<boolean>;
 };
 
-export default function SettingButton({ title, onPress }: SettingButtonProps) {
+export default function SettingButton({ title, onPress, color }: SettingButtonProps) {
     const theme = getTheme();
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const fadeAnim = useRef(new Animated.Value(1)).current; // Initial opacity value
+
+    const handlePress = async () => {
+        setLoading(true);
+        const success = await onPress();
+        setLoading(false);
+        setSuccess(success);
+        if (success) {
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 600, // Duration of the fade-out
+                easing: Easing.ease,
+                useNativeDriver: true,
+            }).start(() => {
+                setSuccess(false);
+                fadeAnim.setValue(1); // Reset opacity for next success
+            });
+        } else {
+          Alert.alert('Error', 'An error occurred, please try again');
+        }
+    }
+
     return (
       <View style={[styles.container, { backgroundColor: theme.backgroundSecondary }]}>
-        <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: theme.backgroundTertiary }]}>
-            <CommonText>{title}</CommonText>
+        <TouchableOpacity onPress={handlePress} style={[styles.button, { backgroundColor: theme.backgroundTertiary }]}>
+            {!loading && !success && <CommonText style={{color: color ? color : theme.text.full}}>{title}</CommonText>}
+            {loading && <ActivityIndicator size="small" color={theme.text.full} />}
+            {!loading && success && (
+                <Animated.View style={{ opacity: fadeAnim }}>
+                  <Ionicons name="checkmark-circle" size={24} color={theme.text.success} />
+                </Animated.View>
+            )}
         </TouchableOpacity>
       </View>
   );

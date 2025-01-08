@@ -226,7 +226,6 @@ export const syncContactsToNative = async (dispatch: any, halabiContacts: Contac
         dispatch(updateContactId({ oldId: halabiContact.id, newId: added_contact_id }));
       }
     }
-  
     return true;
   };
   

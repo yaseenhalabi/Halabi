@@ -18,6 +18,8 @@ const themeSlice = createSlice({
                     semi: '#A6A6A6',
                     muted: '#5B5B5B',
                     semiFull: '#DBDBDB',
+                    error: '#FF453A',
+                    success: '#4bb543',
                 },
             },
             {
@@ -32,6 +34,8 @@ const themeSlice = createSlice({
                     semi: '#666666',
                     muted: '#333333',
                     semiFull: '#333333',
+                    error: '#FF453A',
+                    success: '#4bb543',
                 },
             },
         ],
