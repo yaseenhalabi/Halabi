@@ -4,7 +4,15 @@ import * as Contacts from 'expo-contacts';
 import { Alert, Linking } from "react-native";
 import { v4 as uuidv4 } from 'uuid';
 import { updateContactId } from "../redux/contactsSlice";
-
+export const resetAllBirthdaysInNative = async () => {
+    const { granted } = await Contacts.requestPermissionsAsync();
+    if (granted) {
+        const { data } = await Contacts.getContactsAsync();
+        data.forEach(async (item: any) => {
+            await Contacts.updateContactAsync({ ...item, birthday: { day: null, month: null } });
+        });
+    }
+}
 export const importContacts = async (dispatch: any) => {
     const { granted } = await Contacts.requestPermissionsAsync();
     if (granted) {
@@ -16,8 +24,8 @@ export const importContacts = async (dispatch: any) => {
                 tags: [],
                 name: (item.firstName || '') + (item.lastName ? ' ' + item.lastName : ''),
                 birthday: {
-                    month: String(item.birthday?.month+1 || ''),
-                    day: String(item.birthday?.day || ''),
+                    month: item.birthday?.month ? String(item.birthday?.month+1) : '',
+                    day: item.birthday?.day ? String(item.birthday?.day) : '',
                 },
                 notes: '',
                 phone: {
@@ -79,8 +87,8 @@ export const syncContactsToHalabi = async (dispatch: any, old_contacts: Contact[
                 tags: [],
                 name: (item.firstName || '') + (item.lastName ? ' ' + item.lastName : ''),
                 birthday: {
-                    month: String(item.birthday?.month+1 || ''),
-                    day: String(item.birthday?.day || ''),
+                    month: item.birthday?.month ? String(item.birthday?.month+1) : '',
+                    day: item.birthday?.day ? String(item.birthday?.day) : '',
                 },
                 notes: '',
                 phone: {

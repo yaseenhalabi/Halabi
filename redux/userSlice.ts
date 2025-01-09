@@ -7,6 +7,7 @@ type User = {
 const userSlice = createSlice({
     name: 'user',
     initialState: {
+        id: '',
         isTutorialComplete: false
     } as User,
     reducers: {

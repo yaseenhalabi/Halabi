@@ -15,6 +15,11 @@ export default function AppLayout() {
   }
 
   const tutorialMode = !useSelector((state: any) => state.user.isTutorialComplete);
+  const user = useSelector((state: any) => state.user);
+  console.log(user);
+  if (user.id == '') {
+    return <Redirect href="/sign-in" />
+  }
   if (tutorialMode) {
     return (
       <>

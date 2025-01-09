@@ -6,13 +6,40 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import getTheme from '../utils/GetTheme';
 import CommonText from '../components/CommonText';
 import googleIcon from '../assets/images/google-icon.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from '../firebaseConfig';
+import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import * as Google from 'expo-auth-session/providers/google';
+import { makeRedirectUri } from 'expo-auth-session';
+import { useEffect } from 'react';
 
 export default function SignIn() {
     const dispatch = useDispatch();
+    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+        clientId: '409006450675-nkkvh6uee10eaht65igp0lbj80cmb18t.apps.googleusercontent.com',
+        redirectUri: makeRedirectUri({
+            native: 'https://auth.expo.io/@thecontactapp/thecontactapp',
+        }),
+    });
+
+    useEffect(() => {
+        if (response?.type === 'success') {
+            const { id_token } = response.params;
+            const credential = GoogleAuthProvider.credential(id_token);
+            signInWithCredential(auth, credential)
+                .then(userCredential => {
+                    console.log('User data:', userCredential.user);
+                })
+                .catch(error => {
+                    console.error('Error during sign-in:', error);
+                });
+        }
+    }, [response]);
+
     const signIn = () => {
-        dispatch(setUser({ signedIn: true, name: 'John Doe' }));
-        router.navigate('/');
+        promptAsync();
     }
+
     return (
         <SafeAreaView style={styles.container}>
             <Text onPress={() => signIn()} style={styles.title}>
