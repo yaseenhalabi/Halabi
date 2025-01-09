@@ -5,6 +5,46 @@ import { Alert, Linking } from "react-native";
 import { v4 as uuidv4 } from 'uuid';
 import { updateContactId } from "../redux/contactsSlice";
 
+
+export const resetBirthdaysInNative = async () => {
+  const { granted } = await Contacts.requestPermissionsAsync();
+  if (!granted) return;
+
+  // Fetch all contacts
+  const { data } = await Contacts.getContactsAsync();
+  console.log('Before:', data.map(contact => contact.birthday).slice(0, 10));
+  
+  if (data.length < 1) return;
+  
+  for (const contact of data) {
+    try {
+      // Remove the old contact
+      await Contacts.removeContactAsync(contact.id || '');
+      
+      // Recreate a brand-new contact with the same info, but no birthday field
+      // Include whichever fields you want to preserve
+      const newContact = {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        phoneNumbers: contact.phoneNumbers,
+        emails: contact.emails,
+        addresses: contact.addresses,
+        // ...any other fields you want to keep
+        // DO NOT include `birthday`
+      };
+      
+      // Create the new contact
+      await Contacts.addContactAsync(newContact as Contacts.Contact);
+    } catch (error) {
+      console.error(`Failed to recreate contact ${contact.id}:`, error);
+    }
+  }
+
+  // Fetch contacts again to confirm the birthday fields are gone
+  const { data: newData } = await Contacts.getContactsAsync();
+  console.log('After:', newData.map(contact => contact.birthday).slice(0, 10));
+};
+
 export const importContacts = async (dispatch: any) => {
     const { granted } = await Contacts.requestPermissionsAsync();
     if (granted) {
@@ -192,7 +232,7 @@ export const syncContactsToNative = async (dispatch: any, halabiContacts: Contac
           await Contacts.updateContactAsync({
             id: nativeContact.id,
             contactType: Contacts.ContactTypes.Person,
-            name: halabiContact.name,
+            name: halabiContact.name || '',
             [Contacts.Fields.FirstName]: firstName,
             [Contacts.Fields.LastName]: lastName,
             [Contacts.Fields.PhoneNumbers]: [

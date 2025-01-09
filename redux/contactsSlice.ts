@@ -37,7 +37,7 @@ const contactsSlice = createSlice({
         },
         deleteSelectedTagsFromContacts: (state, action: PayloadAction<string[]>) => {
             return state.map(contact => ({ ...contact, tags: contact.tags.filter(tagId => !action.payload.includes(tagId)) }));
-        },
+        },  
         resetContacts: (state) => {
             return [] as Contact[];
         }
