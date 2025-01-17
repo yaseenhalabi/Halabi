@@ -8,12 +8,14 @@
     "userInterfaceStyle": "light",
     "scheme": "halabi",
     "newArchEnabled": true,
+    
     "splash": {
       "image": "./assets/images/halabi-splash-screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
     "ios": {
+      "buildNumber": "3", 
       "supportsTablet": true,
       "bundleIdentifier": "com.contactapp.thecontactapp"
     },

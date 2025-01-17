@@ -24,6 +24,7 @@ export const resetBirthdaysInNative = async () => {
       // Recreate a brand-new contact with the same info, but no birthday field
       // Include whichever fields you want to preserve
       const newContact = {
+        contactType: Contacts.ContactTypes.Person,
         firstName: contact.firstName,
         lastName: contact.lastName,
         phoneNumbers: contact.phoneNumbers,
