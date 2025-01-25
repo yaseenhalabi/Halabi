@@ -154,6 +154,20 @@ export const syncContactsToHalabi = async (dispatch: any, old_contacts: Contact[
     }
 }
 export const syncContactsToNative = async (dispatch: any, halabiContacts: Contact[]): Promise<boolean> => {
+    const proceed = await new Promise<boolean>((resolve) => {
+        Alert.alert(
+            "Warning",
+            "This could potentially overwrite your existing contacts. Are you sure you want to proceed?",
+            [
+                { text: "Cancel", style: "cancel", onPress: () => resolve(false) },
+                { text: "Proceed", onPress: () => resolve(true) }
+            ],
+            { cancelable: true }
+        );
+    });
+    if (!proceed) {
+        return false;
+    }
     const { granted } = await Contacts.requestPermissionsAsync();
     if (!granted) {
       Alert.alert(

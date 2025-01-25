@@ -32,15 +32,15 @@ export default function TagScreen() {
         value={tag.name} 
       />
       <View style={{width: '100%'}}>
-
         <CommonText color='semi'>{contactsWithTag.length > 0 ? "Contacts with this tag:" : "No contacts with this tag"}</CommonText>
       </View>
+
       <FlatList
         style={{ width: '100%' }}
         data={contactsWithTag}
         renderItem={({ item }) => <ContactItem contact={item} />}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ gap: 5, paddingBottom: 300 }}
+        contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
       />
     </PageContainer>
   );
@@ -49,8 +49,9 @@ export default function TagScreen() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
-    paddingBottom: 300,
     width: '100%',
+    height: '10%',
     gap: 10,
+    
   }
 }); 
