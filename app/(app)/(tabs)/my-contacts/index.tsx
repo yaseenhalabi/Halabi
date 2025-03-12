@@ -19,6 +19,7 @@ import EditContact from "../../../../components/contacts screen/EditContacts";
 import FilterContacts from "../../../../components/contacts screen/FilterContacts";
 import AddContactButton from "../../../../components/AddContactButton";
 import getTheme from "../../../../utils/GetTheme";
+import { useFocusEffect } from "expo-router";
 
 export default function MyContacts() {
   const dispatch = useDispatch();
@@ -34,6 +35,14 @@ export default function MyContacts() {
       setEditButtonsMode("edit");
     }
   }, [inEditMode]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setSearchText("");
+      };
+    }, [])
+  );
 
   const selectedContacts: string[] = useSelector(
     (state: any) => state.selection.selectedContacts

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Alert } from "react-native";
 import PageContainer from "../../../../components/PageContainer";
 import SearchBar from "../../../../components/SearchBar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import addIcon from "../../../../assets/images/add-icon-white.png";
 import blackAddIcon from "../../../../assets/images/add-icon-black.png";
 import editIcon from "../../../../assets/images/edit-icon-white.png";
@@ -24,6 +24,7 @@ import {
 import getTheme from "../../../../utils/GetTheme";
 import { deleteSelectedTagsFromContacts } from "../../../../redux/contactsSlice";
 import AddContactButton from "../../../../components/AddContactButton";
+import { useFocusEffect } from "expo-router";
 
 export default function MyTags() {
   const [searchText, setSearchText] = useState("");
@@ -98,6 +99,13 @@ export default function MyTags() {
     );
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setSearchText("");
+      };
+    }, [])
+  );
   const activeFiltersCount = (sortBy ? 1 : 0) + (isReversed ? 1 : 0);
   const theme = getTheme();
 
