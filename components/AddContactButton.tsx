@@ -1,8 +1,7 @@
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
-import CommonText from "./CommonText";
 import getTheme from "../utils/GetTheme";
 import { Entypo } from "@expo/vector-icons";
-
+import * as Haptics from "expo-haptics";
 type EditButtonProps = {
   onPress: () => void;
   disabled: boolean;
@@ -10,9 +9,13 @@ type EditButtonProps = {
 
 export default function EditButton({ onPress, disabled }: EditButtonProps) {
   const theme = getTheme();
+  const handlePress = () => {
+    onPress();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+  };
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled}
       style={[
         { backgroundColor: theme.text.full, opacity: disabled ? 0 : 1 },

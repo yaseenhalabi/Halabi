@@ -1,80 +1,97 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import PageContainer from '../../../../components/PageContainer';
-import SearchBar from '../../../../components/SearchBar';
-import { useEffect, useState } from 'react';
-import addIcon from '../../../../assets/images/add-icon-white.png';
-import blackAddIcon from '../../../../assets/images/add-icon-black.png';
-import editIcon from '../../../../assets/images/edit-icon-white.png';
-import blackEditIcon from '../../../../assets/images/edit-icon-black.png';
-import filterIcon from '../../../../assets/images/filter-icon-white.png';
-import blackFilterIcon from '../../../../assets/images/filter-icon-black.png';
-import EditButton from '../../../../components/EditButton';
-import EditButtonsContainer from '../../../../components/EditButtonsContainer';
-import ListOfTags from '../../../../components/tags screen/ListOfTags';
-import { useSelector, useDispatch } from 'react-redux';
-import { getFilteredTags } from '../../../../utils/helpers';
-import AddTagInput from '../../../../components/tags screen/AddTagInput';
-import EditTags from '../../../../components/tags screen/EditTags';
-import FilterTags from '../../../../components/tags screen/FilterTags';
-import { deleteSelectedTags } from '../../../../redux/tagsSlice';
-import { resetSelectedTags, setTagsSelectionMode } from '../../../../redux/selectTagsSlice';
-import getTheme from '../../../../utils/GetTheme';
-import { deleteSelectedTagsFromContacts } from '../../../../redux/contactsSlice';
+import { View, Text, StyleSheet, Alert } from "react-native";
+import PageContainer from "../../../../components/PageContainer";
+import SearchBar from "../../../../components/SearchBar";
+import { useEffect, useState, useRef } from "react";
+import addIcon from "../../../../assets/images/add-icon-white.png";
+import blackAddIcon from "../../../../assets/images/add-icon-black.png";
+import editIcon from "../../../../assets/images/edit-icon-white.png";
+import blackEditIcon from "../../../../assets/images/edit-icon-black.png";
+import filterIcon from "../../../../assets/images/filter-icon-white.png";
+import blackFilterIcon from "../../../../assets/images/filter-icon-black.png";
+import EditButton from "../../../../components/EditButton";
+import EditButtonsContainer from "../../../../components/EditButtonsContainer";
+import ListOfTags from "../../../../components/tags screen/ListOfTags";
+import { useSelector, useDispatch } from "react-redux";
+import { getFilteredTags } from "../../../../utils/helpers";
+import AddTagInput from "../../../../components/tags screen/AddTagInput";
+import EditTags from "../../../../components/tags screen/EditTags";
+import FilterTags from "../../../../components/tags screen/FilterTags";
+import { deleteSelectedTags } from "../../../../redux/tagsSlice";
+import {
+  resetSelectedTags,
+  setTagsSelectionMode,
+} from "../../../../redux/selectTagsSlice";
+import getTheme from "../../../../utils/GetTheme";
+import { deleteSelectedTagsFromContacts } from "../../../../redux/contactsSlice";
+import AddContactButton from "../../../../components/AddContactButton";
 
 export default function MyTags() {
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const tags = useSelector((state: any) => state.tags);
   const contacts = useSelector((state: any) => state.contacts);
   const sortBy = useSelector((state: any) => state.filterTags.sortBy);
   const isReversed = useSelector((state: any) => state.filterTags.reverse);
-  const filteredTags = getFilteredTags(tags, contacts, searchText, sortBy, isReversed);
-  const inTagSelectionMode = useSelector((state: any) => state.tagSelection.tagsSelectionMode);
+  const filteredTags = getFilteredTags(
+    tags,
+    contacts,
+    searchText,
+    sortBy,
+    isReversed
+  );
 
+  const inTagSelectionMode = useSelector(
+    (state: any) => state.tagSelection.tagsSelectionMode
+  );
   const dispatch = useDispatch();
+
   type modes = "default" | "edit" | "filter" | "add";
   const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
+
   useEffect(() => {
     if (inTagSelectionMode) {
       setEditButtonsMode("edit");
     }
   }, [inTagSelectionMode]);
-  const onSearchTextChange = (text: string) => {
-    setSearchText(text);
-  }
 
   const endEditing = () => {
     setEditButtonsMode("default");
     dispatch(resetSelectedTags());
     dispatch(setTagsSelectionMode(false));
-  }
+  };
 
   const onAddTag = () => {
     setEditButtonsMode("add");
-  }
+  };
 
   const onEditTags = () => {
     setEditButtonsMode("edit");
-    dispatch(setTagsSelectionMode(true)); 
-  }
+    dispatch(setTagsSelectionMode(true));
+  };
 
   const onFilterTags = () => {
     setEditButtonsMode("filter");
-  }
+  };
 
-  const selectedTagIds = useSelector((state: any) => state.tagSelection.selectedTags);
+  const selectedTagIds = useSelector(
+    (state: any) => state.tagSelection.selectedTags
+  );
+
   const trashTags = () => {
     const numberOfSelectedTags = selectedTagIds.length;
     Alert.alert(
-      'Delete Tags',
+      "Delete Tags",
       `Are you sure you want to delete ${numberOfSelectedTags} tags?`,
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => {
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
             dispatch(deleteSelectedTags(selectedTagIds));
             dispatch(deleteSelectedTagsFromContacts(selectedTagIds));
             dispatch(resetSelectedTags());
             endEditing();
-          }
+          },
         },
       ],
       { cancelable: true }
@@ -84,20 +101,77 @@ export default function MyTags() {
   const activeFiltersCount = (sortBy ? 1 : 0) + (isReversed ? 1 : 0);
   const theme = getTheme();
 
+  // -- Search bar logic to mimic MyContacts --
+  const searchBarRef = useRef<any>(null);
+  const onSearchTextChange = (text: string) => setSearchText(text);
+
+  const focusSearchInput = () => {
+    searchBarRef.current?.focus();
+  };
+  const blurSearchInput = () => {
+    searchBarRef.current?.blur();
+  };
+
   return (
     <PageContainer style={styles.container}>
-      <SearchBar onChangeText={onSearchTextChange} value={searchText} />
+      <AddContactButton
+        onPress={() => setEditButtonsMode("add")}
+        disabled={editButtonsMode !== "default"}
+      />
+      <SearchBar
+        onChangeText={onSearchTextChange}
+        value={searchText}
+        // If you'd like "Enter" to go directly to the first item, replicate the same logic:
+        selectedItemRoutingInfo={
+          searchText && filteredTags[0]
+            ? {
+                pathName: "my-tags/tag",
+                id: filteredTags[0].id,
+              }
+            : undefined
+        }
+        ref={searchBarRef}
+      />
       {editButtonsMode === "default" && (
-        <EditButtonsContainer 
-          editButton1={<EditButton text="Add Tag" onPress={onAddTag} source={theme.name === "dark" ? addIcon : blackAddIcon}/>} 
-          editButton2={<EditButton text="Edit Tags" onPress={onEditTags} source={theme.name === "dark" ? editIcon : blackEditIcon}/>} 
-          editButton3={<EditButton text="Filter Tags" onPress={onFilterTags} source={theme.name === "dark" ? filterIcon : blackFilterIcon} badgeCount={activeFiltersCount}/>} 
+        <EditButtonsContainer
+          editButton1={
+            <EditButton
+              text="Add Tag"
+              onPress={onAddTag}
+              source={theme.name === "dark" ? addIcon : blackAddIcon}
+            />
+          }
+          editButton2={
+            <EditButton
+              text="Edit Tags"
+              onPress={onEditTags}
+              source={theme.name === "dark" ? editIcon : blackEditIcon}
+            />
+          }
+          editButton3={
+            <EditButton
+              text="Filter Tags"
+              onPress={onFilterTags}
+              source={theme.name === "dark" ? filterIcon : blackFilterIcon}
+              badgeCount={activeFiltersCount}
+            />
+          }
         />
       )}
+
       {editButtonsMode === "add" && <AddTagInput endEditing={endEditing} />}
-      {editButtonsMode === "edit" && <EditTags endEditing={endEditing} trashTags={trashTags} />}
+      {editButtonsMode === "edit" && (
+        <EditTags endEditing={endEditing} trashTags={trashTags} />
+      )}
       {editButtonsMode === "filter" && <FilterTags endEditing={endEditing} />}
-      <ListOfTags tags={filteredTags} />
+
+      <ListOfTags
+        tags={filteredTags}
+        onOverScrollTop={focusSearchInput}
+        // let’s add onOverScrollBottom so we can blur the search bar:
+        onOverScrollBottom={blurSearchInput}
+        isSearching={searchText.length > 0}
+      />
     </PageContainer>
   );
 }
@@ -105,5 +179,5 @@ export default function MyTags() {
 const styles = StyleSheet.create({
   container: {
     gap: 5,
-  }
+  },
 });

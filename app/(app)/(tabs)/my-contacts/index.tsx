@@ -1,7 +1,7 @@
 import { Alert, StyleSheet } from "react-native";
 import PageContainer from "../../../../components/PageContainer";
 import SearchBar from "../../../../components/SearchBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import addIcon from "../../../../assets/images/add-icon-white.png";
 import blackAddIcon from "../../../../assets/images/add-icon-black.png";
 import editIcon from "../../../../assets/images/edit-icon-white.png";
@@ -38,9 +38,6 @@ export default function MyContacts() {
   const selectedContacts: string[] = useSelector(
     (state: any) => state.selection.selectedContacts
   );
-  const onSearchTextChange = (text: string) => {
-    setSearchText(text);
-  };
 
   type modes = "default" | "edit" | "filter" | "add";
   const [editButtonsMode, setEditButtonsMode] = useState<modes>("default");
@@ -97,13 +94,42 @@ export default function MyContacts() {
 
   const theme = getTheme();
 
+  // Search bar ref logic
+  const searchBarRef = useRef<any>(null);
+
+  const onSearchTextChange = (text: string) => {
+    setSearchText(text);
+  };
+
+  // Example of focusing from the parent
+  const focusSearchInput = () => {
+    // The parent can call focus on the child's TextInput
+    searchBarRef.current?.focus();
+  };
+  const blurSearchInput = () => {
+    // The parent can call focus on the child's TextInput
+    searchBarRef.current?.blur();
+  };
+
   return (
     <PageContainer style={styles.container}>
       <AddContactButton
         onPress={() => setEditButtonsMode("add")}
         disabled={editButtonsMode !== "default"}
       />
-      <SearchBar onChangeText={onSearchTextChange} value={searchText} />
+      <SearchBar
+        onChangeText={onSearchTextChange}
+        value={searchText}
+        selectedItemRoutingInfo={
+          searchText && filteredContacts[0]
+            ? {
+                pathName: "my-contacts/profile",
+                id: filteredContacts[0]?.id || "",
+              }
+            : undefined
+        }
+        ref={searchBarRef}
+      />
       {editButtonsMode === "default" && (
         <EditButtonsContainer
           editButton1={
@@ -137,7 +163,12 @@ export default function MyContacts() {
       {editButtonsMode === "edit" && (
         <EditContact endEditing={endEditing} trashContacts={trashContacts} />
       )}
-      <ListOfContacts contacts={filteredContacts} />
+      <ListOfContacts
+        contacts={filteredContacts}
+        onOverScrollTop={focusSearchInput}
+        onOverScrollBottom={blurSearchInput}
+        isSearching={searchText.length > 0}
+      />
     </PageContainer>
   );
 }
