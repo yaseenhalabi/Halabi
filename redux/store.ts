@@ -1,19 +1,29 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { persistReducer, persistStore } from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { combineReducers } from '@reduxjs/toolkit';
-import userSlice from './userSlice';
-import themeSlice from './themeSlice';
-import contactsSlice from './contactsSlice';
-import tagsSlice from './tagsSlice';
-import selectContactsSlice from './selectContactsSlice';
-import filterContactsSlice from './filterContactsSlice';
-import filterTagsSlice from './filterTagsSlice';
-import selectTagsSlice from './selectTagsSlice';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import userSlice from "./userSlice";
+import themeSlice, { initialThemeState } from "./themeSlice";
+import contactsSlice from "./contactsSlice";
+import tagsSlice from "./tagsSlice";
+import selectContactsSlice from "./selectContactsSlice";
+import filterContactsSlice from "./filterContactsSlice";
+import filterTagsSlice from "./filterTagsSlice";
+import selectTagsSlice from "./selectTagsSlice";
+
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage: AsyncStorage,
-  whitelist: ['user', 'theme', 'contacts', 'tags', 'filter', 'filterTags']  // Only persist these slices
+  version: 3, // ⬅️ Bump version
+  whitelist: ["user", "theme", "contacts", "tags", "filter", "filterTags"],
+  migrate: async (state: any) => {
+    if (state) {
+      return {
+        ...state,
+        theme: initialThemeState,
+      };
+    }
+    return state;
+  },
 };
 
 const rootReducer = combineReducers({
@@ -35,11 +45,11 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [
-          'persist/PERSIST',
-          'persist/PURGE',
-          'persist/REHYDRATE',
+          "persist/PERSIST",
+          "persist/PURGE",
+          "persist/REHYDRATE",
         ],
-        ignoredPaths: ['register', 'rehydrate'],
+        ignoredPaths: ["register", "rehydrate"],
       },
     }),
 });
