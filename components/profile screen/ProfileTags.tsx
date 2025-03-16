@@ -89,11 +89,6 @@ export default function ProfileTags({
     dispatch(addTagToContact({ contactId, tagId }));
     setSearchText("");
   };
-  const addFirstTagToContact = () => {
-    if (!searchText || filteredTags.length == 0) return;
-    dispatch(addTagToContact({ contactId, tagId: filteredTags[0].id }));
-    setSearchText("");
-  };
 
   const createNewTag = () => {
     if (searchText.length === 0) return;
@@ -108,7 +103,15 @@ export default function ProfileTags({
     dispatch(addTag(newTag));
     addTagToContact_(newTag.id);
   };
-
+  const addFirstTagToContact = () => {
+    if (!searchText) return;
+    if (filteredTags.length == 0) {
+      createNewTag();
+      return;
+    }
+    dispatch(addTagToContact({ contactId, tagId: filteredTags[0].id }));
+    setSearchText("");
+  };
   return (
     <View style={styles.container}>
       {tagComponents}
