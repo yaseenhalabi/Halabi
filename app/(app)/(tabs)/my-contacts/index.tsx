@@ -110,13 +110,10 @@ export default function MyContacts() {
     setSearchText(text);
   };
 
-  // Example of focusing from the parent
   const focusSearchInput = () => {
-    // The parent can call focus on the child's TextInput
     searchBarRef.current?.focus();
   };
   const blurSearchInput = () => {
-    // The parent can call focus on the child's TextInput
     searchBarRef.current?.blur();
   };
 

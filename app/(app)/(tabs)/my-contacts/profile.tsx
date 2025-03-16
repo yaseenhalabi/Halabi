@@ -1,78 +1,67 @@
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { getContactById } from '../../../../utils/helpers';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { updateContact } from '../../../../redux/contactsSlice';
-import { Contact } from '../../../../utils/types';
-import CommonText from '../../../../components/CommonText';
-import PageContainer from '../../../../components/PageContainer';
-import NameInput from '../../../../components/profile screen/NameInput';
-import ProfileTags from '../../../../components/profile screen/ProfileTags';
-import NotesInput from '../../../../components/profile screen/NotesInput';
-import PhoneNumberInput from '../../../../components/profile screen/PhoneNumberInput';
-import EmailInput from '../../../../components/profile screen/EmailInput';
-import BirthdayInput from '../../../../components/profile screen/BirthdayInput';
-import AddressInput from '../../../../components/profile screen/AddressInput';
+import { getContactById } from "../../../../utils/helpers";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { updateContact } from "../../../../redux/contactsSlice";
+import { Contact } from "../../../../utils/types";
+import CommonText from "../../../../components/CommonText";
+import PageContainer from "../../../../components/PageContainer";
+import NameInput from "../../../../components/profile screen/NameInput";
+import ProfileTags from "../../../../components/profile screen/ProfileTags";
+import NotesInput from "../../../../components/profile screen/NotesInput";
+import PhoneNumberInput from "../../../../components/profile screen/PhoneNumberInput";
+import EmailInput from "../../../../components/profile screen/EmailInput";
+import BirthdayInput from "../../../../components/profile screen/BirthdayInput";
+import AddressInput from "../../../../components/profile screen/AddressInput";
 
 export default function Profile() {
   const dispatch = useDispatch();
-  const { id } : { id: string } = useLocalSearchParams();
+  const { id }: { id: string } = useLocalSearchParams();
   const contacts: Contact[] = useSelector((state: any) => state.contacts);
   const contact: Contact | undefined = getContactById(id, contacts);
 
   if (!contact) {
-    return <PageContainer><CommonText>Contact not found</CommonText></PageContainer>
+    return (
+      <PageContainer>
+        <CommonText>Contact not found</CommonText>
+      </PageContainer>
+    );
   }
-  
+
   return (
     <PageContainer style={styles.container} scrollEnabled>
-      <NameInput 
+      <NameInput
         onChangeText={(text) => {
-          dispatch(updateContact({...contact, name: text}));
-        }} 
-        value={contact.name} 
+          dispatch(updateContact({ ...contact, name: text }));
+        }}
+        value={contact.name}
       />
       <ProfileTags tagIds={contact.tags} contactId={contact.id} />
-      <NotesInput 
-        value={contact.notes || ''} 
+      <NotesInput
+        value={contact.notes || ""}
         onChangeText={(text) => {
-          dispatch(updateContact({...contact, notes: text}));
-        }} 
+          dispatch(updateContact({ ...contact, notes: text }));
+        }}
       />
-      <BirthdayInput 
+      <BirthdayInput
         birthday={contact.birthday}
         onChangeBirthday={(birthday) => {
-          dispatch(updateContact({...contact, birthday}));
+          dispatch(updateContact({ ...contact, birthday }));
         }}
       />
-      <PhoneNumberInput 
-        phoneNumber={contact.phone || {id: '', countryCode: '1', number: ''}}
+      <PhoneNumberInput
+        phoneNumber={contact.phone || { id: "", countryCode: "1", number: "" }}
         onChangePhoneNumber={(phoneNumber) => {
-          dispatch(updateContact({...contact, phone: phoneNumber}));
+          dispatch(updateContact({ ...contact, phone: phoneNumber }));
         }}
       />
-      <EmailInput 
-        value={contact.email || ''} 
+      <EmailInput
+        value={contact.email || ""}
         onChangeText={(text) => {
-          dispatch(updateContact({...contact, email: text}));
+          dispatch(updateContact({ ...contact, email: text }));
         }}
       />
-      <AddressInput
-        address={contact.address || ''}
-        onChangeAddress={ (address) => {
-            dispatch(updateContact({...contact, address}));
-          }
-        }
-      />
-      {
-      /* todo: add birthday input */
-      /* todo: add phone number input */
-      /* todo: add email number input */
-      /* todo: add address input */
-      /* todo: add social media input */
-      /* todo: add contact buttons */
-      }
     </PageContainer>
   );
 }
@@ -80,6 +69,6 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
-    paddingBottom: 300
-  }
+    paddingBottom: 300,
+  },
 });

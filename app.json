@@ -5,27 +5,29 @@
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/halabi-icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "scheme": "halabi",
     "newArchEnabled": true,
-    
+
     "splash": {
       "image": "./assets/images/halabi-splash-screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
     "ios": {
-      "buildNumber": "3", 
+      "userInterfaceStyle": "automatic",
+      "buildNumber": "3",
       "supportsTablet": true,
       "bundleIdentifier": "com.contactapp.thecontactapp"
     },
-    "android": {},
+    "android": {
+      "userInterfaceStyle": "automatic"
+    },
     "web": {
       "favicon": "./assets/halabi-icon.png"
     },
     "plugins": [
       [
-        
         "expo-font",
         {
           "fonts": [
@@ -44,9 +46,9 @@
       "expo-router",
       "expo-build-properties",
       [
-      "expo-contacts",
-      {
-        "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
         }
       ]
     ],

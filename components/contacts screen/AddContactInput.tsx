@@ -52,7 +52,7 @@ export default function AddContactInput({ endEditing }: AddContactInputProps) {
         autoCapitalize="words"
         autoComplete="off"
         returnKeyType="done"
-        onEndEditing={onConfirmLocal}
+        onSubmitEditing={onConfirmLocal}
         keyboardAppearance="dark"
         autoCorrect={false}
       />

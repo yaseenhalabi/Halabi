@@ -22,7 +22,7 @@ export default function EditButton({ onPress, disabled }: EditButtonProps) {
         styles.button,
       ]}
     >
-      <Entypo name="plus" size={35} color={theme.background} />
+      <Entypo name="plus" size={35} color={theme.backgroundSecondary} />
     </TouchableOpacity>
   );
 }
