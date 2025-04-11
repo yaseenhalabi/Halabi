@@ -55,7 +55,6 @@ export default function Header({ navigation, route }: HeaderProps) {
 
   return (
     <>
-      <SafeAreaView edges={["top"]} />
       <View style={{ ...styles.container, backgroundColor: theme.background }}>
         <View style={styles.headerTextContainer}>
           <CommonText>{currentRouteName}</CommonText>

@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "Halabi",
+    "name": "halabi",
     "slug": "halabi-frontend",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/halabi-icon.png",
     "userInterfaceStyle": "automatic",
     "scheme": "halabi",
     "newArchEnabled": true,
-
     "splash": {
       "image": "./assets/images/halabi-splash-screen.png",
       "resizeMode": "contain",
@@ -18,10 +17,17 @@
       "userInterfaceStyle": "automatic",
       "buildNumber": "3",
       "supportsTablet": true,
-      "bundleIdentifier": "com.contactapp.thecontactapp"
+      "bundleIdentifier": "com.contactapp.thecontactapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "permissions": [
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS"
+      ]
     },
     "web": {
       "favicon": "./assets/halabi-icon.png"

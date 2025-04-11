@@ -35,8 +35,12 @@ function App() {
   }, [colorScheme, dispatch]);
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: theme.background }}>
-      <Slot />
+    <SafeAreaProvider>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+          <Slot />
+        </SafeAreaView>
+      </SafeAreaProvider>
     </SafeAreaProvider>
   );
 }
