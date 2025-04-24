@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../redux/themeSlice";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function Root() {
   const loaded = FontLoader();
@@ -35,12 +36,14 @@ function App() {
   }, [colorScheme, dispatch]);
 
   return (
-    <SafeAreaProvider>
+    <GestureHandlerRootView>
       <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-          <Slot />
-        </SafeAreaView>
+        <SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+            <Slot />
+          </SafeAreaView>
+        </SafeAreaProvider>
       </SafeAreaProvider>
-    </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
