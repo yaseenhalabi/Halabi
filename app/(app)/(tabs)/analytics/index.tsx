@@ -26,18 +26,18 @@ export default function AnalyticsPage() {
   return (
     <PageContainer scrollEnabled style={{ paddingBottom: 200 }}>
       <View style={{ height: 25 }} />
-      <CommonText size="small" weight="semiBold">
+      <CommonText size="small" weight="regular">
         My Network
       </CommonText>
       <View style={{ height: 25 }} />
       <CoOccurenceGraph contacts={contacts} tags={tags} />
       <View style={{ height: 25 }} />
-      <CommonText size="small" weight="semiBold">
+      <CommonText size="small" weight="regular">
         Percent of Contacts With Tag (%)
       </CommonText>
       <TagPercentageChart contacts={contacts} tags={tags} />
       <View style={{ height: 25 }} />
-      <CommonText size="small" weight="semiBold">
+      <CommonText size="small" weight="regular">
         Most Common Tag Pair
       </CommonText>
       <View style={{ height: 10 }} />

@@ -12,6 +12,7 @@ import { Tag, Contact } from "../../utils/types";
 import { getContactsWithTag } from "../../utils/helpers";
 import getTheme from "../../utils/GetTheme";
 import { useFont, LinearGradient, vec } from "@shopify/react-native-skia";
+import CommonText from "../CommonText";
 
 const poppinsBlack = require("../../assets/fonts/Poppins-Medium.ttf");
 const PAGE_SIZE = 5;
@@ -81,7 +82,23 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
 
   const maxPercent = Math.max(...pageData.map((d) => d.percent), 0);
   const paddedMax = Math.ceil(maxPercent) + 5;
-
+  if (pageData.length === 0)
+    return (
+      <View
+        style={{
+          height: 300,
+          width: width - 30,
+          marginTop: 25,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: theme.name === "dark" ? "#121212" : "#f5f4f2",
+          borderRadius: 20,
+        }}
+      >
+        <CommonText size="xsmall">Not enought data.</CommonText>
+        <CommonText size="xsmall">Tag more contacts</CommonText>
+      </View>
+    );
   return (
     <View style={{ height: 300, width: width - 30 }}>
       <CartesianChart
@@ -91,11 +108,15 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
         xAxis={{
           font,
           tickCount: pageData.length - 1,
-          lineColor: theme.text.semi,
+          lineColor: theme.name === "dark" ? "#2e2e2e" : "#d6d6d6",
           labelColor: theme.text.full,
         }}
         yAxis={[
-          { font, lineColor: theme.text.semi, labelColor: theme.text.full },
+          {
+            font,
+            lineColor: theme.name === "dark" ? "#2e2e2e" : "#d6d6d6",
+            labelColor: theme.text.full,
+          },
         ]}
         domainPadding={{ left: 20, right: 20, top: 40 }}
         viewport={{ y: [0, paddedMax] }}
@@ -132,7 +153,7 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
             disabled={page === 0}
             onPress={() => setPage((p) => Math.max(0, p - 1))}
             style={{ opacity: page === 0 ? 0.3 : 1, padding: 6 }}
-            hitSlop={5}
+            hitSlop={10}
           >
             <Text style={{ color: theme.text.full, fontSize: 18 }}>‹</Text>
           </TouchableOpacity>
@@ -151,7 +172,7 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
             disabled={page === pageCount - 1}
             onPress={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
             style={{ opacity: page === pageCount - 1 ? 0.3 : 1, padding: 6 }}
-            hitSlop={5}
+            hitSlop={10}
           >
             <Text style={{ color: theme.text.full, fontSize: 18 }}>›</Text>
           </TouchableOpacity>

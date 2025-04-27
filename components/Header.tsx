@@ -60,7 +60,9 @@ export default function Header() {
     <>
       <View style={{ ...styles.container, backgroundColor: theme.background }}>
         <View style={styles.headerTextContainer}>
-          <CommonText>{currentRouteName}</CommonText>
+          <CommonText size="small" weight="bold">
+            {currentRouteName}
+          </CommonText>
         </View>
         <View style={styles.iconsContainer}>
           {showBackArrow ? (

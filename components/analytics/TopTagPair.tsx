@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { Contact, Tag } from "../../utils/types";
 import CommonText from "../CommonText";
@@ -17,7 +18,7 @@ type Props = {
 
 function TopTagPair({ contacts, tags }: Props) {
   // theme is assumed stable; memoize so it doesn't trigger re-renders
-  const theme = getTheme()
+  const theme = getTheme();
 
   // heavy computation runs only when contacts or tags change
   const topPair = useMemo<Tag[]>(() => {
@@ -46,21 +47,33 @@ function TopTagPair({ contacts, tags }: Props) {
       }
     }
 
-    return bestKey
-      .split("|")
-      .map(
-        (id) =>
-          tags.find((t) => t.id === id) || {
-            id: "",
-            name: "",
-          }
-      );
+    return bestKey.split("|").map(
+      (id) =>
+        tags.find((t) => t.id === id) || {
+          id: "",
+          name: "",
+        }
+    );
   }, [contacts, tags]);
 
   // if not enough tags, show fallback
-  if (topPair.length < 2) {
-    return <CommonText size="xsmall">Not enough tags</CommonText>;
-  }
+  if (topPair.length < 2)
+    return (
+      <View
+        style={{
+          height: 300,
+          width: Dimensions.get("window").width * 0.9 - 30,
+          marginTop: 25,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: theme.name === "dark" ? "#121212" : "#f5f4f2",
+          borderRadius: 20,
+        }}
+      >
+        <CommonText size="xsmall">Not enought data.</CommonText>
+        <CommonText size="xsmall">Tag more contacts</CommonText>
+      </View>
+    );
 
   return (
     <View style={styles.container}>

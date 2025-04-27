@@ -99,7 +99,22 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
     setIsModalVisible(false);
   };
 
-  /* ───── render ────────────────────────────────────────────────────────── */
+  if (!graph?.elements)
+    return (
+      <View
+        style={{
+          width,
+          height: SMALL_HEIGHT,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: theme.name === "dark" ? "#121212" : "#f5f4f2",
+          borderRadius: 20,
+        }}
+      >
+        <CommonText size="xsmall">Not enought data.</CommonText>
+        <CommonText size="xsmall">Tag more contacts</CommonText>
+      </View>
+    );
   return (
     <>
       {/* ─────────── thumbnail view ─────────── */}
@@ -170,7 +185,12 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
               ) : (
                 <Canvas style={{ width, height }}>
                   <Group transform={centerTransform}>
-                    <Group transform={animTransform}>{graph.elements}</Group>
+                    <Group
+                      origin={{ x: width / 2, y: height / 2 }}
+                      transform={animTransform}
+                    >
+                      {graph.elements}
+                    </Group>
                   </Group>
                 </Canvas>
               )}
@@ -273,31 +293,47 @@ function useTransforms(
 }
 
 /** Pan + pinch‑zoom gesture plumbing extracted into its own hook */
+/** Pan + pinch-zoom gesture */
 function usePanZoom() {
-  // shared values for animated transform
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
 
-  // local refs used during a gesture
   const lastPanX = useSharedValue(0);
   const lastPanY = useSharedValue(0);
+  const lastScale = useSharedValue(1);
 
+  /* ----- animated matrix (scale first, then translate) ----- */
   const animTransform = useDerivedValue(() => [
+    { scale: scale.value },
     { translateX: translateX.value },
     { translateY: translateY.value },
-    { scale: scale.value },
   ]);
 
+  /* ----- pinch ----- */
+  const pinch = Gesture.Pinch()
+    .onStart(() => {
+      lastScale.value = scale.value;
+    })
+    .onUpdate((e) => {
+      // ignore bogus first sample (e.scale === 0) & clamp
+      const raw = e.scale === 0 ? 1 : e.scale;
+      scale.value = lastScale.value * raw;
+    });
+
+  /* ----- pan (delta ÷ current scale!) ----- */
   const pan = Gesture.Pan()
     .onStart(() => {
       lastPanX.value = translateX.value;
       lastPanY.value = translateY.value;
     })
     .onUpdate((e) => {
-      translateX.value = lastPanX.value + e.translationX;
-      translateY.value = lastPanY.value + e.translationY;
+      const s = scale.value; // current zoom
+      translateX.value = lastPanX.value + e.translationX / s;
+      translateY.value = lastPanY.value + e.translationY / s;
     });
+
+  const gesture = Gesture.Simultaneous(pinch, pan); // order matters: pinch first
 
   const resetTransforms = () => {
     translateX.value = 0;
@@ -305,7 +341,7 @@ function usePanZoom() {
     scale.value = 1;
   };
 
-  return { gesture: pan, animTransform, resetTransforms } as const;
+  return { gesture, animTransform, resetTransforms } as const;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -486,5 +522,6 @@ function buildCoOccurrenceGraphData(contacts: Contact[]): {
   return { nodes: [...nodesMap.values()], edges: [...edgesMap.values()] };
 }
 function clamp(n: number, lo: number, hi: number) {
+  if (!Number.isFinite(n) || n === 0) return lo; // <-- new guard
   return Math.min(Math.max(n, lo), hi);
 }
