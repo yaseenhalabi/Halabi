@@ -1,5 +1,5 @@
 // analytics/index.tsx
-import { View } from "react-native";
+import { InteractionManager, View } from "react-native";
 import { useSelector } from "react-redux";
 import PageContainer from "../../../../components/PageContainer";
 import CommonText from "../../../../components/CommonText";
@@ -8,16 +8,28 @@ import getTheme from "../../../../utils/GetTheme";
 import TagPercentageChart from "../../../../components/analytics/TagPercentageChart";
 import TopTagPair from "../../../../components/analytics/TopTagPair";
 import CoOccurenceGraph from "../../../../components/analytics/CoOccurenceGraph";
+import { router, usePathname } from "expo-router";
+import { useEffect, useState } from "react";
 
 export default function AnalyticsPage() {
   const contacts: Contact[] = useSelector((s: any) => s.contacts);
   const tags: Tag[] = useSelector((s: any) => s.tags);
+  const pathname = usePathname();
+  const [ready, setReady] = useState(false);
 
+  useEffect(() => {
+    const task = InteractionManager.runAfterInteractions(() => setReady(true));
+    return () => task.cancel();
+  }, []);
+
+  if (!ready) return null;
   return (
     <PageContainer scrollEnabled style={{ paddingBottom: 200 }}>
+      <View style={{ height: 25 }} />
       <CommonText size="small" weight="semiBold">
-        Co-Occurrence Tag Graph
+        My Network
       </CommonText>
+      <View style={{ height: 25 }} />
       <CoOccurenceGraph contacts={contacts} tags={tags} />
       <View style={{ height: 25 }} />
       <CommonText size="small" weight="semiBold">

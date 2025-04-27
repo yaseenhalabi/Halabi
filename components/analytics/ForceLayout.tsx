@@ -18,7 +18,6 @@ export function runForceLayout(
   height: number
 ) {
   const maxCnt = Math.max(...nodes.map((n) => n.count));
-
   const sim = forceSimulation(nodes)
     // 1) link force (heavier edges pull harder)
     .force(
@@ -48,7 +47,7 @@ export function runForceLayout(
     .alphaDecay(0.05);
 
   // give it enough ticks to settle
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < 140; i++) {
     sim.tick();
   }
   sim.stop();

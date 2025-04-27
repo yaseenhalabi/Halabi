@@ -46,6 +46,7 @@ export default function TabLayout() {
         name="analytics"
         options={{
           title: "Analytics",
+          freezeOnBlur: true,
           tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
