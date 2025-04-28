@@ -29,12 +29,13 @@ export default function AnalyticsPage() {
       <CommonText size="small" weight="regular">
         My Network
       </CommonText>
-      <View style={{ height: 25 }} />
+      <View style={{ height: 10 }} />
       <CoOccurenceGraph contacts={contacts} tags={tags} />
       <View style={{ height: 25 }} />
       <CommonText size="small" weight="regular">
         Percent of Contacts With Tag (%)
       </CommonText>
+      <View style={{ height: 10 }} />
       <TagPercentageChart contacts={contacts} tags={tags} />
       <View style={{ height: 25 }} />
       <CommonText size="small" weight="regular">

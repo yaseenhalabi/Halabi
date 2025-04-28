@@ -15,6 +15,7 @@ import {
   vec,
   SkFont,
   RadialGradient,
+  Path1DPathEffect,
 } from "@shopify/react-native-skia";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import CommonModal from "../profile screen/CommonModal";
@@ -66,7 +67,9 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
 
   /* ───── UI state ──────────────────────────────────────────────────────── */
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [minEdgeWeight, setMinEdgeWeight] = useState(1);
+  const [minEdgeWeight, setMinEdgeWeight] = useState(
+    Math.ceil(maxEdgeWeight / 2)
+  );
 
   /* Keep slider value within the valid range when contacts change */
   useEffect(() => {
@@ -98,8 +101,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
     resetTransforms();
     setIsModalVisible(false);
   };
-
-  if (!graph?.elements)
+  if (!loading && !graph?.elements)
     return (
       <View
         style={{
@@ -159,7 +161,9 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
               top: 30,
             }}
           >
-            <CommonText>Similarity Level: {minEdgeWeight}</CommonText>
+            <CommonText style={{ zIndex: 3 }}>
+              Similarity Level: {minEdgeWeight}
+            </CommonText>
             <Slider
               style={{ width: "90%", height: 40 }}
               minimumValue={1}
@@ -167,8 +171,8 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
               step={1}
               value={minEdgeWeight}
               onValueChange={setMinEdgeWeight}
-              minimumTrackTintColor="#3F5EFB"
-              thumbTintColor="#3F5EFB"
+              minimumTrackTintColor="#b33ffb"
+              thumbTintColor="#b33ffb"
             />
           </View>
 
@@ -420,14 +424,22 @@ function buildSkiaElements(
   edges.forEach((e, i) => {
     const s = e.source as any;
     const t = e.target as any;
+    const weight = Math.pow(e.weight, 0.7);
     elements.push(
       <Line
         key={`edge-${i}`}
         p1={vec(s.x, s.y)}
         p2={vec(t.x, t.y)}
-        strokeWidth={1 + Math.log2(e.weight)}
+        strokeWidth={weight}
         color={theme.text.full}
-      />
+      >
+        <Path1DPathEffect
+          path={`M -${weight} 0 L 0 -${weight}, ${weight} 0, 0 ${weight} Z`}
+          advance={4}
+          phase={0}
+          style="rotate"
+        />
+      </Line>
     );
   });
 

@@ -46,7 +46,11 @@
     "react-redux": "^9.1.2",
     "redux-persist": "^6.0.0",
     "uuid": "^10.0.0",
-    "victory-native": "^41.16.2"
+    "victory-native": "^41.16.2",
+    "expo-dev-client": "~5.0.20",
+    "expo-file-system": "~18.0.12",
+    "expo-sharing": "~13.0.1",
+    "expo-document-picker": "~13.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

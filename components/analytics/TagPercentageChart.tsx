@@ -118,7 +118,7 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
             labelColor: theme.text.full,
           },
         ]}
-        domainPadding={{ left: 20, right: 20, top: 40 }}
+        domainPadding={{ left: 20, right: 20, top: 1 }}
         viewport={{ y: [0, paddedMax] }}
       >
         {({ points, chartBounds }) => (
