@@ -34,6 +34,9 @@ yarn-error.*
 # env file
 .env
 
+.venv
+
+__pycache__
 # typescript
 *.tsbuildinfo
 
