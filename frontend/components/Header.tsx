@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
 import { usePathname, router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import CommonText from "./CommonText";
 import getTheme from "../utils/GetTheme";
 import HeaderIcon from "./HeaderIcon";
@@ -9,14 +8,10 @@ import whiteBackArrowIcon from "../assets/images/back-arrow-icon-white.png";
 import blackSettingsIcon from "../assets/images/settings-icon-black.png";
 import blackBackArrowIcon from "../assets/images/back-arrow-icon-black.png";
 import { useEffect, useState } from "react";
-type HeaderProps = {
-  route: any;
-};
+
 export default function Header() {
   const theme = getTheme();
   const pathname = usePathname();
-
-  const [showBackArrow, setShowBackArrow] = useState(false);
   const [currentRouteName, setCurrentRouteName] = useState("My Contacts");
   useEffect(() => {
     switch (pathname) {
@@ -42,11 +37,6 @@ export default function Header() {
         setCurrentRouteName("Halabi");
         break;
     }
-    setShowBackArrow(
-      pathname == "/my-contacts/profile" ||
-        pathname == "/my-tags/tag" ||
-        pathname == "/settings"
-    );
   }, [pathname]);
 
   const onPressSettings = () => {
@@ -65,23 +55,26 @@ export default function Header() {
           </CommonText>
         </View>
         <View style={styles.iconsContainer}>
-          {showBackArrow ? (
-            <HeaderIcon
-              size={20}
-              source={
-                theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon
-              }
-              onPress={onPressBack}
-            />
-          ) : (
-            <HeaderIcon
-              size={20}
-              source={
-                theme.name === "dark" ? whiteSettingsIcon : blackSettingsIcon
-              }
-              onPress={onPressSettings}
-            />
-          )}
+          <HeaderIcon
+            size={20}
+            source={
+              theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon
+            }
+            onPress={onPressBack}
+            disabled={
+              pathname === "/my-contacts" ||
+              pathname == "/my-tags" ||
+              pathname == "/analytics"
+            }
+          />
+          <HeaderIcon
+            size={20}
+            source={
+              theme.name === "dark" ? whiteSettingsIcon : blackSettingsIcon
+            }
+            onPress={onPressSettings}
+            disabled={pathname === "/settings"}
+          />
         </View>
       </View>
     </>
@@ -98,6 +91,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   iconsContainer: {
+    width: "100%",
     gap: 20,
     flexDirection: "row",
     justifyContent: "space-between",

@@ -25,6 +25,7 @@ import Slider from "@react-native-community/slider";
 import { runForceLayout } from "./ForceLayout";
 import CommonText from "../CommonText";
 import getTheme from "../../utils/GetTheme";
+import { BlurView } from "expo-blur";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Types                                   */
@@ -152,13 +153,16 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
           onClose={onModalClose}
         >
           {/* threshold slider */}
-          <View
+          <BlurView
+            intensity={25}
             style={{
               width: "100%",
               justifyContent: "center",
               alignItems: "center",
               position: "absolute",
               top: 30,
+              padding: 5,
+              zIndex: 3,
             }}
           >
             <CommonText style={{ zIndex: 3 }}>
@@ -174,7 +178,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
               minimumTrackTintColor="#b33ffb"
               thumbTintColor="#b33ffb"
             />
-          </View>
+          </BlurView>
 
           <GestureDetector gesture={gesture}>
             <View
