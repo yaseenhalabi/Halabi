@@ -9,7 +9,7 @@ import { setTheme } from "../redux/themeSlice";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
+import { useTest } from "../api/test";
 export default function Root() {
   const loaded = FontLoader();
   if (!loaded) return null;
@@ -27,7 +27,11 @@ function App() {
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
+
+  const {handleTest, loading } = useTest();
+
   useEffect(() => {
+    handleTest()
     if (colorScheme === "dark") {
       dispatch(setTheme("dark"));
     } else if (colorScheme === "light") {
