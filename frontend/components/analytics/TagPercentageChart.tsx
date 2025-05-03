@@ -37,7 +37,7 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
       const total = contacts.length || 1;
       const computed = tags
         .map((tag) => ({
-          tagName: truncateString(tag.name),
+          tagName: truncateString(tag.name, 9),
           percent: Number(
             ((getContactsWithTag(tag, contacts).length / total) * 100).toFixed(
               1
@@ -118,12 +118,12 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
             labelColor: theme.text.full,
           },
         ]}
-        domainPadding={{ left: 20, right: 20, top: 1 }}
+        domainPadding={{ left: 40, right: 40, top: 1, bottom: 0 }}
         viewport={{ y: [0, paddedMax] }}
       >
         {({ points, chartBounds }) => (
           <Bar
-            barWidth={30}
+            barWidth={40}
             points={points.percent}
             chartBounds={chartBounds}
             labels={{ position: "top", font, color: theme.text.full }}
@@ -182,6 +182,8 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
   );
 }
 
-function truncateString(str: string) {
-  return str.length > 10 ? str.slice(0, 10) + "..." : str;
+function truncateString(str: string, limit: number) {
+  return str.length > limit
+    ? (str.slice(0, limit - 3) + "...").replace(" ", "")
+    : str;
 }

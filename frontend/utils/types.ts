@@ -1,37 +1,45 @@
 export type Contact = {
-    id: string;
-    tags: string[]; // Changed from Tag[] to string[]
-    name: string;
-    notes?: string;
-    phone?: PhoneNumber;
-    email?: string;
-    address?: string;
-    birthday?: Birthday;
-    socialMedia?: SocialMedia[];
-    photos: Photo[];
-}
+  id: string;
+  tags: string[]; // Changed from Tag[] to string[]
+  name: string;
+  notes?: string;
+  phone?: PhoneNumber;
+  email?: string;
+  birthday?: Birthday;
+  socialMedia?: SocialMedia[];
+  photo?: Photo;
+  address?: string;
+};
 
 export type Tag = {
-    id: string;
-    name: string;
-}
+  id: string;
+  name: string;
+};
 
 export type Photo = {
-    id: string;
-    url: string;
-}
-export type PhoneNumber ={
-    id: string;
-    countryCode: string;
-    number: string;
-}
+  url: string;
+  blurHash: string;
+};
+export type PhoneNumber = {
+  id: string;
+  countryCode: string;
+  number: string;
+};
 export type Birthday = {
-    day: string;
-    month: string;
-}
+  day: string;
+  month: string;
+};
 export type SocialMedia = {
-    title: string;
-    id: string;
-    type: 'facebook' | 'instagram' | 'twitter' | 'linkedin' | 'snapchat' | 'tiktok' | 'youtube' | 'other';
-    url: string;
-}
+  title: string;
+  id: string;
+  type:
+    | "facebook"
+    | "instagram"
+    | "twitter"
+    | "linkedin"
+    | "snapchat"
+    | "tiktok"
+    | "youtube"
+    | "other";
+  url: string;
+};

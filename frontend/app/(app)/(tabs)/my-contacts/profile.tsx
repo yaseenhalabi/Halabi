@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
+import { Image, KeyboardAvoidingView, StyleSheet, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { getContactById } from "../../../../utils/helpers";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,7 +14,7 @@ import EmailInput from "../../../../components/profile screen/EmailInput";
 import BirthdayInput from "../../../../components/profile screen/BirthdayInput";
 import AddressInput from "../../../../components/profile screen/AddressInput";
 import { useRef } from "react";
-
+import ImageInput from "../../../../components/profile screen/ImageInput";
 export default function Profile() {
   const dispatch = useDispatch();
   const { id }: { id: string } = useLocalSearchParams();
@@ -42,6 +42,17 @@ export default function Profile() {
         }
       }}
     >
+      <ImageInput
+        photo={contact.photo}
+        onChangeImageUrl={(url: string, blurHash: string) => {
+          dispatch(
+            updateContact({
+              ...contact,
+              photo: { url: url, blurHash: blurHash },
+            })
+          );
+        }}
+      />
       <NameInput
         onChangeText={(text) => {
           dispatch(updateContact({ ...contact, name: text }));
@@ -61,16 +72,16 @@ export default function Profile() {
           dispatch(updateContact({ ...contact, notes: text }));
         }}
       />
-      <BirthdayInput
-        birthday={contact.birthday}
-        onChangeBirthday={(birthday) => {
-          dispatch(updateContact({ ...contact, birthday }));
-        }}
-      />
       <PhoneNumberInput
         phoneNumber={contact.phone || { id: "", countryCode: "1", number: "" }}
         onChangePhoneNumber={(phoneNumber) => {
           dispatch(updateContact({ ...contact, phone: phoneNumber }));
+        }}
+      />
+      <BirthdayInput
+        birthday={contact.birthday}
+        onChangeBirthday={(birthday) => {
+          dispatch(updateContact({ ...contact, birthday }));
         }}
       />
       <EmailInput
