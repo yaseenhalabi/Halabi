@@ -60,7 +60,6 @@ export default function Settings() {
     try {
       const data = { contacts, tags };
       const json = JSON.stringify(data, null, 2);
-      console.log(json);
       const date = new Date();
       const dateString = date.toDateString();
       const fileName = "Halabi Contacts [" + dateString + "].json";
