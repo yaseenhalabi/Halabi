@@ -157,11 +157,12 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
           <BlurView
             intensity={8}
             style={{
-              width: "100%",
+              width: width,
               justifyContent: "center",
               alignItems: "center",
               position: "absolute",
-              top: 30,
+              bottom: -10,
+              paddingBottom: 20,
               zIndex: 3,
             }}
           >
@@ -385,7 +386,7 @@ function drawCoOccurrenceGraph(
 
   /* ───── node sizing ───────────────────────────────────────────────────── */
   const maxCnt = Math.max(...nodes.map((n) => n.count));
-  const minR = 10;
+  const minR = 20;
   const maxR = 50;
   nodes.forEach((n) => {
     (n as any).r = minR + ((maxR - minR) * n.count) / (maxCnt || 1);
