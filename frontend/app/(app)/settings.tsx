@@ -1,6 +1,6 @@
 import CommonText from "../../components/CommonText";
 import PageContainer from "../../components/PageContainer";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, Clipboard, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import SettingToggle from "../../components/settings screen/SettingToggle";
 import SettingButton from "../../components/settings screen/SettingButton";
@@ -60,7 +60,10 @@ export default function Settings() {
     try {
       const data = { contacts, tags };
       const json = JSON.stringify(data, null, 2);
-      const fileName = "contacts-export.json";
+      console.log(json);
+      const date = new Date();
+      const dateString = date.toDateString();
+      const fileName = "Halabi Contacts [" + dateString + "].json";
       const dir = FileSystem.documentDirectory!;
       const fileUri = `${dir}${fileName}`;
 

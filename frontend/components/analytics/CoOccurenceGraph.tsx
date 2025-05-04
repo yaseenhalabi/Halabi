@@ -15,7 +15,6 @@ import {
   vec,
   SkFont,
   RadialGradient,
-  Path1DPathEffect,
 } from "@shopify/react-native-skia";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import CommonModal from "../profile screen/CommonModal";
@@ -27,57 +26,34 @@ import CommonText from "../CommonText";
 import getTheme from "../../utils/GetTheme";
 import { BlurView } from "expo-blur";
 
-/* -------------------------------------------------------------------------- */
-/*                                    Types                                   */
-/* -------------------------------------------------------------------------- */
-
-/** Visual node rendered in the graph */
 export type Node = { id: string; name: string; count: number };
-/** Edge connecting two nodes */
 export type Edge = { source: Node; target: Node; weight: number };
-/** Axis‑aligned bounding box */
 export type Bounds = { minX: number; minY: number; maxX: number; maxY: number };
-/** Result returned by the draw routine */
 export type GraphResult = { elements: React.ReactNode[]; bounds: Bounds };
-/** Component props */
 export type Props = { contacts: Contact[]; tags: Tag[] };
 
-/* -------------------------------------------------------------------------- */
-/*                                 Constants                                  */
-/* -------------------------------------------------------------------------- */
-
-const SMALL_HEIGHT = 300; // thumbnail canvas height
-const PADDING = 20; // inner padding when fitting
+const SMALL_HEIGHT = 300;
+const PADDING = 20;
 const FONT_PATH = require("../../assets/fonts/Poppins-Medium.ttf");
 
-/* -------------------------------------------------------------------------- */
-/*                               Main Component                               */
-/* -------------------------------------------------------------------------- */
-
 export default function CoOccurrenceGraph({ contacts }: Props) {
-  /* ───── theme & fonts ─────────────────────────────────────────────────── */
   const theme = getTheme();
   const font = useFont(FONT_PATH, 11);
 
-  /* ───── dimensions ────────────────────────────────────────────────────── */
   const width = Dimensions.get("window").width * 0.8;
   const height = Dimensions.get("window").height * 0.8;
 
-  /* ───── data‑driven upper bound for the slider ────────────────────────── */
   const maxEdgeWeight = useMaxEdgeWeight(contacts);
 
-  /* ───── UI state ──────────────────────────────────────────────────────── */
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [minEdgeWeight, setMinEdgeWeight] = useState(
     Math.ceil(maxEdgeWeight / 2)
   );
 
-  /* Keep slider value within the valid range when contacts change */
   useEffect(() => {
     if (minEdgeWeight > maxEdgeWeight) setMinEdgeWeight(maxEdgeWeight);
   }, [maxEdgeWeight, minEdgeWeight]);
 
-  /* ───── heavy graph computation (runs on a background frame) ──────────── */
   const { graph, loading } = useGraph(
     contacts,
     width,
@@ -88,13 +64,12 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
     theme
   );
 
-  /* ───── transforms (static & animated) ────────────────────────────────── */
   const { fitTransform, centerTransform } = useTransforms(
     graph,
     width,
     height,
     isModalVisible,
-    maxEdgeWeight //  ← new arg
+    maxEdgeWeight
   );
 
   const { gesture, animTransform, resetTransforms } = usePanZoom();
@@ -121,7 +96,6 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
     );
   return (
     <>
-      {/* ─────────── thumbnail view ─────────── */}
       {!isModalVisible && (
         <TouchableWithoutFeedback onPress={() => setIsModalVisible(true)}>
           <View
@@ -145,7 +119,6 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
         </TouchableWithoutFeedback>
       )}
 
-      {/* ─────────── modal view ─────────── */}
       {isModalVisible && (
         <CommonModal
           isVisible
@@ -153,16 +126,15 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
           centered
           onClose={onModalClose}
         >
-          {/* threshold slider */}
           <BlurView
-            intensity={8}
+            intensity={30}
             style={{
               width: width,
               justifyContent: "center",
               alignItems: "center",
               position: "absolute",
               bottom: -10,
-              paddingBottom: 20,
+              paddingVertical: 20,
               zIndex: 3,
             }}
           >
@@ -211,23 +183,13 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*                              Custom   Hooks                                */
-/* -------------------------------------------------------------------------- */
-
-/** Compute the maximum edge weight present in the data. */
 function useMaxEdgeWeight(contacts: Contact[]) {
   return useMemo(() => {
     const { edges } = buildCoOccurrenceGraphData(contacts);
     return edges.length ? Math.max(...edges.map((e) => e.weight)) : 1;
   }, [contacts]);
 }
-function useMaxEdgeWeightEdges(edges: any) {
-  return useMemo(() => {
-    return edges.length ? Math.max(...edges.map((e: any) => e.weight)) : 1;
-  }, [edges]);
-}
-/** Heavy graph drawing logic wrapped in a hook */
+
 function useGraph(
   contacts: Contact[],
   width: number,
@@ -244,7 +206,6 @@ function useGraph(
     if (!font) return;
     setLoading(true);
 
-    // Execute on next frame to keep UI responsive
     requestAnimationFrame(() => {
       const res = drawCoOccurrenceGraph(
         contacts,
@@ -263,7 +224,6 @@ function useGraph(
   return { graph, loading } as const;
 }
 
-/** Compute static transforms for the thumbnail & modal modes */
 function useTransforms(
   graph: GraphResult | null,
   width: number,
@@ -307,8 +267,6 @@ function useTransforms(
   return { fitTransform, centerTransform } as const;
 }
 
-/** Pan + pinch‑zoom gesture plumbing extracted into its own hook */
-/** Pan + pinch-zoom gesture */
 function usePanZoom() {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -318,37 +276,33 @@ function usePanZoom() {
   const lastPanY = useSharedValue(0);
   const lastScale = useSharedValue(1);
 
-  /* ----- animated matrix (scale first, then translate) ----- */
   const animTransform = useDerivedValue(() => [
     { scale: scale.value },
     { translateX: translateX.value },
     { translateY: translateY.value },
   ]);
 
-  /* ----- pinch ----- */
   const pinch = Gesture.Pinch()
     .onStart(() => {
       lastScale.value = scale.value;
     })
     .onUpdate((e) => {
-      // ignore bogus first sample (e.scale === 0) & clamp
       const raw = e.scale === 0 ? 1 : e.scale;
       scale.value = lastScale.value * raw;
     });
 
-  /* ----- pan (delta ÷ current scale!) ----- */
   const pan = Gesture.Pan()
     .onStart(() => {
       lastPanX.value = translateX.value;
       lastPanY.value = translateY.value;
     })
     .onUpdate((e) => {
-      const s = scale.value; // current zoom
+      const s = scale.value;
       translateX.value = lastPanX.value + e.translationX / s;
       translateY.value = lastPanY.value + e.translationY / s;
     });
 
-  const gesture = Gesture.Simultaneous(pinch, pan); // order matters: pinch first
+  const gesture = Gesture.Simultaneous(pinch, pan);
 
   const resetTransforms = () => {
     translateX.value = 0;
@@ -358,10 +312,6 @@ function usePanZoom() {
 
   return { gesture, animTransform, resetTransforms } as const;
 }
-
-/* -------------------------------------------------------------------------- */
-/*                           Rendering / Data Helpers                         */
-/* -------------------------------------------------------------------------- */
 
 function drawCoOccurrenceGraph(
   contacts: Contact[],
@@ -375,33 +325,29 @@ function drawCoOccurrenceGraph(
   const { nodes, edges } = buildCoOccurrenceGraphData(contacts);
   if (!nodes.length) return null;
 
-  /* ───── filter edges & compute node degrees ──────────────────────────── */
-  nodes.forEach((n) => (n.count = 0));
-  const keptEdges = edges.filter((e) => e.weight >= minEdgeWeight);
+  const keptEdges: Edge[] = edges.filter((e) => e.weight >= minEdgeWeight);
   keptEdges.forEach((e) => {
     e.source.count += 1;
     e.target.count += 1;
   });
   if (!keptEdges.length) return null;
 
-  /* ───── node sizing ───────────────────────────────────────────────────── */
-  const maxCnt = Math.max(...nodes.map((n) => n.count));
+  const keptNodes: Node[] = nodes.filter((n) => n.count > 0);
+
+  const maxCnt = Math.max(...keptNodes.map((n) => n.count));
   const minR = 20;
   const maxR = 50;
   nodes.forEach((n) => {
     (n as any).r = minR + ((maxR - minR) * n.count) / (maxCnt || 1);
   });
 
-  /* ───── layout ────────────────────────────────────────────────────────── */
-  runForceLayout(nodes as any, keptEdges as any, width, height);
+  runForceLayout(keptNodes as any, keptEdges as any, width, height);
 
-  /* ───── compute bounds ───────────────────────────────────────────────── */
   const bounds = computeBounds(nodes as any);
 
-  /* ───── build react‑native‑skia elements ─────────────────────────────── */
   const elements = buildSkiaElements(
     keptEdges,
-    nodes,
+    keptNodes,
     maxEdgeWeight,
     font,
     theme
@@ -410,7 +356,6 @@ function drawCoOccurrenceGraph(
   return { elements, bounds };
 }
 
-/** Compute axis‑aligned bounding box around all rendered nodes */
 function computeBounds(nodes: any[]): Bounds {
   let minX = Infinity,
     minY = Infinity,
@@ -418,7 +363,7 @@ function computeBounds(nodes: any[]): Bounds {
     maxY = -Infinity;
 
   nodes.forEach(({ x, y, r, count }) => {
-    if (count === 0) return; // only hidden nodes are skipped
+    if (count === 0) return;
 
     minX = Math.min(minX, x - r);
     minY = Math.min(minY, y - r);
@@ -429,7 +374,6 @@ function computeBounds(nodes: any[]): Bounds {
   return { minX, minY, maxX, maxY };
 }
 
-/** Convert layout data into skia primitives */
 function buildSkiaElements(
   edges: Edge[],
   nodes: Node[],
@@ -439,7 +383,6 @@ function buildSkiaElements(
 ) {
   const elements: React.ReactNode[] = [];
 
-  // ───── edges
   edges.forEach((e, i) => {
     const s = e.source as any;
     const t = e.target as any;
@@ -456,7 +399,6 @@ function buildSkiaElements(
     );
   });
 
-  // ───── nodes + labels
   nodes.forEach((n, i) => {
     if (n.count === 0) return;
     const { x, y, r } = n as any;
@@ -474,7 +416,6 @@ function buildSkiaElements(
   return elements;
 }
 
-/** A tiny helper to render a scaled text label inside a bubble */
 function buildNodeLabel(
   label: string,
   idx: number,
@@ -504,10 +445,6 @@ function buildNodeLabel(
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*                               Data Builder                                 */
-/* -------------------------------------------------------------------------- */
-
 function buildCoOccurrenceGraphData(contacts: Contact[]): {
   nodes: Node[];
   edges: Edge[];
@@ -515,7 +452,6 @@ function buildCoOccurrenceGraphData(contacts: Contact[]): {
   const nodesMap = new Map<string, Node>();
   contacts.forEach(({ id, name }) => nodesMap.set(id, { id, name, count: 0 }));
 
-  // bucket contact IDs by tag
   const tagBuckets = new Map<string, string[]>();
   contacts.forEach(({ id, tags }) => {
     tags.forEach((tag) => {
@@ -523,7 +459,6 @@ function buildCoOccurrenceGraphData(contacts: Contact[]): {
     });
   });
 
-  // build unique edges (undirected, A|B ordering)
   const edgesMap = new Map<string, Edge>();
   for (const ids of tagBuckets.values()) {
     for (let i = 0; i < ids.length - 1; i++) {
@@ -547,6 +482,6 @@ function buildCoOccurrenceGraphData(contacts: Contact[]): {
   return { nodes: [...nodesMap.values()], edges: [...edgesMap.values()] };
 }
 function clamp(n: number, lo: number, hi: number) {
-  if (!Number.isFinite(n) || n === 0) return lo; // <-- new guard
+  if (!Number.isFinite(n) || n === 0) return lo;
   return Math.min(Math.max(n, lo), hi);
 }

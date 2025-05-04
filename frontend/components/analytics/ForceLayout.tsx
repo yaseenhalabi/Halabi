@@ -44,7 +44,6 @@ export const defaultForceLayoutConfig: ForceLayoutConfig = {
   spacingFactor: 1,
   initialAlpha: 1,
   alphaDecay: 0.05,
-  tickCount: 140,
 };
 
 /**
@@ -66,7 +65,9 @@ export function runForceLayout(
 ) {
   // Merge defaults with any user-provided overrides
   const cfg = { ...defaultForceLayoutConfig, ...config };
-
+  const tickCount = Math.ceil(
+    Math.min(Math.max(Math.pow(nodes.length, 1.05), 100), 400)
+  );
   // Determine max count for scaling charge by node size
   const maxCnt = Math.max(...nodes.map((n) => n.count));
 
@@ -104,7 +105,7 @@ export function runForceLayout(
     .alphaDecay(cfg.alphaDecay!);
 
   // Run the simulation for a fixed number of ticks
-  for (let i = 0; i < cfg.tickCount!; i++) {
+  for (let i = 0; i < tickCount; i++) {
     sim.tick();
   }
   sim.stop();
