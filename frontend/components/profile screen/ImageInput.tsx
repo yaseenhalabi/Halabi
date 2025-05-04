@@ -31,7 +31,6 @@ export default function ImageInput({ photo, onChangeImageUrl }: Props) {
     }
   };
 
-  console.log(photo);
   const defaultPFP = theme.name === "dark" ? defaultPfpBlack : defaultPfpWhite;
   return (
     <TouchableOpacity style={styles.container} onPress={pickImage}>
