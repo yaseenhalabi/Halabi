@@ -10,16 +10,21 @@ import getTheme from "../../utils/GetTheme";
 import { addSelectedContact } from "../../redux/selectContactsSlice";
 import { setContactsSelectionMode } from "../../redux/selectContactsSlice";
 import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
+import defaultPfpWhite from "../../assets/images/default-pfp-white.png";
+import defaultPfpBlack from "../../assets/images/default-pfp-black.png";
 type ContactItemProps = {
   contact: Contact;
   isSelected?: boolean;
   isHighlighted?: boolean;
+  longPressDisabled?: boolean;
 };
 
 export default function ContactItem({
   contact,
   isSelected,
   isHighlighted,
+  longPressDisabled,
 }: ContactItemProps) {
   const theme = getTheme();
   const tags: Tag[] = useSelector((state: any) => state.tags);
@@ -28,7 +33,13 @@ export default function ContactItem({
   );
   const dispatch = useDispatch();
   // Maximum number of tags to display before summarizing
-  const maxTags = 4;
+  const firstThreeTags = contactTags.slice(0, 3);
+  let threeTagsCharacterCount = 0;
+  firstThreeTags.map(
+    (tag: Tag) => (threeTagsCharacterCount += tag.name.length)
+  );
+
+  const maxTags = threeTagsCharacterCount > 25 ? 2 : 3;
   const displayedTags = contactTags.slice(0, maxTags);
   const remainingTags = contactTags.length - displayedTags.length;
 
@@ -71,11 +82,13 @@ export default function ContactItem({
   };
 
   const onLongPress = () => {
+    if (longPressDisabled) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     dispatch(setContactsSelectionMode(true));
     dispatch(addSelectedContact({ id: contact.id }));
   };
-
+  const defaultProfilePic =
+    theme.name === "dark" ? defaultPfpBlack : defaultPfpWhite;
   return (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
       <LinearGradient
@@ -94,8 +107,19 @@ export default function ContactItem({
           },
         ]}
       >
-        <CommonText size="medium">{contact.name}</CommonText>
-        <View style={styles.tagsContainer}>{tagComponents}</View>
+        {contact.photo ? (
+          <Image
+            placeholder={{ blurhash: contact.photo.blurHash }}
+            source={contact.photo.url}
+            style={styles.profilePic}
+          />
+        ) : (
+          <Image source={defaultProfilePic} style={styles.profilePic} />
+        )}
+        <View style={{ flexDirection: "column" }}>
+          <CommonText size="medium">{contact.name}</CommonText>
+          <View style={styles.tagsContainer}>{tagComponents}</View>
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -104,16 +128,21 @@ export default function ContactItem({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 65,
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingHorizontal: 5,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: 10,
     borderWidth: 1,
-    gap: 3,
+    gap: 10,
   },
   tagsContainer: {
     flexDirection: "row",
     overflow: "hidden",
     gap: 5,
+  },
+  profilePic: {
+    height: 40,
+    width: 40,
+    borderRadius: 5,
   },
 });

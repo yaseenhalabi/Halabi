@@ -84,6 +84,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
     height,
     font,
     minEdgeWeight,
+    maxEdgeWeight,
     theme
   );
 
@@ -154,18 +155,17 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
         >
           {/* threshold slider */}
           <BlurView
-            intensity={25}
+            intensity={8}
             style={{
               width: "100%",
               justifyContent: "center",
               alignItems: "center",
               position: "absolute",
               top: 30,
-              padding: 5,
               zIndex: 3,
             }}
           >
-            <CommonText style={{ zIndex: 3 }}>
+            <CommonText weight="bold" style={{ zIndex: 3 }}>
               Similarity Level: {minEdgeWeight}
             </CommonText>
             <Slider
@@ -221,7 +221,11 @@ function useMaxEdgeWeight(contacts: Contact[]) {
     return edges.length ? Math.max(...edges.map((e) => e.weight)) : 1;
   }, [contacts]);
 }
-
+function useMaxEdgeWeightEdges(edges: any) {
+  return useMemo(() => {
+    return edges.length ? Math.max(...edges.map((e: any) => e.weight)) : 1;
+  }, [edges]);
+}
 /** Heavy graph drawing logic wrapped in a hook */
 function useGraph(
   contacts: Contact[],
@@ -229,6 +233,7 @@ function useGraph(
   height: number,
   font: SkFont | null,
   minEdgeWeight: number,
+  maxEdgeWeight: number,
   theme: any
 ) {
   const [graph, setGraph] = useState<GraphResult | null>(null);
@@ -246,6 +251,7 @@ function useGraph(
         height,
         font,
         minEdgeWeight,
+        maxEdgeWeight,
         theme
       );
       setGraph(res);
@@ -362,6 +368,7 @@ function drawCoOccurrenceGraph(
   height: number,
   font: SkFont,
   minEdgeWeight: number,
+  maxEdgeWeight: number,
   theme: any
 ): GraphResult | null {
   const { nodes, edges } = buildCoOccurrenceGraphData(contacts);
@@ -378,8 +385,8 @@ function drawCoOccurrenceGraph(
 
   /* ───── node sizing ───────────────────────────────────────────────────── */
   const maxCnt = Math.max(...nodes.map((n) => n.count));
-  const minR = 16;
-  const maxR = 40;
+  const minR = 10;
+  const maxR = 50;
   nodes.forEach((n) => {
     (n as any).r = minR + ((maxR - minR) * n.count) / (maxCnt || 1);
   });
@@ -391,7 +398,13 @@ function drawCoOccurrenceGraph(
   const bounds = computeBounds(nodes as any);
 
   /* ───── build react‑native‑skia elements ─────────────────────────────── */
-  const elements = buildSkiaElements(keptEdges, nodes, font, theme);
+  const elements = buildSkiaElements(
+    keptEdges,
+    nodes,
+    maxEdgeWeight,
+    font,
+    theme
+  );
 
   return { elements, bounds };
 }
@@ -419,6 +432,7 @@ function computeBounds(nodes: any[]): Bounds {
 function buildSkiaElements(
   edges: Edge[],
   nodes: Node[],
+  maxEdgeWeight: number,
   font: SkFont,
   theme: any
 ) {
@@ -428,7 +442,7 @@ function buildSkiaElements(
   edges.forEach((e, i) => {
     const s = e.source as any;
     const t = e.target as any;
-    const weight = Math.pow(e.weight, 0.7);
+    const weight = e.weight * 0.8;
     elements.push(
       <Line
         key={`edge-${i}`}
@@ -436,14 +450,8 @@ function buildSkiaElements(
         p2={vec(t.x, t.y)}
         strokeWidth={weight}
         color={theme.text.full}
-      >
-        <Path1DPathEffect
-          path={`M -${weight} 0 L 0 -${weight}, ${weight} 0, 0 ${weight} Z`}
-          advance={4}
-          phase={0}
-          style="rotate"
-        />
-      </Line>
+        opacity={weight / maxEdgeWeight}
+      ></Line>
     );
   });
 

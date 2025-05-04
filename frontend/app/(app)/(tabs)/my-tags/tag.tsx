@@ -45,7 +45,9 @@ export default function TagScreen() {
       <FlatList
         style={{ width: "100%" }}
         data={contactsWithTag}
-        renderItem={({ item }) => <ContactItem contact={item} />}
+        renderItem={({ item }) => (
+          <ContactItem contact={item} longPressDisabled />
+        )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
       />

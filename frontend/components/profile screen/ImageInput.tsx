@@ -7,7 +7,7 @@ import { Photo } from "../../utils/types";
 import defaultPfpWhite from "../../assets/images/default-pfp-white.png";
 import defaultPfpBlack from "../../assets/images/default-pfp-black.png";
 import getTheme from "../../utils/GetTheme";
-const IMAGE_SIZE = 150;
+const IMAGE_SIZE = 175;
 type Props = {
   photo?: Photo;
   onChangeImageUrl: (url: string, blurHash: string) => void;
@@ -24,37 +24,44 @@ export default function ImageInput({ photo, onChangeImageUrl }: Props) {
     });
     if (!result.canceled) {
       const url: string = result.assets[0].uri;
-      Image.generateBlurhashAsync(url, [4, 3]).then((blurHash) => {
+      onChangeImageUrl(url, "");
+      Image.generateBlurhashAsync(url, [1, 1]).then((blurHash) => {
         onChangeImageUrl(url, blurHash || "");
       });
     }
   };
 
+  console.log(photo);
   const defaultPFP = theme.name === "dark" ? defaultPfpBlack : defaultPfpWhite;
   return (
     <TouchableOpacity style={styles.container} onPress={pickImage}>
       {photo ? (
-        <Image
-          placeholder={{ blurhash: photo?.blurHash }}
-          blurRadius={40}
-          source={photo?.url}
-          style={styles.blurImageBackground}
-          transition={100}
-        />
+        <>
+          <Image
+            placeholder={{ blurhash: photo?.blurHash }}
+            blurRadius={40}
+            source={photo?.url}
+            style={styles.blurImageBackground}
+            transition={100}
+          />
+          <Image
+            style={styles.image}
+            source={photo?.url || defaultPFP}
+            placeholder={{ blurhash: photo?.blurHash }}
+            transition={60}
+          />
+        </>
       ) : (
-        <View
-          style={[
-            styles.blurImageBackground,
-            { backgroundColor: theme.backgroundSecondary },
-          ]}
-        />
+        <>
+          <View
+            style={[
+              styles.blurImageBackground,
+              { backgroundColor: theme.backgroundSecondary },
+            ]}
+          />
+          <Image style={styles.image} source={defaultPFP} />
+        </>
       )}
-      <Image
-        style={styles.image}
-        source={photo?.url || defaultPFP}
-        placeholder={{ blurhash: photo?.blurHash }}
-        transition={100}
-      />
     </TouchableOpacity>
   );
 }
@@ -62,7 +69,7 @@ export default function ImageInput({ photo, onChangeImageUrl }: Props) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: IMAGE_SIZE + 50,
+    height: IMAGE_SIZE + 20,
     overflow: "hidden",
     marginBottom: 10,
     borderRadius: IMAGE_SIZE / 20,
