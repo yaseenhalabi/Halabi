@@ -5,18 +5,22 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  TouchableOpacity,
 } from "react-native";
 import ContactItem from "./ContactItem";
 import { Contact } from "../../utils/types";
 import getTheme from "../../utils/GetTheme";
-import { useSelector } from "react-redux";
-import { applyFilters } from "../../utils/helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { applyFilters, createNewContactWithName } from "../../utils/helpers";
+import { addContact } from "../../redux/contactsSlice";
 import CommonText from "../CommonText";
+import { router } from "expo-router";
 type ListOfContactsProps = {
   contacts: Contact[];
   onOverScrollTop: () => void;
   onOverScrollBottom: () => void;
   isSearching?: boolean;
+  searchQuery?: string;
 };
 
 export default function ListOfContacts({
@@ -24,6 +28,7 @@ export default function ListOfContacts({
   onOverScrollTop,
   onOverScrollBottom,
   isSearching,
+  searchQuery,
 }: ListOfContactsProps) {
   const theme = getTheme();
   const selectedContacts = useSelector(
@@ -40,22 +45,53 @@ export default function ListOfContacts({
     selectedTagIds,
     sortBy
   );
-  if (filteredAndSortedContacts.length === 0) {
+
+  const dispatch = useDispatch();
+
+  const noContactFound = filteredAndSortedContacts.length === 0;
+
+  const addThisContact = (name: string) => {
+    const new_contact = createNewContactWithName(name);
+    dispatch(addContact(new_contact));
+    router.push({
+      pathname: "/my-contacts/profile",
+      params: { id: new_contact.id },
+    });
+  };
+
+  if (noContactFound) {
     return (
-      <View
-        style={{
-          ...styles.noContactsFoundContainer,
-          backgroundColor: theme.background,
-        }}
-      >
-        <CommonText
-          weight="light"
-          size="medium"
-          style={{ color: theme.text.muted, textAlign: "center" }}
+      <>
+        {searchQuery && (
+          <TouchableOpacity
+            onPress={() => addThisContact(searchQuery)}
+            style={{ width: "100%" }}
+          >
+            <View
+              style={[
+                styles.addNewContactButton,
+                { backgroundColor: theme.backgroundSecondary },
+              ]}
+            >
+              <CommonText>Add new contact "{searchQuery}"</CommonText>
+            </View>
+          </TouchableOpacity>
+        )}
+        <View
+          style={{
+            ...styles.noContactsFoundContainer,
+            backgroundColor: theme.background,
+          }}
         >
-          No Contacts Found
-        </CommonText>
-      </View>
+          <CommonText
+            weight="light"
+            size="medium"
+            style={{ color: theme.text.muted, textAlign: "center" }}
+          >
+            No Contacts Found
+          </CommonText>
+        </View>
+      </>
     );
   }
 
@@ -99,5 +135,14 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     justifyContent: "center",
     alignItems: "center",
+  },
+  addNewContactButton: {
+    width: "100%",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F0F0F0",
+    borderRadius: 10,
+    marginTop: 10,
   },
 });

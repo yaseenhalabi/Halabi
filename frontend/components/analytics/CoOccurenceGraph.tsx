@@ -25,6 +25,7 @@ import { runForceLayout } from "./ForceLayout";
 import CommonText from "../CommonText";
 import getTheme from "../../utils/GetTheme";
 import { BlurView } from "expo-blur";
+import { useFocusEffect } from "expo-router";
 
 export type Node = { id: string; name: string; count: number };
 export type Edge = { source: Node; target: Node; weight: number };
@@ -34,7 +35,9 @@ export type Props = { contacts: Contact[]; tags: Tag[] };
 
 const SMALL_HEIGHT = 300;
 const PADDING = 20;
-const FONT_PATH = require("../../assets/fonts/Poppins-Medium.ttf");
+const MINIMUM_NODE_RADIUS = 15;
+const MAXIMUM_NODE_RADIUS = 40;
+const FONT_PATH: string = require("../../assets/fonts/Poppins-Medium.ttf");
 
 export default function CoOccurrenceGraph({ contacts }: Props) {
   const theme = getTheme();
@@ -47,7 +50,16 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [minEdgeWeight, setMinEdgeWeight] = useState(
-    Math.ceil(maxEdgeWeight / 2)
+    Math.ceil(maxEdgeWeight / 1.5)
+  );
+
+  // this has to be done to force the graph to re-render when user goes
+  // away and comes back to the screen
+  const [refreshKey, setRefreshKey] = useState(0);
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshKey((k) => k + 1);
+    }, [])
   );
 
   useEffect(() => {
@@ -78,6 +90,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
     resetTransforms();
     setIsModalVisible(false);
   };
+
   if (!loading && !graph?.elements)
     return (
       <View
@@ -111,7 +124,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
             {loading || !graph ? (
               <ActivityIndicator size="large" color={theme.text.semi} />
             ) : (
-              <Canvas style={{ width, height: SMALL_HEIGHT }}>
+              <Canvas style={{ width, height: SMALL_HEIGHT }} key={refreshKey}>
                 <Group transform={fitTransform}>{graph.elements}</Group>
               </Canvas>
             )}
@@ -164,7 +177,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
               {loading || !graph ? (
                 <ActivityIndicator size="large" color={theme.text.semi} />
               ) : (
-                <Canvas style={{ width, height }}>
+                <Canvas style={{ width, height }} key={refreshKey}>
                   <Group transform={centerTransform}>
                     <Group
                       origin={{ x: width / 2, y: height / 2 }}
@@ -241,8 +254,8 @@ function useTransforms(
     }
     const scale = clamp(
       Math.min((width - 2 * PADDING) / gW, (SMALL_HEIGHT - 2 * PADDING) / gH),
-      0.5,
-      2
+      0.1,
+      5
     );
 
     const h = isModalVisible ? height : SMALL_HEIGHT;
@@ -335,10 +348,10 @@ function drawCoOccurrenceGraph(
   const keptNodes: Node[] = nodes.filter((n) => n.count > 0);
 
   const maxCnt = Math.max(...keptNodes.map((n) => n.count));
-  const minR = 20;
-  const maxR = 50;
   nodes.forEach((n) => {
-    (n as any).r = minR + ((maxR - minR) * n.count) / (maxCnt || 1);
+    (n as any).r =
+      MINIMUM_NODE_RADIUS +
+      ((MAXIMUM_NODE_RADIUS - MINIMUM_NODE_RADIUS) * n.count) / (maxCnt || 1);
   });
 
   runForceLayout(keptNodes as any, keptEdges as any, width, height);
@@ -386,7 +399,7 @@ function buildSkiaElements(
   edges.forEach((e, i) => {
     const s = e.source as any;
     const t = e.target as any;
-    const weight = e.weight * 0.8;
+    const weight = Math.pow(e.weight - 1, 1.3);
     elements.push(
       <Line
         key={`edge-${i}`}

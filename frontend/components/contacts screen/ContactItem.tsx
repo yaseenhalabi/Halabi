@@ -1,4 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native";
+import { useMemo } from "react";
 import CommonText from "../CommonText";
 import { LinearGradient } from "expo-linear-gradient";
 import { Contact } from "../../utils/types";
@@ -20,6 +21,8 @@ type ContactItemProps = {
   longPressDisabled?: boolean;
 };
 
+const MAX_CHARACTER_COUNT = 25;
+
 export default function ContactItem({
   contact,
   isSelected,
@@ -28,39 +31,42 @@ export default function ContactItem({
 }: ContactItemProps) {
   const theme = getTheme();
   const tags: Tag[] = useSelector((state: any) => state.tags);
-  const contactTags: Tag[] = tags.filter((tag: Tag) =>
-    contact.tags.includes(tag.id)
-  );
+  const contactTags: Tag[] = tags
+    .filter((tag: Tag) => contact.tags.includes(tag.id))
+    .sort((a, b) => a.name.length - b.name.length);
   const dispatch = useDispatch();
-  // Maximum number of tags to display before summarizing
-  const firstThreeTags = contactTags.slice(0, 3);
-  let threeTagsCharacterCount = 0;
-  firstThreeTags.map(
-    (tag: Tag) => (threeTagsCharacterCount += tag.name.length)
-  );
-
-  const maxTags = threeTagsCharacterCount > 25 ? 2 : 3;
-  const displayedTags = contactTags.slice(0, maxTags);
-  const remainingTags = contactTags.length - displayedTags.length;
-
-  const tagComponents: React.ReactNode[] = displayedTags.map((tag: Tag) => (
-    <ContactItemTag key={tag.id} name={tag.name} />
-  ));
-
-  // Add "+n more" if there are more tags than maxTags
-  if (remainingTags > 0) {
-    tagComponents.push(
-      <CommonText
-        key="more"
-        size="xsmall"
-        weight="light"
-        color="semi"
-      >{`+${remainingTags} tags`}</CommonText>
-    );
+  // limit how many tags are shown (by character)
+  let tagCharacterCount = 0;
+  let i = 0;
+  while (tagCharacterCount < MAX_CHARACTER_COUNT && i < contactTags.length) {
+    tagCharacterCount += contactTags[i].name.length + 4;
+    i++;
   }
+
+  const displayedTags = contactTags.slice(0, i);
+
+  const tagComponents: any = useMemo(() => {
+    if (i < contactTags.length) {
+      return (
+        <>
+          {displayedTags.map((tag: Tag) => (
+            <ContactItemTag key={tag.id} name={tag.name} />
+          ))}
+          <CommonText key="more" size="xsmall" weight="light" color="semi">{`+${
+            contactTags.length - i
+          } tag${contactTags.length - i === 1 ? "" : "s"}`}</CommonText>
+        </>
+      );
+    }
+    return displayedTags.map((tag: Tag) => (
+      <ContactItemTag key={tag.id} name={tag.name} />
+    ));
+  }, [contact]);
+
   const inContactSelectionMode: boolean = useSelector(
     (state: any) => state.selection.contactsSelectionMode
   );
+
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (inContactSelectionMode) {
@@ -87,8 +93,10 @@ export default function ContactItem({
     dispatch(setContactsSelectionMode(true));
     dispatch(addSelectedContact({ id: contact.id }));
   };
+
   const defaultProfilePic =
     theme.name === "dark" ? defaultPfpBlack : defaultPfpWhite;
+
   return (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
       <LinearGradient
@@ -107,7 +115,7 @@ export default function ContactItem({
           },
         ]}
       >
-        {contact.photo ? (
+        {/* {contact.photo ? (
           <Image
             placeholder={{ blurhash: contact.photo.blurHash }}
             source={contact.photo.url}
@@ -115,10 +123,12 @@ export default function ContactItem({
           />
         ) : (
           <Image source={defaultProfilePic} style={styles.profilePic} />
-        )}
-        <View style={{ flexDirection: "column" }}>
+        )} */}
+        <View style={styles.container}>
           <CommonText size="medium">{contact.name}</CommonText>
-          <View style={styles.tagsContainer}>{tagComponents}</View>
+          {tagComponents.length > 0 && (
+            <View style={styles.tagsContainer}>{tagComponents}</View>
+          )}
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -128,12 +138,13 @@ export default function ContactItem({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    padding: 10,
-    borderWidth: 1,
-    gap: 10,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingLeft: 5,
+    paddingRight: 10,
+    height: 65,
+    gap: 3,
   },
   tagsContainer: {
     flexDirection: "row",

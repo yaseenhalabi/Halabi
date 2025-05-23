@@ -68,6 +68,10 @@ const SearchBar = forwardRef<TextInput, SearchBarProps>(
             value={value}
             onSubmitEditing={handleSubmitEditing}
             keyboardAppearance={theme.name === "dark" ? "dark" : "light"}
+            autoCapitalize="words"
+            autoComplete="off"
+            autoCorrect={false}
+            returnKeyType="search"
           />
           {hasText && (
             <CancelSearch

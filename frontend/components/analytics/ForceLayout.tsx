@@ -30,19 +30,17 @@ export interface ForceLayoutConfig {
   initialAlpha?: number;
   /** Alpha decay rate per tick */
   alphaDecay?: number;
-  /** Number of ticks to run before stopping */
-  tickCount?: number;
 }
 
 /** Default values for layout constants */
 export const defaultForceLayoutConfig: ForceLayoutConfig = {
   linkDistance: 20,
-  linkStrength: 0.7,
+  linkStrength: 1,
   chargeStrength: -40,
   collisionPadding: 8,
   forceXYStrength: 0.1,
   spacingFactor: 1,
-  initialAlpha: 1,
+  initialAlpha: 2,
   alphaDecay: 0.05,
 };
 
@@ -66,7 +64,7 @@ export function runForceLayout(
   // Merge defaults with any user-provided overrides
   const cfg = { ...defaultForceLayoutConfig, ...config };
   const tickCount = Math.ceil(
-    Math.min(Math.max(Math.pow(nodes.length, 1.05), 100), 400)
+    Math.min(Math.max(Math.pow(nodes.length, 1.1), 100), 400)
   );
   // Determine max count for scaling charge by node size
   const maxCnt = Math.max(...nodes.map((n) => n.count));

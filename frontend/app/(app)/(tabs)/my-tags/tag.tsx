@@ -37,7 +37,10 @@ export default function TagScreen() {
       <View style={{ width: "100%" }}>
         <CommonText color="semi">
           {contactsWithTag.length > 0
-            ? contactsWithTag.length + " contacts with this tag:"
+            ? contactsWithTag.length +
+              ` contact${
+                contactsWithTag.length === 1 ? "" : "s"
+              } with this tag:`
             : "No contacts with this tag"}
         </CommonText>
       </View>

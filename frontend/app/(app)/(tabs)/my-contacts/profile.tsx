@@ -21,7 +21,6 @@ export default function Profile() {
   const contacts: Contact[] = useSelector((state: any) => state.contacts);
   const contact: Contact | undefined = getContactById(id, contacts);
 
-  // Ref to store overscroll handler from ProfileTags
   const overscrollCallbackRef = useRef<() => void>(() => {});
 
   if (!contact) {
@@ -42,7 +41,7 @@ export default function Profile() {
         }
       }}
     >
-      <ImageInput
+      {/* <ImageInput
         photo={contact.photo}
         onChangeImageUrl={(url: string, blurHash: string) => {
           dispatch(
@@ -52,7 +51,7 @@ export default function Profile() {
             })
           );
         }}
-      />
+      /> */}
       <NameInput
         onChangeText={(text) => {
           dispatch(updateContact({ ...contact, name: text }));

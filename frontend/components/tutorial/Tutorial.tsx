@@ -10,11 +10,9 @@ import { importContacts } from "../../utils/SyncContactScripts";
 import { Alert } from "react-native";
 
 export default function Tutorial() {
-
   const [currentStage, setCurrentStage] = useState(0);
   const dispatch = useDispatch();
   const incrementStage = () => {
-    
     if (currentStage === 12) {
       // ask user if they want to import contacts
       // if they do, import contacts
@@ -24,14 +22,14 @@ export default function Tutorial() {
         [
           {
             text: "No",
-            style: "cancel"
+            style: "cancel",
           },
-          { 
+          {
             text: "Yes",
             onPress: () => {
               importContacts(dispatch);
-            }
-          }
+            },
+          },
         ]
       );
       // then set tutorial complete
@@ -42,25 +40,22 @@ export default function Tutorial() {
     }
 
     if (currentStage === 3) {
-      router.push({ pathname: "/my-contacts/profile", params: { id: '1' } });
+      router.push({ pathname: "/my-contacts/profile", params: { id: "1" } });
     }
     if (currentStage === 8) {
-      router.navigate('/my-tags');
+      router.navigate("/my-tags");
     }
     if (currentStage === 10) {
-      router.push({ pathname: "/my-tags/tag", params: { id: '1' } });
+      router.push({ pathname: "/my-tags/tag", params: { id: "1" } });
     }
     if (currentStage === 11) {
-      router.navigate('/my-contacts');
+      router.navigate("/my-contacts");
     }
     setCurrentStage(currentStage + 1);
-  }
+  };
 
   if (currentStage === 0) {
-    return <IntroPage onComplete={incrementStage}/>
+    return <IntroPage onComplete={incrementStage} />;
   }
-  return (
-    <WalkthroughPage stage={currentStage} onComplete={incrementStage} />
-  )
+  return <WalkthroughPage stage={currentStage} onComplete={incrementStage} />;
 }
-

@@ -174,6 +174,7 @@ export default function MyContacts() {
         onOverScrollTop={focusSearchInput}
         onOverScrollBottom={blurSearchInput}
         isSearching={searchText.length > 0}
+        searchQuery={searchText}
       />
     </PageContainer>
   );

@@ -27,11 +27,10 @@ function App() {
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
-
-  const {handleTest, loading } = useTest();
+  const { handleTest, loading } = useTest();
 
   useEffect(() => {
-    handleTest()
+    handleTest();
     if (colorScheme === "dark") {
       dispatch(setTheme("dark"));
     } else if (colorScheme === "light") {
