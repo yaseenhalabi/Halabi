@@ -67,8 +67,14 @@ export default function TagItem({
       <LinearGradient
         colors={
           theme.name === "dark"
-            ? [isHighlighted ? "#1D1D1D" : "#000000", "#1D1D1D"]
-            : [isHighlighted ? "#F0F0F0" : "#FFFFFF", "#F0F0F0"]
+            ? [
+                isHighlighted ? "rgb(20, 20, 20)" : "rgb(0, 0, 0)",
+                "rgb(20, 20, 20)",
+              ]
+            : [
+                isHighlighted ? "rgb(240, 240, 240)" : "rgb(255, 255, 255)",
+                "rgb(240, 240, 240)",
+              ]
         }
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingRight: 15,
-    paddingLeft: 5,
+    paddingLeft: 10,
   },
   leftContainer: {
     justifyContent: "center",
