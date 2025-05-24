@@ -143,7 +143,7 @@ export default function NewContactsPopupBanner({
         <View style={styles.content}>
           <View style={styles.textContainer}>
             <CommonText size="medium" weight="medium" color="full">
-              {newContactsCount} new contact{newContactsCount !== 1 ? "s" : ""}{" "}
+              {newContactsCount} new contact{newContactsCount > 1 ? "s" : ""}{" "}
               detected
             </CommonText>
             <CommonText size="small" color="semi">

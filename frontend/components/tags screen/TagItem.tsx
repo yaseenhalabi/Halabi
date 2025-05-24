@@ -92,14 +92,16 @@ export default function TagItem({
       >
         <View style={styles.leftContainer}>
           <CommonText numberOfLines={1}>{tag.name}</CommonText>
-          <CommonText
-            weight="regular"
-            size="xsmall"
-            color="semi"
-            numberOfLines={1}
-          >
-            {contactsToString(contactsWithTag)}
-          </CommonText>
+          {contactsWithTag.length > 0 && (
+            <CommonText
+              weight="regular"
+              size="xsmall"
+              color="semi"
+              numberOfLines={1}
+            >
+              {contactsToString(contactsWithTag)}
+            </CommonText>
+          )}
         </View>
         <View style={styles.rightContainer}>
           <CommonText
