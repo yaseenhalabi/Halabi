@@ -9,12 +9,22 @@ import selectContactsSlice from "./selectContactsSlice";
 import filterContactsSlice from "./filterContactsSlice";
 import filterTagsSlice from "./filterTagsSlice";
 import selectTagsSlice from "./selectTagsSlice";
+import contactSnapshotsSlice from "./contactSnapshotsSlice";
+import popupBannerSlice from "./popupBannerSlice";
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
   version: 3, // ⬅️ Bump version
-  whitelist: ["user", "theme", "contacts", "tags", "filter", "filterTags"],
+  whitelist: [
+    "user",
+    "theme",
+    "contacts",
+    "tags",
+    "filter",
+    "filterTags",
+    "contactSnapshots",
+  ],
   migrate: async (state: any) => {
     if (state) {
       return {
@@ -35,6 +45,8 @@ const rootReducer = combineReducers({
   filter: filterContactsSlice,
   filterTags: filterTagsSlice,
   tagSelection: selectTagsSlice,
+  contactSnapshots: contactSnapshotsSlice,
+  popupBanner: popupBannerSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

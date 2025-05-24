@@ -20,6 +20,12 @@ import FilterContacts from "../../../../components/contacts screen/FilterContact
 import AddContactButton from "../../../../components/AddContactButton";
 import getTheme from "../../../../utils/GetTheme";
 import { useFocusEffect } from "expo-router";
+import { detectNewContacts } from "../../../../utils/detectNewContacts";
+import { setContactSnapshots } from "../../../../redux/contactSnapshotsSlice";
+import {
+  showNewContactsBanner,
+  hideNewContactsBanner,
+} from "../../../../redux/popupBannerSlice";
 
 export default function MyContacts() {
   const dispatch = useDispatch();
@@ -30,6 +36,11 @@ export default function MyContacts() {
     (state: any) => state.selection.contactsSelectionMode
   );
 
+  // New contacts detection state
+  const contactSnapshots: string[] = useSelector(
+    (state: any) => state.contactSnapshots
+  );
+
   useEffect(() => {
     if (inEditMode) {
       setEditButtonsMode("edit");
@@ -38,10 +49,31 @@ export default function MyContacts() {
 
   useFocusEffect(
     useCallback(() => {
+      const checkForNewContacts = async () => {
+        try {
+          const newIds = await detectNewContacts(contactSnapshots);
+          if (newIds.length > 0) {
+            dispatch(showNewContactsBanner(newIds));
+            const updatedSnapshots = [...contactSnapshots, ...newIds];
+            dispatch(setContactSnapshots(updatedSnapshots));
+          }
+        } catch (error) {
+          console.error("Error checking for new contacts:", error);
+        }
+      };
+
+      // Initial check
+      checkForNewContacts();
+
+      // Set up polling every 3 seconds
+      const interval = setInterval(checkForNewContacts, 3000);
+
       return () => {
+        // Clear the interval and reset search text on cleanup
+        clearInterval(interval);
         setSearchText("");
       };
-    }, [])
+    }, [contactSnapshots, dispatch])
   );
 
   const selectedContacts: string[] = useSelector(

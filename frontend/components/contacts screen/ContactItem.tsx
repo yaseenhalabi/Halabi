@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import CommonText from "../CommonText";
 import { LinearGradient } from "expo-linear-gradient";
 import { Contact } from "../../utils/types";
@@ -29,6 +29,9 @@ export default function ContactItem({
   isHighlighted,
   longPressDisabled,
 }: ContactItemProps) {
+  const renderCount = useRef(0);
+  renderCount.current++;
+
   const theme = getTheme();
   const tags: Tag[] = useSelector((state: any) => state.tags);
   const contactTags: Tag[] = tags
@@ -45,7 +48,7 @@ export default function ContactItem({
 
   const displayedTags = contactTags.slice(0, i);
 
-  const tagComponents: any = useMemo(() => {
+  const tagComponents = useMemo(() => {
     if (i < contactTags.length) {
       return (
         <>
@@ -94,8 +97,8 @@ export default function ContactItem({
     dispatch(addSelectedContact({ id: contact.id }));
   };
 
-  const defaultProfilePic =
-    theme.name === "dark" ? defaultPfpBlack : defaultPfpWhite;
+  // const defaultProfilePic =
+  //   theme.name === "dark" ? defaultPfpBlack : defaultPfpWhite;
 
   return (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
@@ -126,7 +129,7 @@ export default function ContactItem({
         )} */}
         <View style={styles.container}>
           <CommonText size="medium">{contact.name}</CommonText>
-          {tagComponents.length > 0 && (
+          {displayedTags.length > 0 && (
             <View style={styles.tagsContainer}>{tagComponents}</View>
           )}
         </View>

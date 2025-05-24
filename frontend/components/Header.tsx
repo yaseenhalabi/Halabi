@@ -31,7 +31,6 @@ export default function Header() {
         setCurrentRouteName("Analytics");
         break;
       case "/settings":
-        setCurrentRouteName("Settings");
         break;
       default:
         setCurrentRouteName("Halabi");
@@ -46,6 +45,11 @@ export default function Header() {
     router.back();
   };
 
+  const isBackButtonEnabled =
+    pathname !== "/my-contacts" &&
+    pathname !== "/my-tags" &&
+    pathname !== "/analytics" &&
+    pathname !== "/settings";
   return (
     <>
       <View style={{ ...styles.container, backgroundColor: theme.background }}>
@@ -55,18 +59,17 @@ export default function Header() {
           </CommonText>
         </View>
         <View style={styles.iconsContainer}>
-          <HeaderIcon
-            size={20}
-            source={
-              theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon
-            }
-            onPress={onPressBack}
-            disabled={
-              pathname === "/my-contacts" ||
-              pathname == "/my-tags" ||
-              pathname == "/analytics"
-            }
-          />
+          {isBackButtonEnabled && (
+            <HeaderIcon
+              size={20}
+              source={
+                theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon
+              }
+              onPress={onPressBack}
+              disabled={!isBackButtonEnabled}
+              style={{ position: "absolute", left: 0 }}
+            />
+          )}
           <HeaderIcon
             size={20}
             source={
@@ -74,6 +77,7 @@ export default function Header() {
             }
             onPress={onPressSettings}
             disabled={pathname === "/settings"}
+            style={{ position: "absolute", right: 0 }}
           />
         </View>
       </View>
@@ -84,7 +88,6 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     top: 0,
-    justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
@@ -94,7 +97,9 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 20,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 30,
   },
   headerTextContainer: {
     ...StyleSheet.absoluteFillObject,

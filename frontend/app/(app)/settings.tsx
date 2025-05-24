@@ -1,6 +1,6 @@
 import CommonText from "../../components/CommonText";
 import PageContainer from "../../components/PageContainer";
-import { Alert, Clipboard, StyleSheet } from "react-native";
+import { Alert, Clipboard, StyleSheet, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import SettingToggle from "../../components/settings screen/SettingToggle";
 import SettingButton from "../../components/settings screen/SettingButton";
@@ -139,6 +139,10 @@ export default function Settings() {
 
   return (
     <PageContainer style={styles.container}>
+      <View style={{ ...styles.line, backgroundColor: theme.text.semi }} />
+      <CommonText size="small" weight="bold" style={{ marginTop: 10 }}>
+        Settings
+      </CommonText>
       <SettingToggle
         toggled={theme.name === "dark"}
         title="Dark Mode"
@@ -192,5 +196,12 @@ const styles = StyleSheet.create({
   container: {
     gap: 5,
     height: "100%",
+  },
+  line: {
+    marginTop: 10,
+    height: 2,
+    opacity: 0.5,
+    borderRadius: 3,
+    width: "10%",
   },
 });
