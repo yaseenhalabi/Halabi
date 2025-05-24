@@ -41,15 +41,7 @@ export default function Header() {
   const onPressSettings = () => {
     router.navigate("settings");
   };
-  const onPressBack = () => {
-    router.back();
-  };
 
-  const isBackButtonEnabled =
-    pathname !== "/my-contacts" &&
-    pathname !== "/my-tags" &&
-    pathname !== "/analytics" &&
-    pathname !== "/settings";
   return (
     <>
       <View style={{ ...styles.container, backgroundColor: theme.background }}>
@@ -59,24 +51,12 @@ export default function Header() {
           </CommonText>
         </View>
         <View style={styles.iconsContainer}>
-          {isBackButtonEnabled && (
-            <HeaderIcon
-              size={20}
-              source={
-                theme.name === "dark" ? whiteBackArrowIcon : blackBackArrowIcon
-              }
-              onPress={onPressBack}
-              disabled={!isBackButtonEnabled}
-              style={{ position: "absolute", left: 0 }}
-            />
-          )}
           <HeaderIcon
             size={20}
             source={
               theme.name === "dark" ? whiteSettingsIcon : blackSettingsIcon
             }
             onPress={onPressSettings}
-            disabled={pathname === "/settings"}
             style={{ position: "absolute", right: 0 }}
           />
         </View>
