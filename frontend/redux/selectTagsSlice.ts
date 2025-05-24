@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const selectTagsSlice = createSlice({
-  name: 'tagSelection',
+  name: "tagSelection",
   initialState: {
     selectedTags: [] as string[],
     tagsSelectionMode: false,
@@ -11,7 +11,9 @@ const selectTagsSlice = createSlice({
       state.selectedTags.push(action.payload);
     },
     removeSelectedTag: (state, action: PayloadAction<string>) => {
-      state.selectedTags = state.selectedTags.filter(tagId => tagId !== action.payload);
+      state.selectedTags = state.selectedTags.filter(
+        (tagId) => tagId !== action.payload
+      );
     },
     resetSelectedTags: (state) => {
       state.selectedTags = [];
@@ -22,6 +24,11 @@ const selectTagsSlice = createSlice({
   },
 });
 
-export const { addSelectedTag, removeSelectedTag, resetSelectedTags, setTagsSelectionMode } = selectTagsSlice.actions;
+export const {
+  addSelectedTag,
+  removeSelectedTag,
+  resetSelectedTags,
+  setTagsSelectionMode,
+} = selectTagsSlice.actions;
 
-export default selectTagsSlice.reducer; 
+export default selectTagsSlice.reducer;

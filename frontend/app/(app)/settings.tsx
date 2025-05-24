@@ -12,7 +12,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   syncContactsToHalabi,
   syncContactsToNative,
-} from "../../utils/SyncContactScripts";
+} from "../../utils/syncContactScripts";
 import { resetTags, setTags } from "../../redux/tagsSlice";
 import { resetContacts, setContacts } from "../../redux/contactsSlice";
 
@@ -83,70 +83,49 @@ export default function Settings() {
 
   const onImportData = async (): Promise<boolean> => {
     try {
-      // 1) pick the JSON file
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/json",
       });
       if (result.canceled) {
         return false; // user hit “Cancel”
       }
-
-      // 2) grab the file URI
       const asset = result.assets[0];
       if (!asset?.uri) {
         throw new Error("No file URI returned");
       }
-
-      // 3) read & parse
       const content = await FileSystem.readAsStringAsync(asset.uri, {
         encoding: FileSystem.EncodingType.UTF8,
       });
       const parsed = JSON.parse(content);
       const importedContacts = parsed.contacts;
       const importedTags = parsed.tags;
-
-      // 4) basic shape validation
       if (!Array.isArray(importedContacts) || !Array.isArray(importedTags)) {
         throw new Error(
           "Invalid JSON format: expected { contacts: [], tags: [] }"
         );
       }
-
-      // 5) merge tags (overwrite on ID collision)
       const tagMap = new Map<string, Tag>();
-      // start with existing tags
       tags.forEach((t: Tag) => tagMap.set(t.id, t));
-      // then overlay imported tags
       importedTags.forEach((t: Tag) => {
         if (t.id) {
           tagMap.set(t.id, t);
         }
       });
       const mergedTags = Array.from(tagMap.values());
-
-      // 6) build a set of valid tag IDs
       const validTagIds = new Set(mergedTags.map((t) => t.id));
-
-      // 7) merge contacts (overwrite on ID collision + filter tags + require id)
       const contactMap = new Map<string, Contact>();
-      // existing first
       contacts.forEach((c: Contact) => contactMap.set(c.id, c));
-      // then imported
       importedContacts.forEach((c: Contact) => {
         if (!c.id) {
-          // skip anything missing an id
           return;
         }
-        // filter out any tag references that don’t exist
         const safeTags = Array.isArray(c.tags)
           ? c.tags.filter((tagId) => validTagIds.has(tagId))
           : [];
-
         contactMap.set(c.id, { ...c, tags: safeTags });
       });
       const mergedContacts = Array.from(contactMap.values());
 
-      // 8) dispatch into Redux
       dispatch(setTags(mergedTags));
       dispatch(setContacts(mergedContacts));
 

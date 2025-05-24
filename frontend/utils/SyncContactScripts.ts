@@ -257,7 +257,7 @@ export const syncContactsToNative = async (
       // If any fields differ, update the native contact
       if (hasDifferences) {
         await Contacts.updateContactAsync({
-          id: nativeContact.id,
+          id: nativeContact.id || "",
           contactType: Contacts.ContactTypes.Person,
           name: halabiContact.name || "",
           [Contacts.Fields.FirstName]: firstName,

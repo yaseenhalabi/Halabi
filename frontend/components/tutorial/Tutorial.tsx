@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setTutorialComplete } from "../../redux/userSlice";
 import { resetContacts, setContacts } from "../../redux/contactsSlice";
 import { resetTags } from "../../redux/tagsSlice";
-import { importContacts } from "../../utils/SyncContactScripts";
+import { importContacts } from "../../utils/syncContactScripts";
 import { Alert } from "react-native";
 
 export default function Tutorial() {
