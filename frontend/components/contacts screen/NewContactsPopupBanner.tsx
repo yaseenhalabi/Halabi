@@ -11,6 +11,7 @@ import CommonText from "../CommonText";
 import { LinearGradient } from "expo-linear-gradient";
 import getTheme from "../../utils/GetTheme";
 import * as Haptics from "expo-haptics";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const SWIPE_THRESHOLD_PERCENTAGE = 0.3;
 
@@ -28,6 +29,7 @@ export default function NewContactsPopupBanner({
   visible,
 }: NewContactsPopupBannerProps) {
   const theme = getTheme();
+  const insets = useSafeAreaInsets();
   const parentSlideInAnim = useRef(new Animated.Value(400)).current;
   const parentSlideDownAnim = useRef(new Animated.Value(0)).current;
   const childSwipeAnim = useRef(new Animated.Value(0)).current;
@@ -89,7 +91,7 @@ export default function NewContactsPopupBanner({
           }).start(() => {
             Animated.timing(parentSlideDownAnim, {
               toValue: 100,
-              duration: 300,
+              duration: 150,
               useNativeDriver: true,
             }).start(() => {
               parentSlideInAnim.setValue(400);
@@ -120,6 +122,7 @@ export default function NewContactsPopupBanner({
         styles.parentContainer,
         {
           backgroundColor: theme.text.error,
+          bottom: insets.bottom,
         },
         {
           transform: [
@@ -179,7 +182,6 @@ export default function NewContactsPopupBanner({
 const styles = StyleSheet.create({
   parentContainer: {
     position: "absolute",
-    bottom: 0,
     left: 0,
     right: 0,
     height: 80,

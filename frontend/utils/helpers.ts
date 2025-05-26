@@ -1,6 +1,8 @@
 import { Contact, Tag, Birthday } from "./types";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import * as Contacts from "expo-contacts";
+
 export const contactsToString = (contactsWithTag: Contact[]) => {
   let contactsWithTagString = "";
   for (let i = 0; i < contactsWithTag.length; i++) {
@@ -74,6 +76,7 @@ export const getContactById = (id: string, contacts: Contact[]) => {
 export const getTagById = (id: string, tags: Tag[]) => {
   return tags.find((tag) => tag.id === id);
 };
+
 export const formatPhoneNumber = (text: string): string => {
   // Remove all non-numeric characters
   const digits = text.replace(/\D/g, "");
@@ -111,6 +114,7 @@ export const getDaysUntilBirthday = (birthday: Birthday): number => {
   }
   return daysUntilBirthday;
 };
+
 export const getBirthdayText = (birthday: Birthday) => {
   const daysUntilBirthday = getDaysUntilBirthday(birthday);
   if (daysUntilBirthday === 0) {
@@ -196,4 +200,64 @@ export const createNewTagWithName = (name: string): Tag => {
 
 export const generateBlurHash = (photoUrl: string): string => {
   return "";
+};
+
+export const getAppleContactById = async (
+  contactId: string
+): Promise<Contact | null> => {
+  try {
+    const { granted } = await Contacts.requestPermissionsAsync();
+    if (!granted) {
+      console.warn("Contact permissions not granted");
+      return null;
+    }
+
+    const { data } = await Contacts.getContactsAsync({
+      fields: [
+        Contacts.Fields.ID,
+        Contacts.Fields.FirstName,
+        Contacts.Fields.LastName,
+        Contacts.Fields.PhoneNumbers,
+        Contacts.Fields.Emails,
+        Contacts.Fields.Birthday,
+        Contacts.Fields.Addresses,
+      ],
+    });
+
+    const appleContact = data.find((contact) => contact.id === contactId);
+    if (!appleContact) {
+      return null;
+    }
+
+    // Convert Apple contact to our Contact format
+    const contact: Contact = {
+      id: appleContact.id || uuidv4(),
+      name:
+        (appleContact.firstName || "") +
+        (appleContact.lastName ? " " + appleContact.lastName : ""),
+      tags: [],
+      birthday: {
+        month: String(
+          appleContact.birthday?.month ? appleContact.birthday.month + 1 : ""
+        ),
+        day: String(appleContact.birthday?.day || ""),
+      },
+      notes: "",
+      phone: {
+        countryCode: "1",
+        number: appleContact.phoneNumbers?.[0]?.digits?.startsWith("+1")
+          ? appleContact.phoneNumbers[0].digits.slice(2)
+          : appleContact.phoneNumbers?.[0]?.digits || "",
+        id: uuidv4(),
+      },
+      email: appleContact.emails?.[0]?.email || "",
+      address: appleContact.addresses?.[0]?.street || "",
+      photo: { url: "", blurHash: "" },
+    };
+
+    return contact;
+  } catch (error) {
+    console.error("Error fetching Apple contact:", error);
+    return null;
+  }
 };

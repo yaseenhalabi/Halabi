@@ -1,7 +1,7 @@
 import { Alert, StyleSheet } from "react-native";
 import PageContainer from "../../../../components/PageContainer";
 import SearchBar from "../../../../components/SearchBar";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import addIcon from "../../../../assets/images/add-icon-white.png";
 import blackAddIcon from "../../../../assets/images/add-icon-black.png";
 import editIcon from "../../../../assets/images/edit-icon-white.png";
@@ -19,13 +19,6 @@ import EditContact from "../../../../components/contacts screen/EditContacts";
 import FilterContacts from "../../../../components/contacts screen/FilterContacts";
 import AddContactButton from "../../../../components/AddContactButton";
 import getTheme from "../../../../utils/GetTheme";
-import { useFocusEffect } from "expo-router";
-import { detectNewContacts } from "../../../../utils/detectNewContacts";
-import { setContactSnapshots } from "../../../../redux/contactSnapshotsSlice";
-import {
-  showNewContactsBanner,
-  hideNewContactsBanner,
-} from "../../../../redux/popupBannerSlice";
 
 export default function MyContacts() {
   const dispatch = useDispatch();
@@ -36,45 +29,11 @@ export default function MyContacts() {
     (state: any) => state.selection.contactsSelectionMode
   );
 
-  // New contacts detection state
-  const contactSnapshots: string[] = useSelector(
-    (state: any) => state.contactSnapshots
-  );
-
   useEffect(() => {
     if (inEditMode) {
       setEditButtonsMode("edit");
     }
   }, [inEditMode]);
-
-  useFocusEffect(
-    useCallback(() => {
-      const checkForNewContacts = async () => {
-        try {
-          const newIds = await detectNewContacts(contactSnapshots);
-          if (newIds.length > 0) {
-            dispatch(showNewContactsBanner(newIds));
-            const updatedSnapshots = [...contactSnapshots, ...newIds];
-            dispatch(setContactSnapshots(updatedSnapshots));
-          }
-        } catch (error) {
-          console.error("Error checking for new contacts:", error);
-        }
-      };
-
-      // Initial check
-      checkForNewContacts();
-
-      // Set up polling every 3 seconds
-      const interval = setInterval(checkForNewContacts, 3000);
-
-      return () => {
-        // Clear the interval and reset search text on cleanup
-        clearInterval(interval);
-        setSearchText("");
-      };
-    }, [contactSnapshots, dispatch])
-  );
 
   const selectedContacts: string[] = useSelector(
     (state: any) => state.selection.selectedContacts

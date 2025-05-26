@@ -91,12 +91,6 @@ export default function AppLayout() {
             options={{ presentation: "modal" }}
           />
         </Stack>
-        <NewContactsPopupBanner
-          newContactsCount={popupBanner.newContactIds.length}
-          onAddPress={handleAddNewContacts}
-          onDismiss={handleDismissBanner}
-          visible={popupBanner.visible}
-        />
       </>
     );
   }
