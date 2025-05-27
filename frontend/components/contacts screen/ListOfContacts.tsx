@@ -1,12 +1,12 @@
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
   NativeSyntheticEvent,
   NativeScrollEvent,
   TouchableOpacity,
 } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import ContactItem from "./ContactItem";
 import { Contact } from "../../utils/types";
 import getTheme from "../../utils/GetTheme";
@@ -106,30 +106,33 @@ export default function ListOfContacts({
   };
 
   return (
-    <FlatList
-      data={filteredAndSortedContacts}
-      keyboardShouldPersistTaps="handled"
-      style={{ ...styles.container, backgroundColor: theme.background }}
-      renderItem={({ item }) => (
-        <ContactItem
-          contact={item}
-          isSelected={selectedContacts.indexOf(item.id) !== -1}
-          isHighlighted={
-            isSearching && item.id == filteredAndSortedContacts[0].id
-          }
-        />
-      )}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
-      onScrollEndDrag={(event) => onScrollEndDrag(event)}
-    />
+    <View style={styles.container}>
+      <FlashList
+        data={filteredAndSortedContacts}
+        keyboardShouldPersistTaps="handled"
+        renderItem={({ item }: { item: Contact }) => (
+          <ContactItem
+            contact={item}
+            isSelected={selectedContacts.indexOf(item.id) !== -1}
+            isHighlighted={
+              isSearching && item.id == filteredAndSortedContacts[0].id
+            }
+          />
+        )}
+        keyExtractor={(item: Contact) => item.id}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        onScrollEndDrag={(event: NativeSyntheticEvent<NativeScrollEvent>) => onScrollEndDrag(event)}
+        estimatedItemSize={70}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "10%",
+    flex: 1,
   },
   noContactsFoundContainer: {
     paddingVertical: 20,
