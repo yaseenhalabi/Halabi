@@ -7,7 +7,7 @@ interface PopupBannerState {
 
 const initialState: PopupBannerState = {
   newContactIds: [],
-  visible: true,
+  visible: false,
 };
 
 const popupBannerSlice = createSlice({
