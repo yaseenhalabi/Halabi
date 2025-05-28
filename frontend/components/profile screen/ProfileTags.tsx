@@ -92,16 +92,16 @@ export default function ProfileTags({
 
   const createNewTag = () => {
     if (searchText.length === 0) return;
-    const existingTag = tags.find(
+    const existingTag = allTags.find(
       (tag: any) => tag.name.toLowerCase() === searchText.toLowerCase()
     );
     if (existingTag && !tagIds.includes(existingTag.id)) {
       addTagToContact_(existingTag.id);
-      return;
+    } else if (!existingTag) {
+      const newTag = { id: uuidv4(), name: searchText };
+      dispatch(addTag(newTag));
+      addTagToContact_(newTag.id);
     }
-    const newTag = { id: uuidv4(), name: searchText };
-    dispatch(addTag(newTag));
-    addTagToContact_(newTag.id);
   };
   const addFirstTagToContact = () => {
     if (!searchText) return;

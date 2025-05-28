@@ -8,13 +8,11 @@ import getTheme from "../../../../utils/GetTheme";
 import TagPercentageChart from "../../../../components/analytics/TagPercentageChart";
 import TopTagPair from "../../../../components/analytics/TopTagPair";
 import CoOccurenceGraph from "../../../../components/analytics/CoOccurenceGraph";
-import { router, usePathname } from "expo-router";
 import { useEffect, useState } from "react";
 
 export default function AnalyticsPage() {
   const contacts: Contact[] = useSelector((s: any) => s.contacts);
   const tags: Tag[] = useSelector((s: any) => s.tags);
-  const pathname = usePathname();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {

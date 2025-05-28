@@ -23,6 +23,7 @@ type ListOfContactsProps = {
   searchQuery?: string;
 };
 
+const SCROLL_THRESHOLD = 1;
 export default function ListOfContacts({
   contacts,
   onOverScrollTop,
@@ -97,10 +98,10 @@ export default function ListOfContacts({
 
   // Opening search bar with scroll detection
   const onScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (event.nativeEvent.contentOffset.y < -10) {
+    if (event.nativeEvent.contentOffset.y < -SCROLL_THRESHOLD) {
       onOverScrollTop();
     }
-    if (event.nativeEvent.contentOffset.y > 10) {
+    if (event.nativeEvent.contentOffset.y > SCROLL_THRESHOLD) {
       onOverScrollBottom();
     }
   };
@@ -122,7 +123,9 @@ export default function ListOfContacts({
         keyExtractor={(item: Contact) => item.id}
         contentContainerStyle={{ paddingBottom: 100 }}
         ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
-        onScrollEndDrag={(event: NativeSyntheticEvent<NativeScrollEvent>) => onScrollEndDrag(event)}
+        onScrollEndDrag={(event: NativeSyntheticEvent<NativeScrollEvent>) =>
+          onScrollEndDrag(event)
+        }
         estimatedItemSize={70}
       />
     </View>

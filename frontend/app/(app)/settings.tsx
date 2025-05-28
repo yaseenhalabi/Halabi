@@ -8,6 +8,7 @@ import getTheme from "../../utils/GetTheme";
 import { setTheme } from "../../redux/themeSlice";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
 
 import {
   syncContactsToHalabi,
@@ -20,7 +21,6 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as DocumentPicker from "expo-document-picker";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import Octicons from "@expo/vector-icons/Octicons";
 import { Feather } from "@expo/vector-icons";
 import { Contact, Tag } from "../../utils/types";
 
@@ -29,11 +29,22 @@ export default function Settings() {
   const theme = getTheme();
   const contacts = useSelector((state: any) => state.contacts);
   const tags = useSelector((state: any) => state.tags);
+  const newContactReview = useSelector((state: any) => state.newContactReview);
 
   const onSyncContactsToHalabi = async () =>
     syncContactsToHalabi(dispatch, contacts);
   const onSyncContactsToNative = async () =>
     syncContactsToNative(dispatch, contacts);
+
+  const onReviewPendingContacts = async (): Promise<boolean> => {
+    try {
+      router.push('/new-contacts?openedfrombanner=false');
+      return true;
+    } catch (error) {
+      console.error('Error navigating to new-contacts:', error);
+      return false;
+    }
+  };
 
   const onResetAllData = (): Promise<boolean> =>
     new Promise((resolve) => {
@@ -87,7 +98,7 @@ export default function Settings() {
         type: "application/json",
       });
       if (result.canceled) {
-        return false; // user hit “Cancel”
+        return false; // user hit "Cancel"
       }
       const asset = result.assets[0];
       if (!asset?.uri) {
@@ -188,6 +199,17 @@ export default function Settings() {
           />
         }
       />
+
+      {newContactReview.awaitingReviewIds.length > 0 && (
+        <SettingButton
+          title={`Review Pending Contacts (${newContactReview.awaitingReviewIds.length})`}
+          color={theme.text.full}
+          onPress={onReviewPendingContacts}
+          icon={
+            <Ionicons name="eye" size={24} color={theme.text.full} />
+          }
+        />
+      )}
     </PageContainer>
   );
 }

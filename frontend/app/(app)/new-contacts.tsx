@@ -7,16 +7,24 @@ import {
   Platform,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
+import * as Haptics from "expo-haptics";
 import { useSelector, useDispatch } from "react-redux";
 import CommonText from "../../components/CommonText";
 import PageContainer from "../../components/PageContainer";
 import getTheme from "../../utils/GetTheme";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { getAppleContactById } from "../../utils/helpers";
 import { Contact, Tag } from "../../utils/types";
 import { addContact } from "../../redux/contactsSlice";
-import { hideNewContactsBanner } from "../../redux/popupBannerSlice";
+import {
+  setAwaitingReviewIds,
+  setAwaitingBannerIds,
+  addReviewedId,
+  finishReviewingId,
+  skipAllContacts,
+} from "../../redux/newContactReviewSlice";
 import { addTag } from "../../redux/tagsSlice";
 import { v4 as uuidv4 } from "uuid";
 import ProfileTag from "../../components/profile screen/ProfileTag";
@@ -25,35 +33,44 @@ import { getContactsWithTag } from "../../utils/helpers";
 export default function NewContacts() {
   const theme = getTheme();
   const dispatch = useDispatch();
+  const { openedfrombanner } = useLocalSearchParams();
 
-  const popupBanner = useSelector((state: any) => state.popupBanner);
+  const newContactReview = useSelector((state: any) => state.newContactReview);
   const allTags = useSelector((state: any) => state.tags);
   const contacts = useSelector((state: any) => state.contacts);
 
   const [currentContactIndex, setCurrentContactIndex] = useState(0);
   const [currentContact, setCurrentContact] = useState<Contact | null>(null);
+  const [numberOfContacts, setNumberOfContacts] = useState(0);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [isAddingTag, setIsAddingTag] = useState(false);
 
   const searchTagRef = useRef<any>(null);
 
-  const newContactIds = popupBanner.newContactIds;
-  const isLastContact = currentContactIndex >= newContactIds.length - 1;
+  // Determine which contact IDs to use based on the openedfrombanner parameter
+  const contactIds =
+    openedfrombanner === "true"
+      ? newContactReview.awaitingBannerIds
+      : newContactReview.awaitingReviewIds;
+
+  const isLastContact = contactIds.length <= 1; // If there's 1 or 0 contacts left, this is the last one
 
   useEffect(() => {
-    if (
-      newContactIds.length > 0 &&
-      currentContactIndex < newContactIds.length
-    ) {
+    if (contactIds.length > 0) {
       loadCurrentContact();
     }
-  }, [currentContactIndex, newContactIds]);
+  }, [contactIds]);
+
+  useEffect(() => {
+    if (contactIds.length > 0 && currentContactIndex < contactIds.length) {
+      loadCurrentContact();
+    }
+  }, [currentContactIndex]);
 
   useEffect(() => {
     // Auto-focus keyboard when modal opens
+    setNumberOfContacts(contactIds.length);
     setTimeout(() => {
-      setIsAddingTag(true);
       if (searchTagRef.current) {
         searchTagRef.current.focus();
       }
@@ -61,7 +78,14 @@ export default function NewContacts() {
   }, []);
 
   const loadCurrentContact = async () => {
-    const contactId = newContactIds[currentContactIndex];
+    // Check if currentContactIndex is within bounds
+    if (currentContactIndex >= contactIds.length) {
+      // If we've gone past the available contacts, close the modal
+      router.back();
+      return;
+    }
+
+    const contactId = contactIds[currentContactIndex];
     const contact = await getAppleContactById(contactId);
     if (contact) {
       setCurrentContact(contact);
@@ -71,16 +95,24 @@ export default function NewContacts() {
   };
 
   const handleSkip = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    if (currentContact) {
+      // Use finishReviewingId to handle all the state updates
+      dispatch(finishReviewingId(currentContact.id));
+    }
+
     if (isLastContact) {
       // Last contact - close modal
       router.back();
-    } else {
-      // Skip - move to next contact
-      setCurrentContactIndex(currentContactIndex + 1);
     }
+    // Note: We don't increment currentContactIndex because when we remove
+    // a contact from the array, the next contact moves to the current index
   };
 
   const handleAdd = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     if (currentContact) {
       // Create the contact with selected tags
       const contactWithTags = {
@@ -90,15 +122,50 @@ export default function NewContacts() {
 
       dispatch(addContact(contactWithTags));
 
+      // Add the contact ID to reviewedIds
+      dispatch(addReviewedId(currentContact.id));
+
+      // Remove from the appropriate array
+      if (openedfrombanner === "true") {
+        const updatedBannerIds = newContactReview.awaitingBannerIds.filter(
+          (id: string) => id !== currentContact.id
+        );
+        dispatch(setAwaitingBannerIds(updatedBannerIds));
+      } else {
+        const updatedReviewIds = newContactReview.awaitingReviewIds.filter(
+          (id: string) => id !== currentContact.id
+        );
+        dispatch(setAwaitingReviewIds(updatedReviewIds));
+      }
+
       if (isLastContact) {
         // Last contact - close modal
-        dispatch(hideNewContactsBanner());
         router.back();
-      } else {
-        // Move to next contact
-        setCurrentContactIndex(currentContactIndex + 1);
       }
+      // Note: We don't increment currentContactIndex because when we remove
+      // a contact from the array, the next contact moves to the current index
     }
+  };
+
+  const handleSkipAll = () => {
+    Alert.alert(
+      "Skip All Contacts",
+      "Are you sure you want to skip all remaining contacts? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Skip All",
+          style: "destructive",
+          onPress: () => {
+            dispatch(skipAllContacts());
+            router.back();
+          },
+        },
+      ]
+    );
   };
 
   const addTagToContact = (tagId: string) => {
@@ -118,12 +185,16 @@ export default function NewContacts() {
     const existingTag = allTags.find(
       (tag: Tag) => tag.name.toLowerCase() === searchText.toLowerCase()
     );
-
-    if (existingTag && !selectedTagIds.includes(existingTag.id)) {
-      addTagToContact(existingTag.id);
+    if (existingTag) {
+      // If tag exists and is not already selected, add it
+      if (!selectedTagIds.includes(existingTag.id)) {
+        addTagToContact(existingTag.id);
+      }
+      // If tag exists and is already selected, do nothing (don't create duplicate)
       return;
     }
 
+    // Only create new tag if no existing tag with this name exists
     const newTag = { id: uuidv4(), name: searchText };
     dispatch(addTag(newTag));
     addTagToContact(newTag.id);
@@ -149,16 +220,69 @@ export default function NewContacts() {
     const bContactCount = getContactsWithTag(b, contacts).length;
     return bContactCount - aContactCount;
   });
-  filteredTags = filteredTags.slice(0, 10);
+  filteredTags = filteredTags.slice(0, 6);
 
   if (!currentContact) {
     return (
       <PageContainer style={styles.container}>
-        <CommonText size="small" color="error">
-          ERROR: Could not load contact. Common causes are: The iOS contact is
-          no longer in your contacts list, or the iOS contact is taking too long
-          to load.
-        </CommonText>
+        <View style={{ ...styles.line, backgroundColor: theme.text.semi }} />
+        <View style={styles.content}>
+          <CommonText size="medium" weight="medium" style={styles.contactName}>
+            Contact Error
+          </CommonText>
+          <CommonText size="small" color="semi" style={styles.errorText}>
+            ERROR: Could not load contact. Common causes are: The iOS contact is
+            no longer in your contacts list, or the iOS contact is taking too
+            long to load.
+          </CommonText>
+        </View>
+
+        {/* Bottom buttons for error case */}
+        <View style={styles.bottomContainer}>
+          {/* Progress indicator */}
+          <TouchableOpacity
+            style={styles.skipAllButton}
+            onPress={handleSkipAll}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <CommonText size="small" color="muted">
+              Skip All
+            </CommonText>
+          </TouchableOpacity>
+          <CommonText
+            size="small"
+            color="semi-full"
+            style={styles.progressText}
+          >
+            {numberOfContacts - contactIds.length + 1} of {numberOfContacts}
+          </CommonText>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: theme.backgroundSecondary },
+              ]}
+              onPress={handleSkip}
+            >
+              <CommonText size="medium" weight="medium">
+                {isLastContact ? "Skip" : "Skip"}
+              </CommonText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: theme.backgroundSecondary, opacity: 0.5 },
+              ]}
+              disabled={true}
+            >
+              <CommonText size="medium" weight="medium" color="semi">
+                Add
+              </CommonText>
+            </TouchableOpacity>
+          </View>
+        </View>
       </PageContainer>
     );
   }
@@ -173,15 +297,11 @@ export default function NewContacts() {
       style={styles.keyboardContainer}
     >
       <PageContainer style={styles.container}>
+        <View style={{ ...styles.line, backgroundColor: theme.text.semi }} />
         <View style={styles.content}>
           {/* Contact name */}
-          <CommonText size="large" weight="bold" style={styles.contactName}>
+          <CommonText size="large" weight="medium" style={styles.contactName}>
             {currentContact.name}
-          </CommonText>
-
-          {/* Progress indicator */}
-          <CommonText size="small" color="semi" style={styles.progressText}>
-            {currentContactIndex + 1} of {newContactIds.length}
           </CommonText>
 
           {/* Selected tags */}
@@ -199,93 +319,91 @@ export default function NewContacts() {
 
           {/* Tag input */}
           <View style={styles.tagInputContainer}>
-            {isAddingTag ? (
-              <View
-                style={[styles.addTagContainer, { borderColor: theme.button }]}
-              >
-                <TouchableOpacity
-                  hitSlop={5}
-                  onPress={() => setIsAddingTag(false)}
-                  style={styles.cancelTagButton}
-                ></TouchableOpacity>
-                <TextInput
-                  ref={searchTagRef}
-                  value={searchText}
-                  onChangeText={setSearchText}
-                  placeholder="Search for a tag"
-                  placeholderTextColor={theme.text.muted}
-                  autoFocus={true}
-                  style={{ ...styles.input, color: theme.text.full }}
-                  returnKeyType="done"
-                  onSubmitEditing={addFirstTagToContact}
-                  keyboardAppearance={theme.name === "dark" ? "dark" : "light"}
-                  autoCapitalize="words"
-                  submitBehavior="submit"
-                />
+            <View
+              style={[styles.addTagContainer, { borderColor: theme.button }]}
+            >
+              <TextInput
+                ref={searchTagRef}
+                value={searchText}
+                onChangeText={setSearchText}
+                placeholder="Search for a tag"
+                placeholderTextColor={theme.text.muted}
+                autoFocus={true}
+                style={{ ...styles.input, color: theme.text.full }}
+                returnKeyType="done"
+                onSubmitEditing={addFirstTagToContact}
+                keyboardAppearance={theme.name === "dark" ? "dark" : "light"}
+                autoCapitalize="words"
+                submitBehavior="submit"
+              />
 
-                {/* Tag suggestions */}
-                <ScrollView
-                  keyboardShouldPersistTaps="handled"
-                  style={styles.suggestionsList}
-                  contentContainerStyle={styles.suggestionsContainer}
-                >
-                  {searchText.length > 0 && (
-                    <TouchableOpacity hitSlop={10} onPress={createNewTag}>
-                      <CommonText
-                        weight="regular"
-                        size="small"
-                        style={styles.suggestionItem}
-                      >
-                        + New tag "{searchText}"
-                      </CommonText>
-                    </TouchableOpacity>
-                  )}
-                  {filteredTags.map((tag: Tag) => {
-                    const isFirstItem =
-                      filteredTags.length > 0 &&
-                      tag.id === filteredTags[0].id &&
-                      searchText.length > 0;
-                    return (
-                      <TouchableOpacity
-                        key={tag.id}
-                        hitSlop={10}
-                        onPress={() => addTagToContact(tag.id)}
-                      >
-                        <View
-                          style={[
-                            styles.suggestionTag,
-                            {
-                              backgroundColor: theme.smallTag,
-                              borderWidth: isFirstItem ? 0.5 : 0,
-                              borderColor: "grey",
-                            },
-                          ]}
-                        >
-                          <CommonText weight="regular" size="small">
-                            {tag.name}
-                          </CommonText>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-            ) : (
-              <TouchableOpacity
-                style={styles.addTagButton}
-                hitSlop={10}
-                onPress={() => setIsAddingTag(true)}
+              {/* Tag suggestions */}
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                style={styles.suggestionsList}
+                contentContainerStyle={styles.suggestionsContainer}
               >
-                <CommonText weight="regular" size="small">
-                  + Add Tag
-                </CommonText>
-              </TouchableOpacity>
-            )}
+                {searchText.length > 0 && (
+                  <TouchableOpacity hitSlop={10} onPress={createNewTag}>
+                    <CommonText weight="regular" size="small">
+                      + New tag "{searchText}"
+                    </CommonText>
+                  </TouchableOpacity>
+                )}
+                {filteredTags.map((tag: Tag) => {
+                  const isFirstItem =
+                    filteredTags.length > 0 &&
+                    tag.id === filteredTags[0].id &&
+                    searchText.length > 0;
+                  return (
+                    <TouchableOpacity
+                      key={tag.id}
+                      hitSlop={10}
+                      onPress={() => addTagToContact(tag.id)}
+                    >
+                      <View
+                        style={[
+                          styles.suggestionTag,
+                          {
+                            backgroundColor: theme.smallTag,
+                            borderWidth: isFirstItem ? 0.5 : 0,
+                            borderColor: "grey",
+                          },
+                        ]}
+                      >
+                        <CommonText weight="regular" size="small">
+                          {tag.name}
+                        </CommonText>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
           </View>
         </View>
 
         {/* Bottom buttons - Always visible above keyboard */}
         <View style={styles.bottomContainer}>
+          {/* Progress indicator */}
+          <TouchableOpacity
+            style={styles.skipAllButton}
+            onPress={handleSkipAll}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <CommonText size="small" color="muted">
+              Skip All
+            </CommonText>
+          </TouchableOpacity>
+          <CommonText
+            size="small"
+            color="semi-full"
+            style={styles.progressText}
+          >
+            {numberOfContacts - contactIds.length + 1} of {numberOfContacts}
+          </CommonText>
+
+          {/* Skip All button */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[
@@ -323,7 +441,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 20,
   },
   content: {
     flex: 1,
@@ -331,8 +448,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   contactName: {
-    textAlign: "center",
+    marginTop: 20,
     marginBottom: 10,
+    textAlign: "center",
+    fontSize: 28,
   },
   progressText: {
     textAlign: "center",
@@ -341,7 +460,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   tagInputContainer: {
     marginBottom: 20,
@@ -351,11 +470,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 15,
     paddingVertical: 10,
-  },
-  cancelTagButton: {
-    position: "absolute",
-    right: -25,
-    zIndex: 1,
   },
   input: {
     paddingVertical: 10,
@@ -370,9 +484,8 @@ const styles = StyleSheet.create({
     gap: 8,
     flexDirection: "row",
     flexWrap: "wrap",
-  },
-  suggestionItem: {
-    paddingVertical: 8,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   suggestionTag: {
     borderRadius: 30,
@@ -380,11 +493,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    marginVertical: 4,
     alignSelf: "flex-start",
-  },
-  addTagButton: {
-    paddingVertical: 5,
   },
   bottomContainer: {
     paddingHorizontal: 20,
@@ -404,5 +513,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     minHeight: 50,
+  },
+  line: {
+    marginTop: 10,
+    height: 2,
+    opacity: 0.5,
+    borderRadius: 3,
+    width: "10%",
+  },
+  skipAllButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorText: {
+    textAlign: "center",
+    marginBottom: 20,
   },
 });

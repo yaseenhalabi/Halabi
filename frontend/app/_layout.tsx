@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTest } from "../api/test";
+import Welcome from "./welcome";
+import Tutorial from "./tutorial";
 export default function Root() {
   const loaded = FontLoader();
   if (!loaded) return null;
@@ -24,6 +26,7 @@ function App() {
   const theme = useSelector(
     (state: any) => state.theme.themes[state.theme.index]
   );
+  const tutorial = useSelector((state: any) => state.tutorial);
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
@@ -38,6 +41,37 @@ function App() {
     }
   }, [colorScheme, dispatch]);
 
+  // Show welcome screen if tutorial hasn't been completed and not started
+  if (!tutorial.isCompleted && tutorial.currentStep === 0) {
+    return (
+      <GestureHandlerRootView>
+        <SafeAreaProvider>
+          <SafeAreaProvider>
+            <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+              <Welcome />
+            </SafeAreaView>
+          </SafeAreaProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    );
+  }
+
+  // Show tutorial if it's in progress
+  if (!tutorial.isCompleted && tutorial.currentStep > 0) {
+    return (
+      <GestureHandlerRootView>
+        <SafeAreaProvider>
+          <SafeAreaProvider>
+            <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+              <Tutorial />
+            </SafeAreaView>
+          </SafeAreaProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    );
+  }
+
+  // Show normal app if tutorial is completed
   return (
     <GestureHandlerRootView>
       <SafeAreaProvider>

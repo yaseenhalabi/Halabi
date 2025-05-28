@@ -81,7 +81,7 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
   }
 
   const maxPercent = Math.max(...pageData.map((d) => d.percent), 0);
-  const paddedMax = Math.ceil(maxPercent) + 5;
+  const paddedMax = Math.ceil(maxPercent) + 10;
   if (pageData.length === 0)
     return (
       <View
@@ -107,7 +107,7 @@ export default function TagPercentageChart({ contacts, tags }: Props) {
         yKeys={["percent"]}
         xAxis={{
           font,
-          tickCount: pageData.length - 1,
+          tickCount: Math.max(1, pageData.length - 1),
           lineColor: theme.name === "dark" ? "#2e2e2e" : "#d6d6d6",
           labelColor: theme.text.full,
         }}

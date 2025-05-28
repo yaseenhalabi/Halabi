@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Contact, Tag } from '../utils/types';
-import { testContacts } from '../utils/testdata'; 
 
-const initialState: Contact[] = testContacts;
+const initialState: Contact[] = [];
 
 const contactsSlice = createSlice({
     name: 'contacts',

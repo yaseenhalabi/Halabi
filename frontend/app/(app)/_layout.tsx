@@ -1,105 +1,109 @@
-import { View, Text, StatusBar } from "react-native";
-import { Redirect, Slot, Stack } from "expo-router";
+import { StatusBar } from "react-native";
+import { Stack, router } from "expo-router";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import * as Contacts from "expo-contacts";
 import Header from "../../components/Header";
 import getTheme from "../../utils/GetTheme";
-import { StyleSheet } from "react-native";
-import CommonText from "../../components/CommonText";
-import Tutorial from "../../components/tutorial/Tutorial";
-import { useSelector, useDispatch } from "react-redux";
-import { useCallback, useEffect } from "react";
-import { useFocusEffect } from "expo-router";
-import { detectNewContacts } from "../../utils/detectNewContacts";
-import { setContactSnapshots } from "../../redux/contactSnapshotsSlice";
-import {
-  showNewContactsBanner,
-  hideNewContactsBanner,
-} from "../../redux/popupBannerSlice";
 import NewContactsPopupBanner from "../../components/contacts screen/NewContactsPopupBanner";
-import { router } from "expo-router";
+import {
+  setAwaitingReviewIds,
+  setAwaitingBannerIds,
+  moveFromBannerToReview,
+} from "../../redux/newContactReviewSlice";
 
 export default function AppLayout() {
   const theme = getTheme();
   const dispatch = useDispatch();
 
-  // New contacts detection state
-  const contactSnapshots: string[] = useSelector(
-    (state: any) => state.contactSnapshots
+  const reviewedIds = useSelector(
+    (state: any) => state.newContactReview.reviewedIds
+  );
+  const awaitingReviewIds = useSelector(
+    (state: any) => state.newContactReview.awaitingReviewIds
+  );
+  const awaitingBannerIds = useSelector(
+    (state: any) => state.newContactReview.awaitingBannerIds
   );
 
-  const popupBanner = useSelector((state: any) => state.popupBanner);
+  const pollContacts = async () => {
+    try {
+      const { granted } = await Contacts.requestPermissionsAsync();
+      if (!granted) {
+        console.warn("Contact permissions not granted");
+        return;
+      }
 
-  // Detection logic moved from my-contacts/index.tsx
-  useFocusEffect(
-    useCallback(() => {
-      const checkForNewContacts = async () => {
-        try {
-          const newIds = await detectNewContacts(contactSnapshots);
-          if (newIds.length > 0) {
-            dispatch(showNewContactsBanner(newIds));
-            const updatedSnapshots = [...contactSnapshots, ...newIds];
-            dispatch(setContactSnapshots(updatedSnapshots));
-          }
-        } catch (error) {
-          console.error("Error checking for new contacts:", error);
-        }
-      };
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.ID],
+      });
 
-      // Initial check
-      checkForNewContacts();
+      if (data.length < 1) {
+        return;
+      }
 
-      // Set up polling every 3 seconds
-      const interval = setInterval(checkForNewContacts, 3000);
+      const currentContactIds = data
+        .map((contact) => contact.id)
+        .filter((id) => id !== undefined) as string[];
 
-      return () => {
-        // Clear the interval on cleanup
-        clearInterval(interval);
-      };
-    }, [contactSnapshots, dispatch])
-  );
+      // Find contacts not in reviewedIds
+      const unprocessedIds = currentContactIds.filter(
+        (id) => !reviewedIds.includes(id)
+      );
 
-  const handleAddNewContacts = () => {
-    router.push("/new-contacts");
+      // Find which unprocessed contacts are not in awaitingBannerIds or awaitingReviewIds
+      const newBannerIds = unprocessedIds.filter(
+        (id) =>
+          !awaitingBannerIds.includes(id) && !awaitingReviewIds.includes(id)
+      );
+
+      // Add new IDs to awaitingBannerIds if there are any
+      if (newBannerIds.length > 0) {
+        const updatedBannerIds = [...awaitingBannerIds, ...newBannerIds];
+        dispatch(setAwaitingBannerIds(updatedBannerIds));
+      }
+    } catch (error) {
+      console.error("Error polling contacts:", error);
+    }
   };
 
-  const handleDismissBanner = () => {
-    dispatch(hideNewContactsBanner());
+  const handleBannerDismiss = () => {
+    // Move all awaitingBannerIds to awaitingReviewIds
+    dispatch(moveFromBannerToReview());
   };
+
+  const handleAddPress = () => {
+    // Navigate to new-contacts screen with openedfrombanner=true
+    router.push("/new-contacts?openedfrombanner=true");
+  };
+
+  useEffect(() => {
+    // Poll immediately on mount
+    pollContacts();
+
+    // Set up polling interval (every 5 seconds)
+    const interval = setInterval(pollContacts, 5000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
+  }, [reviewedIds, awaitingReviewIds, awaitingBannerIds]);
 
   const screenOptions = {
     fullScreenGestureEnabled: true,
     header: () => <Header />,
   };
 
-  const tutorialMode = !useSelector(
-    (state: any) => state.user.isTutorialComplete
-  );
-
-  if (tutorialMode) {
-    return (
-      <>
-        {/* TUTORIAL COMPONENT */}
-        <Tutorial />
-        <StatusBar
-          barStyle={theme.name == "light" ? "dark-content" : "light-content"}
-          backgroundColor={theme.background}
-        />
-        <Stack>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="settings" options={{ presentation: "modal" }} />
-          <Stack.Screen
-            name="new-contacts"
-            options={{ presentation: "modal" }}
-          />
-        </Stack>
-      </>
-    );
-  }
-
   return (
     <>
       <StatusBar
         barStyle={theme.name == "light" ? "dark-content" : "light-content"}
         backgroundColor={theme.background}
+      />
+      <NewContactsPopupBanner
+        newContactsCount={awaitingBannerIds.length}
+        onAddPress={handleAddPress}
+        onDismiss={handleBannerDismiss}
+        visible={awaitingBannerIds.length > 0}
       />
       <Stack screenOptions={screenOptions}>
         <Stack.Screen name="(tabs)" />
@@ -112,12 +116,6 @@ export default function AppLayout() {
           options={{ presentation: "modal", header: () => null }}
         />
       </Stack>
-      <NewContactsPopupBanner
-        newContactsCount={popupBanner.newContactIds.length}
-        onAddPress={handleAddNewContacts}
-        onDismiss={handleDismissBanner}
-        visible={popupBanner.visible}
-      />
     </>
   );
 }

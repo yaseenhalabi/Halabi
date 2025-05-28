@@ -9,8 +9,8 @@ import selectContactsSlice from "./selectContactsSlice";
 import filterContactsSlice from "./filterContactsSlice";
 import filterTagsSlice from "./filterTagsSlice";
 import selectTagsSlice from "./selectTagsSlice";
-import contactSnapshotsSlice from "./contactSnapshotsSlice";
-import popupBannerSlice from "./popupBannerSlice";
+import newContactReviewSlice from "./newContactReviewSlice";
+import tutorialSlice from "./tutorialSlice";
 
 const persistConfig = {
   key: "root",
@@ -23,7 +23,8 @@ const persistConfig = {
     "tags",
     "filter",
     "filterTags",
-    "contactSnapshots",
+    "newContactReview",
+    "tutorial",
   ],
   migrate: async (state: any) => {
     if (state) {
@@ -45,8 +46,8 @@ const rootReducer = combineReducers({
   filter: filterContactsSlice,
   filterTags: filterTagsSlice,
   tagSelection: selectTagsSlice,
-  contactSnapshots: contactSnapshotsSlice,
-  popupBanner: popupBannerSlice,
+  newContactReview: newContactReviewSlice,
+  tutorial: tutorialSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

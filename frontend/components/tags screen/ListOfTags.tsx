@@ -20,6 +20,7 @@ type ListOfTagsProps = {
   isSearching?: boolean; // <-- New optional prop
 };
 
+const SCROLL_THRESHOLD = 1;
 export default function ListOfTags({
   tags,
   onOverScrollTop,
@@ -56,10 +57,10 @@ export default function ListOfTags({
   // Over-scroll detection for top & bottom
   const onScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    if (offsetY < -10) {
+    if (offsetY < -SCROLL_THRESHOLD) {
       onOverScrollTop();
     }
-    if (onOverScrollBottom && offsetY > 10) {
+    if (onOverScrollBottom && offsetY > SCROLL_THRESHOLD) {
       onOverScrollBottom();
     }
   };

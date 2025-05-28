@@ -4,6 +4,7 @@ import {
   TouchableWithoutFeedback,
   View,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import {
   Canvas,
@@ -20,7 +21,6 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import CommonModal from "../profile screen/CommonModal";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Slider from "@react-native-community/slider";
 import { runForceLayout } from "./ForceLayout";
 import CommonText from "../CommonText";
 import getTheme from "../../utils/GetTheme";
@@ -39,6 +39,61 @@ const MINIMUM_NODE_RADIUS = 15;
 const MAXIMUM_NODE_RADIUS = 40;
 const FONT_PATH: string = require("../../assets/fonts/Poppins-Medium.ttf");
 
+// Custom Block Slider Component
+function BlockSlider({
+  value,
+  onValueChange,
+  minimumValue,
+  maximumValue,
+  activeColor = "#b33ffb",
+  inactiveColor = "#e0e0e0",
+}: {
+  value: number;
+  onValueChange: (value: number) => void;
+  minimumValue: number;
+  maximumValue: number;
+  activeColor?: string;
+  inactiveColor?: string;
+}) {
+  const blockCount = maximumValue - minimumValue + 1;
+  const containerWidth = Dimensions.get("window").width * 0.7;
+  const spacing = 4;
+  const totalSpacing = (blockCount - 1) * spacing;
+  const blockWidth = Math.max((containerWidth - totalSpacing) / blockCount, 8); // minimum 8px width
+  const blockHeight = 20;
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        width: containerWidth,
+        paddingHorizontal: 0,
+      }}
+    >
+      {Array.from({ length: blockCount }, (_, index) => {
+        const blockValue = minimumValue + index;
+        const isActive = blockValue <= value;
+
+        return (
+          <TouchableOpacity
+            key={index}
+            onPress={() => onValueChange(blockValue)}
+            style={{
+              width: blockWidth,
+              height: blockHeight,
+              backgroundColor: isActive ? activeColor : inactiveColor,
+              marginHorizontal: spacing / 2,
+              borderRadius: 3,
+            }}
+          />
+        );
+      })}
+    </View>
+  );
+}
+
 export default function CoOccurrenceGraph({ contacts }: Props) {
   const theme = getTheme();
   const font = useFont(FONT_PATH, 11);
@@ -50,7 +105,7 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [minEdgeWeight, setMinEdgeWeight] = useState(
-    Math.ceil(maxEdgeWeight / 1.5)
+    Math.ceil(maxEdgeWeight / 2)
   );
 
   // this has to be done to force the graph to re-render when user goes
@@ -151,18 +206,16 @@ export default function CoOccurrenceGraph({ contacts }: Props) {
               zIndex: 3,
             }}
           >
-            <CommonText weight="bold" style={{ zIndex: 3 }}>
+            <CommonText weight="bold" style={{ zIndex: 3, marginBottom: 10 }}>
               Similarity Level: {minEdgeWeight}
             </CommonText>
-            <Slider
-              style={{ width: "90%", height: 40 }}
-              minimumValue={1}
-              maximumValue={maxEdgeWeight}
-              step={1}
+            <BlockSlider
               value={minEdgeWeight}
               onValueChange={setMinEdgeWeight}
-              minimumTrackTintColor="#b33ffb"
-              thumbTintColor="#b33ffb"
+              minimumValue={1}
+              maximumValue={maxEdgeWeight}
+              activeColor="#b33ffb"
+              inactiveColor="#d0d0d0"
             />
           </BlurView>
 
@@ -399,7 +452,15 @@ function buildSkiaElements(
   edges.forEach((e, i) => {
     const s = e.source as any;
     const t = e.target as any;
-    const weight = Math.pow(e.weight - 1, 1.3);
+
+    // Better exponential weight calculation
+    // This creates a smoother exponential curve with better dynamic range
+    const baseWeight = 0.5; // Starting weight (can be adjusted)
+    const growthFactor = 2.1; // Controls how steep the exponential growth is
+    const weight = baseWeight * Math.pow(growthFactor, e.weight - 1);
+
+    const opacity = weight / maxEdgeWeight;
+    if (opacity < 0.1) return;
     elements.push(
       <Line
         key={`edge-${i}`}
@@ -407,7 +468,7 @@ function buildSkiaElements(
         p2={vec(t.x, t.y)}
         strokeWidth={weight}
         color={theme.text.full}
-        opacity={weight / maxEdgeWeight}
+        opacity={opacity}
       ></Line>
     );
   });

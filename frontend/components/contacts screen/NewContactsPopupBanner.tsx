@@ -58,7 +58,7 @@ export default function NewContactsPopupBanner({
     childSwipeAnim.setValue(0);
   }
 
-  const handleAddPress = () => {
+  const handleLocalAddPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     onAddPress();
   };
@@ -97,8 +97,8 @@ export default function NewContactsPopupBanner({
               parentSlideInAnim.setValue(400);
               parentSlideDownAnim.setValue(0);
               childSwipeAnim.setValue(0);
-              onDismiss();
             });
+            onDismiss();
           });
         } else {
           Animated.spring(childSwipeAnim, {
@@ -146,16 +146,16 @@ export default function NewContactsPopupBanner({
         <View style={styles.content}>
           <View style={styles.textContainer}>
             <CommonText size="medium" weight="medium" color="full">
-              {newContactsCount} new contact{newContactsCount > 1 ? "s" : ""}{" "}
+              {newContactsCount} new iOS contact{newContactsCount > 1 ? "s" : ""}{" "}
               detected
             </CommonText>
             <CommonText size="small" color="semi">
-              Add them to your Halabi contacts
+              Swipe right to add later in settings
             </CommonText>
           </View>
 
           <TouchableOpacity
-            onPress={handleAddPress}
+            onPress={handleLocalAddPress}
             style={styles.buttonContainer}
           >
             <LinearGradient
@@ -174,6 +174,33 @@ export default function NewContactsPopupBanner({
             </LinearGradient>
           </TouchableOpacity>
         </View>
+      </Animated.View>
+
+      {/* "Later" text appearing behind the swiping banner */}
+      <Animated.View
+        style={[
+          styles.laterTextContainer,
+          {
+            opacity: childSwipeAnim.interpolate({
+              inputRange: [0, screenWidth * 0.1, screenWidth * 0.2],
+              outputRange: [0, 0, 1],
+              extrapolate: "clamp",
+            }),
+            transform: [
+              {
+                translateX: childSwipeAnim.interpolate({
+                  inputRange: [0, screenWidth],
+                  outputRange: [-screenWidth * 0.1, screenWidth * 0.2], // Move with swipe, ending further right
+                  extrapolate: "clamp",
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <CommonText size="large" weight="bold" style={styles.laterText}>
+          Later
+        </CommonText>
       </Animated.View>
     </Animated.View>
   );
@@ -214,5 +241,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+  },
+  laterTextContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "flex-start", // Align to the left to appear from behind
+    paddingLeft: 30, // Increased indent
+    zIndex: -1, // Behind the main swiping banner
+  },
+  laterText: {
+    color: "white", // Assuming red background means white text would be visible
   },
 });

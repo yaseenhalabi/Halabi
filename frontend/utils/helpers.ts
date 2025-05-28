@@ -23,9 +23,20 @@ export const getFilteredTags = (
 ) => {
   let filteredTags = [...tags];
   if (searchText) {
-    filteredTags = tags.filter((tag) =>
-      tag.name.toLowerCase().includes(searchText.toLowerCase())
+    const searchLower = searchText.toLowerCase();
+    // Split into prefix matches and includes matches
+    const prefixMatches = tags.filter((tag) =>
+      tag.name.toLowerCase().startsWith(searchLower)
     );
+    const includesMatches = tags.filter((tag) => {
+      const tagNameLower = tag.name.toLowerCase();
+      return (
+        tagNameLower.includes(searchLower) &&
+        !tagNameLower.startsWith(searchLower)
+      );
+    });
+    // Combine with prefix matches first
+    filteredTags = [...prefixMatches, ...includesMatches];
   }
   const frequency = new Map<string, number>();
   filteredTags.forEach((tag) => {
@@ -58,9 +69,20 @@ export const getFilteredContacts = (
 ) => {
   let filteredContacts = contacts;
   if (searchText) {
-    filteredContacts = contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(searchText.toLowerCase())
+    const searchLower = searchText.toLowerCase();
+    // Split into prefix matches and includes matches
+    const prefixMatches = contacts.filter((contact) =>
+      contact.name.toLowerCase().startsWith(searchLower)
     );
+    const includesMatches = contacts.filter((contact) => {
+      const contactNameLower = contact.name.toLowerCase();
+      return (
+        contactNameLower.includes(searchLower) &&
+        !contactNameLower.startsWith(searchLower)
+      );
+    });
+    // Combine with prefix matches first
+    filteredContacts = [...prefixMatches, ...includesMatches];
   }
   return filteredContacts;
 };

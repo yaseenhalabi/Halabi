@@ -33,7 +33,6 @@ export default function Header() {
       case "/settings":
         break;
       default:
-        setCurrentRouteName("Halabi");
         break;
     }
   }, [pathname]);

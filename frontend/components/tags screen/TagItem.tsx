@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    gap: 3,
+    gap: 5,
     opacity: 0.5,
   },
   icon: {

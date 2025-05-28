@@ -78,7 +78,7 @@ export default function TabBar({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 30,
     left: "25%",
     width: "50%",
     borderRadius: 100,

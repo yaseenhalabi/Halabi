@@ -1,0 +1,75 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Codebase Guide
+
+This document provides an overview of the project structure and how different parts are connected. This project consists of a frontend application and does not have a dedicated backend.
+
+## Project Root
+
+The project root contains the following key elements:
+
+-   **`frontend/`**: Contains the React Native (Expo) frontend application.
+-   **`backend/`**: This directory exists but is not actively used, as the project does not have a backend.
+-   **`docker-compose.yaml`**: ([docker-compose.yaml](mdc:docker-compose.yaml)) Defines services, networks, and volumes for Docker. Likely sets up the frontend service.
+-   **`.gitignore`**: ([.gitignore](mdc:.gitignore)) Specifies intentionally untracked files that Git should ignore.
+-   **`node_modules/`**: Directory where project dependencies (npm packages) are installed. Managed by `package.json` and `package-lock.json` in their respective directories.
+-   **`.expo/`**: Contains global Expo project configuration and cache.
+
+## Frontend (`frontend/`)
+
+The frontend is a React Native application built using the Expo framework.
+
+Key directories and files:
+
+-   **`app/`**: ([frontend/app](mdc:frontend/app)) This directory implements file-system based routing using Expo Router.
+    -   `_layout.tsx`: ([frontend/app/_layout.tsx](mdc:frontend/app/_layout.tsx)) Defines the root layout for the application.
+    -   `sign-in.tsx`: ([frontend/app/sign-in.tsx](mdc:frontend/app/sign-in.tsx)) The screen for user authentication.
+    -   **(app)/**: ([frontend/app/(app)](mdc:frontend/app/(app))) This is a route group.
+        -   `_layout.tsx`: ([frontend/app/(app)/_layout.tsx](mdc:frontend/app/(app)/_layout.tsx)) Layout specific to the `(app)` group.
+        -   `new-contacts.tsx`: ([frontend/app/(app)/new-contacts.tsx](mdc:frontend/app/(app)/new-contacts.tsx)) Screen for adding new contacts.
+        -   `settings.tsx`: ([frontend/app/(app)/settings.tsx](mdc:frontend/app/(app)/settings.tsx)) Screen for application settings.
+        -   **(tabs)/**: ([frontend/app/(app)/(tabs)](mdc:frontend/app/(app)/(tabs))) Defines a tab-based navigation structure.
+            -   `_layout.tsx`: ([frontend/app/(app)/(tabs)/_layout.tsx](mdc:frontend/app/(app)/(tabs)/_layout.tsx)) Layout for the tab navigator.
+            -   `index.tsx`: ([frontend/app/(app)/(tabs)/index.tsx](mdc:frontend/app/(app)/(tabs)/index.tsx)) Default screen/entry point for the tabs.
+            -   **`my-contacts/`**: ([frontend/app/(app)/(tabs)/my-contacts](mdc:frontend/app/(app)/(tabs)/my-contacts)) Screens related to "My Contacts" tab.
+            -   **`my-tags/`**: ([frontend/app/(app)/(tabs)/my-tags](mdc:frontend/app/(app)/(tabs)/my-tags)) Screens related to "My Tags" tab.
+            -   **`analytics/`**: ([frontend/app/(app)/(tabs)/analytics](mdc:frontend/app/(app)/(tabs)/analytics)) Screens related to "Analytics" tab.
+
+-   **`api/`**: ([frontend/api](mdc:frontend/api)) Contains code for interacting with external APIs.
+    -   `apiClient.ts`: ([frontend/api/apiClient.ts](mdc:frontend/api/apiClient.ts)) Likely an Axios or Fetch client for making API requests.
+
+-   **`assets/`**: ([frontend/assets](mdc:frontend/assets)) Stores static assets like images, fonts, etc.
+
+-   **`components/`**: ([frontend/components](mdc:frontend/components)) Houses reusable UI components used throughout the application.
+
+-   **`redux/`**: ([frontend/redux](mdc:frontend/redux)) Contains the Redux store setup and state management logic.
+    -   `store.ts`: ([frontend/redux/store.ts](mdc:frontend/redux/store.ts)) Configures the main Redux store.
+    -   *\Slice.ts files (e.g., `contactsSlice.ts`, `userSlice.ts`, `tagsSlice.ts`): Define reducers and actions for different parts of the application state.
+
+-   **`screens/`**: ([frontend/screens](mdc:frontend/screens)) Likely contains older screen components, or screens not part of the Expo Router's `app/` directory structure. (It's worth investigating if this is actively used or legacy, given the Expo Router setup in `app/`).
+
+-   **`types/`**: ([frontend/types](mdc:frontend/types)) Holds TypeScript type definitions for the project.
+
+-   **`utils/`**: ([frontend/utils](mdc:frontend/utils)) Contains utility functions used across the frontend codebase.
+
+-   **`package.json`**: ([frontend/package.json](mdc:frontend/package.json)) Lists project dependencies and scripts for the frontend.
+-   **`package-lock.json`**: ([frontend/package-lock.json](mdc:frontend/package-lock.json)) Records the exact versions of dependencies.
+-   **`app.json`**: ([frontend/app.json](mdc:frontend/app.json)) Expo configuration file (name, version, orientation, splash screen, etc.).
+-   **`eas.json`**: ([frontend/eas.json](mdc:frontend/eas.json)) Configuration for Expo Application Services (EAS) Build and Submit.
+-   **`babel.config.js`**: ([frontend/babel.config.js](mdc:frontend/babel.config.js)) Configuration for Babel, the JavaScript compiler.
+-   **`tsconfig.json`**: ([frontend/tsconfig.json](mdc:frontend/tsconfig.json)) TypeScript compiler options.
+-   **`Dockerfile`**: ([frontend/Dockerfile](mdc:frontend/Dockerfile)) Instructions for building a Docker image for the frontend application.
+
+## How It Connects
+
+1.  **App Entry & Routing**: The app likely starts with Expo's entry point, which then initializes the navigation defined in `frontend/app/`. The root layout is `frontend/app/_layout.tsx`, and the main app routes are under `frontend/app/(app)/`.
+2.  **Navigation**: Expo Router handles navigation based on the file structure within `frontend/app/`. The `(tabs)` directory sets up tab navigation.
+3.  **State Management**: Redux (configured in `frontend/redux/store.ts` with various slices) manages the application's global state. Components can subscribe to state changes and dispatch actions to modify the state.
+4.  **UI Components**: Reusable UI elements are defined in `frontend/components/` and used within screens and layouts. Specific screens might reside in `frontend/app/(app)/` or potentially `frontend/screens/`.
+5.  **API Interaction**: When data needs to be fetched from or sent to an external server, the logic in `frontend/api/apiClient.ts` is used.
+6.  **Build & Deployment**: `eas.json` is used for building and submitting the app via Expo Application Services. The `Dockerfile` in `frontend/` suggests containerization is an option, possibly for web deployment or a consistent build environment. The top-level `docker-compose.yaml` might orchestrate this.
+
+This guide should provide a good starting point for understanding the codebase.
