@@ -94,11 +94,13 @@ export default function NewContactsPopupBanner({
               duration: 150,
               useNativeDriver: true,
             }).start(() => {
-              parentSlideInAnim.setValue(400);
-              parentSlideDownAnim.setValue(0);
-              childSwipeAnim.setValue(0);
+              setTimeout(() => {
+                parentSlideInAnim.setValue(400);
+                parentSlideDownAnim.setValue(0);
+                childSwipeAnim.setValue(0);
+              }, 50);
+              onDismiss();
             });
-            onDismiss();
           });
         } else {
           Animated.spring(childSwipeAnim, {
@@ -146,8 +148,8 @@ export default function NewContactsPopupBanner({
         <View style={styles.content}>
           <View style={styles.textContainer}>
             <CommonText size="medium" weight="medium" color="full">
-              {newContactsCount} new iOS contact{newContactsCount > 1 ? "s" : ""}{" "}
-              detected
+              {newContactsCount} new iOS contact
+              {newContactsCount > 1 ? "s" : ""} detected
             </CommonText>
             <CommonText size="small" color="semi">
               Swipe right to add later in settings
@@ -190,7 +192,7 @@ export default function NewContactsPopupBanner({
               {
                 translateX: childSwipeAnim.interpolate({
                   inputRange: [0, screenWidth],
-                  outputRange: [-screenWidth * 0.1, screenWidth * 0.2], // Move with swipe, ending further right
+                  outputRange: [-screenWidth * 0.1, screenWidth * 0.35], // Move with swipe, ending further right
                   extrapolate: "clamp",
                 }),
               },

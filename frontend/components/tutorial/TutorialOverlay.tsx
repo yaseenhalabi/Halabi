@@ -43,7 +43,7 @@ export default function TutorialOverlay({ children }: TutorialOverlayProps) {
         birthday: { month: "", day: "" },
         photo: { url: "", blurHash: "" },
         notes: "",
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
 
       // Create tags and add them to the contact
@@ -102,7 +102,7 @@ export default function TutorialOverlay({ children }: TutorialOverlayProps) {
         };
       case 5:
         return {
-          text: "Sweet! You've completed the tutorial. All thats left is to go out and meet some new people! ",
+          text: "Congrats on the first tag! Feel free to add some more. You have completed the tutorial. ",
           position: "bottom" as const,
           showNext: true,
           isFinish: true,

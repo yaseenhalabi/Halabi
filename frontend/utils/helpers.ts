@@ -171,7 +171,7 @@ export const createNewContactWithName = (name: string): Contact => {
     tags: [],
     birthday: { month: "", day: "" },
     photo: { url: "", blurHash: "" },
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   };
 };
 
@@ -276,7 +276,7 @@ export const getAppleContactById = async (
       email: appleContact.emails?.[0]?.email || "",
       address: appleContact.addresses?.[0]?.street || "",
       photo: { url: "", blurHash: "" },
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     };
 
     return contact;

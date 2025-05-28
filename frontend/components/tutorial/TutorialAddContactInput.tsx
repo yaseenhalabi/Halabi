@@ -1,23 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   TextInput,
   StyleSheet,
   TouchableOpacity,
   Animated,
-} from 'react-native';
-import { SymbolView } from 'expo-symbols';
-import { useDispatch, useSelector } from 'react-redux';
-import getTheme from '../../utils/GetTheme';
-import { setTutorialStep, setTutorialContact } from '../../redux/tutorialSlice';
-import * as Haptics from 'expo-haptics';
+} from "react-native";
+import { SymbolView } from "expo-symbols";
+import { useDispatch, useSelector } from "react-redux";
+import getTheme from "../../utils/GetTheme";
+import { setTutorialStep, setTutorialContact } from "../../redux/tutorialSlice";
+import * as Haptics from "expo-haptics";
 
 type TutorialAddContactInputProps = {
   endEditing: () => void;
 };
 
-export default function TutorialAddContactInput({ endEditing }: TutorialAddContactInputProps) {
-  const [text, setText] = useState('');
+export default function TutorialAddContactInput({
+  endEditing,
+}: TutorialAddContactInputProps) {
+  const [text, setText] = useState("");
   const theme = getTheme();
   const dispatch = useDispatch();
   const tutorial = useSelector((state: any) => state.tutorial);
@@ -33,15 +35,17 @@ export default function TutorialAddContactInput({ endEditing }: TutorialAddConta
 
   const onConfirmLocal = () => {
     if (text.trim().length === 0) return;
-    
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    
+
     // Store the contact name in tutorial state
-    dispatch(setTutorialContact({
-      name: text.trim(),
-      tags: [],
-    }));
-    
+    dispatch(
+      setTutorialContact({
+        name: text.trim(),
+        tags: [],
+      })
+    );
+
     // Move to next tutorial step (show contact screen)
     dispatch(setTutorialStep(3));
     endEditing();
@@ -90,9 +94,9 @@ export default function TutorialAddContactInput({ endEditing }: TutorialAddConta
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
     height: 50,
     paddingHorizontal: 10,
     gap: 20,
@@ -101,11 +105,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     paddingHorizontal: 10,
-    height: '100%',
+    height: "100%",
   },
   symbol: {
     width: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-}); 
+});

@@ -12,6 +12,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTest } from "../api/test";
 import Welcome from "./welcome";
 import Tutorial from "./tutorial";
+import Disclaimer from "./disclaimer";
+
 export default function Root() {
   const loaded = FontLoader();
   if (!loaded) return null;
@@ -42,15 +44,30 @@ function App() {
   }, [colorScheme, dispatch]);
 
   // Show welcome screen if tutorial hasn't been completed and not started
-  if (!tutorial.isCompleted && tutorial.currentStep === 0) {
+  if (
+    !tutorial.isCompleted &&
+    tutorial.currentStep === 0 &&
+    !tutorial.hasSeenDisclaimer
+  ) {
     return (
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
-          <SafeAreaProvider>
-            <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-              <Welcome />
-            </SafeAreaView>
-          </SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+            <Welcome />
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    );
+  }
+
+  // Show disclaimer screen if tutorial hasn't been completed, step is 0, and welcome has been seen
+  if (!tutorial.hasSeenDisclaimer) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+            <Disclaimer />
+          </SafeAreaView>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     );
@@ -62,7 +79,9 @@ function App() {
       <GestureHandlerRootView>
         <SafeAreaProvider>
           <SafeAreaProvider>
-            <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+            <SafeAreaView
+              style={{ flex: 1, backgroundColor: theme.background }}
+            >
               <Tutorial />
             </SafeAreaView>
           </SafeAreaProvider>
@@ -73,13 +92,11 @@ function App() {
 
   // Show normal app if tutorial is completed
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <SafeAreaProvider>
-          <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-            <Slot />
-          </SafeAreaView>
-        </SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+          <Slot />
+        </SafeAreaView>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

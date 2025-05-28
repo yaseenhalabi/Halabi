@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import { useDispatch } from 'react-redux';
-import CommonText from '../components/CommonText';
-import HalabiBanner from '../components/HalabiBanner';
-import getTheme from '../utils/GetTheme';
-import { setTutorialStep } from '../redux/tutorialSlice';
-import { LinearGradient } from 'expo-linear-gradient';
-import * as Haptics from 'expo-haptics';
+import React from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+import { useDispatch } from "react-redux";
+import CommonText from "../components/CommonText";
+import HalabiBanner from "../components/HalabiBanner";
+import getTheme from "../utils/GetTheme";
+import { setTutorialStep, setHasSeenDisclaimer } from "../redux/tutorialSlice";
+import { LinearGradient } from "expo-linear-gradient";
+import * as Haptics from "expo-haptics";
 
 export default function Welcome() {
   const theme = getTheme();
@@ -15,8 +15,8 @@ export default function Welcome() {
 
   const handleStartTutorial = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    dispatch(setTutorialStep(1));
-    router.replace("/(app)");
+    dispatch(setHasSeenDisclaimer(true));
+    router.replace("/disclaimer");
   };
 
   return (
@@ -25,17 +25,22 @@ export default function Welcome() {
         <CommonText size="large" weight="bold" style={styles.welcomeText}>
           Welcome to
         </CommonText>
-        
+
         <View style={styles.bannerContainer}>
           <HalabiBanner />
         </View>
-        
-        <TouchableOpacity onPress={handleStartTutorial} style={styles.buttonContainer}>
-          <View style={[styles.button, { backgroundColor: theme.backgroundTertiary }]}>
-            <CommonText
-              size="large"
-              weight="medium"
-            >
+
+        <TouchableOpacity
+          onPress={handleStartTutorial}
+          style={styles.buttonContainer}
+        >
+          <View
+            style={[
+              styles.button,
+              { backgroundColor: theme.backgroundTertiary },
+            ]}
+          >
+            <CommonText size="large" weight="medium">
               Get Started
             </CommonText>
           </View>
@@ -48,31 +53,31 @@ export default function Welcome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   content: {
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
     maxWidth: 400,
   },
   welcomeText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 40,
   },
   bannerContainer: {
     marginBottom: 60,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonContainer: {
-    width: '100%',
+    width: "100%",
   },
   button: {
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-}); 
+});

@@ -38,10 +38,10 @@ export default function Settings() {
 
   const onReviewPendingContacts = async (): Promise<boolean> => {
     try {
-      router.push('/new-contacts?openedfrombanner=false');
+      router.push("/new-contacts?openedfrombanner=false");
       return true;
     } catch (error) {
-      console.error('Error navigating to new-contacts:', error);
+      console.error("Error navigating to new-contacts:", error);
       return false;
     }
   };
@@ -154,6 +154,14 @@ export default function Settings() {
       <CommonText size="small" weight="bold" style={{ marginTop: 10 }}>
         Settings
       </CommonText>
+      {newContactReview.awaitingReviewIds.length > 0 && (
+        <SettingButton
+          title={`Review Pending Contacts (${newContactReview.awaitingReviewIds.length})`}
+          color={theme.text.full}
+          onPress={onReviewPendingContacts}
+          icon={<Ionicons name="eye" size={24} color={theme.text.full} />}
+        />
+      )}
       <SettingToggle
         toggled={theme.name === "dark"}
         title="Dark Mode"
@@ -199,17 +207,6 @@ export default function Settings() {
           />
         }
       />
-
-      {newContactReview.awaitingReviewIds.length > 0 && (
-        <SettingButton
-          title={`Review Pending Contacts (${newContactReview.awaitingReviewIds.length})`}
-          color={theme.text.full}
-          onPress={onReviewPendingContacts}
-          icon={
-            <Ionicons name="eye" size={24} color={theme.text.full} />
-          }
-        />
-      )}
     </PageContainer>
   );
 }

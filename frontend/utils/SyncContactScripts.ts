@@ -68,7 +68,7 @@ export const importContacts = async (dispatch: any) => {
         address: item.addresses?.[0]?.street || "",
         socialMedia: [],
         photos: [],
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
     });
     dispatch(setContacts(contacts));
@@ -142,7 +142,7 @@ export const syncContactsToHalabi = async (
         address: item.addresses?.[0]?.street || "",
         socialMedia: [],
         photos: [],
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
     });
 
