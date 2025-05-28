@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import {
   syncContactsToHalabi,
   syncContactsToNative,
-} from "../../utils/syncContactScripts";
+} from "../../utils/SyncContactScripts";
 import { resetTags, setTags } from "../../redux/tagsSlice";
 import { resetContacts, setContacts } from "../../redux/contactsSlice";
 
