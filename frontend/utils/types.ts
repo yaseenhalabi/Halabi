@@ -9,6 +9,7 @@ export type Contact = {
   socialMedia?: SocialMedia[];
   photo?: Photo;
   address?: string;
+  createdAt?: Date;
 };
 
 export type Tag = {

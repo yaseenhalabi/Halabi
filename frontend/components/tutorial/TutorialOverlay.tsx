@@ -43,6 +43,7 @@ export default function TutorialOverlay({ children }: TutorialOverlayProps) {
         birthday: { month: "", day: "" },
         photo: { url: "", blurHash: "" },
         notes: "",
+        createdAt: new Date(),
       };
 
       // Create tags and add them to the contact

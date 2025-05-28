@@ -68,6 +68,7 @@ export const importContacts = async (dispatch: any) => {
         address: item.addresses?.[0]?.street || "",
         socialMedia: [],
         photos: [],
+        createdAt: new Date(),
       };
     });
     dispatch(setContacts(contacts));
@@ -141,6 +142,7 @@ export const syncContactsToHalabi = async (
         address: item.addresses?.[0]?.street || "",
         socialMedia: [],
         photos: [],
+        createdAt: new Date(),
       };
     });
 
@@ -219,7 +221,7 @@ export const syncContactsToNative = async (
 
     // Find the matching native contact (by ID)
     // NOTE: This assumes the `id` on the Halabi contact is the same
-    // as the ID in native contacts. If that’s not the case in your data,
+    // as the ID in native contacts. If that's not the case in your data,
     // you may need a different matching strategy (e.g. phone number).
     const nativeContact = nativeContacts.find((contact) => {
       return contact.id === halabiContact.id;
