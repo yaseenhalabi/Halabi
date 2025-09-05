@@ -11,7 +11,7 @@ interface TutorialState {
 }
 
 const initialState: TutorialState = {
-  isCompleted: false,
+  isCompleted: true,
   currentStep: 0,
   tutorialContact: null,
   hasSeenDisclaimer: false,
